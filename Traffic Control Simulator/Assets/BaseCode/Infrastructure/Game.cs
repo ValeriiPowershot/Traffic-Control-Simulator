@@ -1,10 +1,10 @@
-using BaseCode.Infrastructure;
+using Infrastructure;
 using Infrastructure.States;
 using Logic;
 using Services;
 using UnityEngine;
 
-namespace Infrastructure
+namespace BaseCode.Infrastructure
 {
   public class Game
   {
@@ -12,11 +12,6 @@ namespace Infrastructure
 
     public Game(ICoroutineRunner coroutineRunner, LoadingCurtain curtain)
     {
-      if (Application.isEditor)
-      {
-        
-      }
-        
       StateMachine = new GameStateMachine(new SceneLoader(coroutineRunner), curtain, AllServices.Container);
     }
   }
