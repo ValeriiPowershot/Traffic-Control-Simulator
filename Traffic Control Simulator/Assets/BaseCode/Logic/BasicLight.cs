@@ -10,6 +10,7 @@ public class BasicLight : MonoBehaviour
 
     private LightState _lightState = (LightState)1;
     private int _lightIndex = 1;
+    private int MAX_LIGHT_INDEX = 2;
 
     private List<ICar> _controlledCars = new List<ICar>();
 
@@ -48,7 +49,7 @@ public class BasicLight : MonoBehaviour
     //The only way _lightIndex and _lightState should be managed
     private void SetLight(int NewIndex)
     {
-        if (NewIndex > 3)
+        if (NewIndex > MAX_LIGHT_INDEX)
             NewIndex = 1;
 
         _lightIndex = NewIndex;
