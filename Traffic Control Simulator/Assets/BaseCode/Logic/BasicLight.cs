@@ -14,7 +14,7 @@ public class BasicLight : MonoBehaviour
 
     private List<ICar> _controlledCars = new List<ICar>();
 
-    //updates and sets light state in order: green, yellow, red
+    //updates and sets light state in order: green, red
     public void ChangeLight()
     {
         SetLight(++_lightIndex);

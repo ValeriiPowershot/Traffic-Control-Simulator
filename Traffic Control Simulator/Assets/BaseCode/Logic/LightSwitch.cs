@@ -24,7 +24,10 @@ public class LightSwitch : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        _interactCalled = true;
-        _switchTimer = Time.time + _switchDelay;
+        if (!_interactCalled)
+        {
+            _interactCalled = true;
+            _switchTimer = Time.time + _switchDelay;
+        }
     }
 }
