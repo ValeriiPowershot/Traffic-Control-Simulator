@@ -30,7 +30,7 @@ namespace BaseCode.Infrastructure.States
     }
     
     private void RegisterServices()
-    {
+    { 
       _services.RegisterSingle<IGameStateMachine>(_stateMachine);
       _services.RegisterSingle<IAssetsProvider>(new AssetsProvider());
       _services.RegisterSingle<IGameFactory>(new GameFactory(_services.Single<IAssetsProvider>())); 
