@@ -4,5 +4,13 @@ public interface ICar
 {
     //passes light state
     //could be called multiple times to inform about state changes
-    public void PassLightState(bool State);
+    public void PassLightState(LightState State);
+}
+
+public enum LightState
+{
+    None,
+    Green,
+    Yellow,
+    Red,
 }
