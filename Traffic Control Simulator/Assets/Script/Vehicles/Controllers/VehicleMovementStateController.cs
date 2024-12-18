@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Script.Vehicles.Controllers
 {
-    public class VehicleStateController
+    public class VehicleMovementStateController
     {
         // Vehicle Controller
         private readonly VehicleController _vehicleController;
@@ -16,22 +16,22 @@ namespace Script.Vehicles.Controllers
         // Base State
         private IVehicleState _currentMovementState;
 
-        public VehicleStateController(VehicleController vehicleController)
+        public VehicleMovementStateController(VehicleController vehicleController)
         {
             _vehicleController = vehicleController;
 
-            _states[typeof(VehicleGoState)] = new VehicleGoState();
-            _states[typeof(VehicleSlowDownState)] = new VehicleSlowDownState();
-            _states[typeof(VehicleStopState)] = new VehicleStopState();
-
-            SetState<VehicleGoState>();
+            _states[typeof(VehicleGoState)] = new VehicleGoState(_vehicleController);
+            _states[typeof(VehicleSlowDownState)] = new VehicleSlowDownState(_vehicleController);
+            _states[typeof(VehicleStopState)] = new VehicleStopState(_vehicleController);
         }
 
         public void SetState<T>() where T : IVehicleState
         {
             if (_states.TryGetValue(typeof(T), out var newState))
             {
+                _currentMovementState?.MovementExit();
                 _currentMovementState = newState;
+                _currentMovementState.MovementEnter();
             }
             else
             {
@@ -41,20 +41,11 @@ namespace Script.Vehicles.Controllers
 
         public void Update()
         {
-            _currentMovementState.MovementStateHandler(_vehicleController);
-
-            InputTest();
+            _currentMovementState.MovementUpdate();
+ 
         }
 
         // Used to test the states
-        private void InputTest()
-        {
-            if(Input.GetKey(KeyCode.W))
-                SetState<VehicleGoState>();
-            else if(Input.GetKey(KeyCode.D))
-                SetState<VehicleSlowDownState>();
-            else if(Input.GetKey(KeyCode.Space) || (Input.GetKey(KeyCode.S)))
-                SetState<VehicleStopState>();
-        }
+        
     }
 }

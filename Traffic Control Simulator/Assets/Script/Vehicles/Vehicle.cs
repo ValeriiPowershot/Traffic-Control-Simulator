@@ -1,4 +1,3 @@
-using System;
 using Script.So;
 using Script.Vehicles.Controllers;
 using UnityEngine;
@@ -7,19 +6,23 @@ namespace Script.Vehicles
 {
     public class Vehicle : MonoBehaviour
     {
-        private VehicleController _vehicleController;
-        
+        public VehicleController vehicleController;
         public VehicleSo vehicleSo;
 
-        private void Start()
+        private void Start() // this will be called by spawn manager
         {
-            _vehicleController = new VehicleController(this);
-            _vehicleController.StartEngine();
+            vehicleController.Starter(this);
         }
 
         public void Update()
         {
-            _vehicleController.Update();
+            // every car had a update but then i added dotween and it was not needed anymore
+            vehicleController.Update();
+        }
+
+        public void OnDestroy()
+        {
+            vehicleController.CleanUp();
         }
     }
 }

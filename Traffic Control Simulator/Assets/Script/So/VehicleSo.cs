@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Script.So
 {
@@ -7,8 +8,7 @@ namespace Script.So
     {
         public GameObject vehiclePrefab;
         
-        public float Speed = 10f;
-        public float SlowDownSpeed = 3f;
-
+        public float speed = 10f;
+        public float slowDownSpeed = 3f;
     }
 }

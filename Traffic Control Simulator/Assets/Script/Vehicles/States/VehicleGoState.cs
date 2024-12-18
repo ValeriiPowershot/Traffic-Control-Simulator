@@ -1,3 +1,5 @@
+using DG.Tweening;
+using Script.So;
 using Script.Vehicles.Controllers;
 using UnityEngine;
 
@@ -5,17 +7,27 @@ namespace Script.Vehicles.States
 {
     public class VehicleGoState : IVehicleState
     {
-        public void MovementStateHandler(VehicleController vehicleController)
+        public VehicleController VehicleController { get; set; }
+        public VehicleGoState(VehicleController vehicleController)
         {
-            Move(vehicleController);
+            VehicleController = vehicleController;
+        }
+        
+        public void MovementEnter()
+        {
+            VehicleController.MoveTween.Play();
+            VehicleController.MoveTween.timeScale = VehicleSo.speed; // Adjust tween speed dynamically
         }
 
-        private void Move(VehicleController vehicleController)
+        public void MovementUpdate()
         {
-            var vehicle = vehicleController.Vehicle;
-            var moveSpeed = vehicle.vehicleSo.Speed;
-            vehicle.transform.Translate(Vector3.forward * (moveSpeed * Time.deltaTime));
         }
 
+        public void MovementExit()
+        {
+        }
+
+       
+        private VehicleSo VehicleSo => VehicleController.Vehicle.vehicleSo;
     }
 }
