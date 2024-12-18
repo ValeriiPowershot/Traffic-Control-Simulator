@@ -31,6 +31,7 @@ namespace BaseCode.Logic
             if (other.TryGetComponent(out ICar collidedCar))
             {
                 _parentLight.RemoveCar(collidedCar);
+                collidedCar.PassLightState(LightState.None); 
             }
         }
     }

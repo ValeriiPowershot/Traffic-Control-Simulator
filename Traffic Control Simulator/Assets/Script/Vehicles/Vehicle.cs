@@ -3,6 +3,7 @@ using Script.So;
 using Script.Vehicles.Controllers;
 using Script.Vehicles.States;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Script.Vehicles
 {
@@ -10,6 +11,9 @@ namespace Script.Vehicles
     {
         public VehicleController vehicleController;
         public VehicleSo vehicleSo;
+
+        public LightState carLightState; // re u in light space or on free space - if it is none then it is on free space
+        public Transform rayStartPoint;
 
         private void Start() // this will be called by spawn manager
         {
@@ -19,7 +23,7 @@ namespace Script.Vehicles
         public void Update()
         {
             // every car had a update but then i added dotween and it was not needed anymore, i realize dotween is bullshit for managing multiple cars 
-        //    vehicleController.Update();
+            vehicleController.Update();
         }
 
         public void OnDestroy()
@@ -44,6 +48,8 @@ namespace Script.Vehicles
                 case LightState.None:
                     break;
             }
+
+            carLightState = state;
         }
     }
 }

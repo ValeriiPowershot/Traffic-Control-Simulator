@@ -42,7 +42,6 @@ namespace Script.Vehicles.Controllers
         public void Update()
         {
             _currentMovementState.MovementUpdate();
- 
         }
 
         // Used to test the states

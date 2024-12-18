@@ -11,18 +11,18 @@ namespace Script.Vehicles.Controllers
     public class VehicleController 
     {
         private VehicleMovementStateController _movementStateController;
-        public Tween MoveTween; 
-        
-        // temporary target place
+        private VehiclePathController _vehiclePathController;
+
         public List<Transform> targets = new List<Transform>();
-        public Vehicle Vehicle { get; private set; }
+        public Tween MoveTween; 
  
         public void Starter(Vehicle vehicle)
         {
             Vehicle = vehicle;
             _movementStateController = new VehicleMovementStateController(this);
+            _vehiclePathController = new VehiclePathController(this);
 
-            DefinePath();
+            _vehiclePathController.DefinePath();
             StartEngine();
         }
 
@@ -34,35 +34,6 @@ namespace Script.Vehicles.Controllers
         public void Update()
         {
             _movementStateController.Update();
-        }
- 
-        private void DefinePath()
-        {
-            var path = targets.ConvertAll(t => t.position).ToArray();
-            var tweenSpeed = Vehicle.vehicleSo.speed; // Speed-based movement
-
-            MoveTween = Vehicle.transform.DOPath(path, tweenSpeed, PathType.CatmullRom)
-                .SetEase(Ease.InOutSine)
-                .SetSpeedBased(true)
-                .SetLoops(-1, LoopType.Restart) // Infinite loop
-                .OnWaypointChange(OnWaypointReached); // Handle direction change
-
-            MoveTween.Pause();
-        }
-
-        private void OnWaypointReached(int waypointIndex)
-        {
-            waypointIndex--; // it is counting its spawn point
-            
-            if (waypointIndex < targets.Count - 1)
-            {
-                var currentWaypoint = targets[waypointIndex];
-                var nextWaypoint = targets[waypointIndex + 1];
-                var direction = (nextWaypoint.position - currentWaypoint.position).normalized;
-                var targetRotation = Quaternion.LookRotation(direction);
-                
-                Vehicle.transform.rotation = targetRotation;
-            }
         }
 
         public bool IsTweenWorking()
@@ -84,6 +55,8 @@ namespace Script.Vehicles.Controllers
         {
             _movementStateController.SetState<T>(); // Start in the stopped state
         }
+        
+        public Vehicle Vehicle { get; private set; }
     }
 }
 
