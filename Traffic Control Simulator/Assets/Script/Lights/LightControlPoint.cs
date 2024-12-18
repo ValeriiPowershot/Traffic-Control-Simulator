@@ -19,6 +19,7 @@ namespace BaseCode.Logic
         //collider on this object should include interactions only with car layer
         private void OnTriggerEnter(Collider other)
         {
+            Debug.Log("Sex");
             if (other.TryGetComponent(out ICar collidedCar))
             {
                 _parentLight.AddNewCar(collidedCar);

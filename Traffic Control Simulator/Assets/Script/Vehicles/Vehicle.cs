@@ -29,6 +29,7 @@ namespace Script.Vehicles
 
         public void PassLightState(LightState state)
         {
+            Debug.Log("Passing light state to vehicle " + state);
             switch (state)
             {
                 case LightState.Green:

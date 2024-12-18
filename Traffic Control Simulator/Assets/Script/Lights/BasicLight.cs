@@ -9,8 +9,8 @@ namespace Script.Lights
         //temporary light indicator
         [SerializeField] private Material[] _lightMats;
         [SerializeField] private MeshRenderer _lightMesh;
-
-        private LightState _lightState = (LightState)1;
+        
+        public LightState LightState { get; private set; } = (LightState)1;
         private int _lightIndex = 1;
         private int MAX_LIGHT_INDEX = 2;
 
@@ -20,17 +20,18 @@ namespace Script.Lights
         public void ChangeLight()
         {
             SetLight(++_lightIndex);
+            PassStates(LightState);
         }
         //Sets state by index
         public void ChangeLight(LightState State)
         {
             SetLight((int)State);
-            PassStates(_lightState);
+            PassStates(LightState);
         }
 
         public void AddNewCar(ICar NewCar)
         {
-            NewCar.PassLightState(_lightState);
+            NewCar.PassLightState(LightState);
             _controlledCars.Add(NewCar);
         }
 
@@ -55,10 +56,11 @@ namespace Script.Lights
                 NewIndex = 1;
 
             _lightIndex = NewIndex;
-            _lightState = (LightState)_lightIndex;
+            LightState = (LightState)_lightIndex;
 
             //temporary light indication
             _lightMesh.material = _lightMats[_lightIndex - 1];
         }
+
     }
 }
