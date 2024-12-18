@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Script.Lights
+namespace Script.Roads
 {
     public class RoadBase : MonoBehaviour
     {

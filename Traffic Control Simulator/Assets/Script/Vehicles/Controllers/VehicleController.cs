@@ -8,19 +8,19 @@ using UnityEngine.Serialization;
 namespace Script.Vehicles.Controllers
 {
     [Serializable]
-    public class VehicleController
+    public class VehicleController 
     {
-        private VehicleMovementStateController _vehicleMovementStateController;
+        private VehicleMovementStateController _movementStateController;
         public Tween MoveTween; 
         
         // temporary target place
-        [FormerlySerializedAs("Targets")] public List<Transform> targets = new List<Transform>();
+        public List<Transform> targets = new List<Transform>();
         public Vehicle Vehicle { get; private set; }
  
         public void Starter(Vehicle vehicle)
         {
             Vehicle = vehicle;
-            _vehicleMovementStateController = new VehicleMovementStateController(this);
+            _movementStateController = new VehicleMovementStateController(this);
 
             DefinePath();
             StartEngine();
@@ -28,12 +28,12 @@ namespace Script.Vehicles.Controllers
 
         public void StartEngine()
         {
-            _vehicleMovementStateController.SetState<VehicleGoState>(); // Start in the stopped state
+            SetState<VehicleGoState>(); // Start in the stopped state
         }
 
         public void Update()
         {
-            _vehicleMovementStateController.Update();
+            _movementStateController.Update();
         }
  
         private void DefinePath()
@@ -48,10 +48,6 @@ namespace Script.Vehicles.Controllers
             MoveTween.Pause();
         }
         
-        public void CleanUp()
-        {
-            MoveTween?.Kill();
-        }
 
         public bool IsTweenWorking()
         {
@@ -63,8 +59,15 @@ namespace Script.Vehicles.Controllers
 
             return true;
         }
+        public void CleanUp()
+        {
+            MoveTween?.Kill();
+        }
 
-
+        public void SetState<T>() where T : IVehicleState
+        {
+            _movementStateController.SetState<T>(); // Start in the stopped state
+        }
     }
 }
 
