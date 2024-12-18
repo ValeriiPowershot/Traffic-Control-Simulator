@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Script.Vehicles.States;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Script.Vehicles.Controllers
 {
@@ -13,7 +12,7 @@ namespace Script.Vehicles.Controllers
         private VehicleMovementStateController _movementStateController;
         private VehiclePathController _vehiclePathController;
 
-        public List<Transform> targets = new List<Transform>();
+        public List<Transform> targets = new();
         public Tween MoveTween; 
  
         public void Starter(Vehicle vehicle)

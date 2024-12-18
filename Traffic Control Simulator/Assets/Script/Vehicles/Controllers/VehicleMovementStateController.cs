@@ -7,13 +7,10 @@ namespace Script.Vehicles.Controllers
 {
     public class VehicleMovementStateController
     {
-        // Vehicle Controller
         private readonly VehicleController _vehicleController;
         
-        // States
         private readonly Dictionary<Type, IVehicleState> _states = new Dictionary<Type, IVehicleState>();
         
-        // Base State
         private IVehicleState _currentMovementState;
 
         public VehicleMovementStateController(VehicleController vehicleController)
@@ -24,6 +21,9 @@ namespace Script.Vehicles.Controllers
             _states[typeof(VehicleSlowDownState)] = new VehicleSlowDownState(_vehicleController);
             _states[typeof(VehicleStopState)] = new VehicleStopState(_vehicleController);
         }
+
+        public void Update() =>
+            _currentMovementState.MovementUpdate();
 
         public void SetState<T>() where T : IVehicleState
         {
@@ -39,10 +39,7 @@ namespace Script.Vehicles.Controllers
             }
         }
 
-        public void Update()
-        {
-            _currentMovementState.MovementUpdate();
-        }
+        
 
         // Used to test the states
         

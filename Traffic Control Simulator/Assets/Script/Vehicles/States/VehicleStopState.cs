@@ -21,10 +21,10 @@ namespace Script.Vehicles.States
 
         public void MovementUpdate() 
         {
-            if(VehicleController.Vehicle.carLightState == LightState.Red)
+            if(VehicleController.Vehicle.CarLightState == LightState.Red)
                 return;
             
-            var ray = new Ray(VehicleController.Vehicle.rayStartPoint.position, VehicleController.Vehicle.transform.forward);
+            var ray = new Ray(VehicleController.Vehicle.RayStartPoint.position, VehicleController.Vehicle.transform.forward);
 
             if (Physics.Raycast(ray, out var hit, _rayDistance,_carLayer))
             {
