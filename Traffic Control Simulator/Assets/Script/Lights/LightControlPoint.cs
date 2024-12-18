@@ -19,19 +19,15 @@ namespace BaseCode.Logic
         //collider on this object should include interactions only with car layer
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Sex");
-            if (other.TryGetComponent(out ICar collidedCar))
+            if(_pointType == LightPointType.Entry)
             {
-                _parentLight.AddNewCar(collidedCar);
+                if (other.TryGetComponent(out BasicCar collidedCar))
+                    _parentLight.AddNewCar(collidedCar);
             }
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            if (other.TryGetComponent(out ICar collidedCar))
+            else if(_pointType == LightPointType.Exit)
             {
-                _parentLight.RemoveCar(collidedCar);
-                collidedCar.PassLightState(LightState.None); 
+                if (other.TryGetComponent(out BasicCar collidedCar))
+                    _parentLight.RemoveCar(collidedCar);
             }
         }
     }

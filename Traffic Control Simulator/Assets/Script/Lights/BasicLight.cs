@@ -14,9 +14,9 @@ namespace Script.Lights
         private int _lightIndex = 1;
         private int MAX_LIGHT_INDEX = 2;
 
-        private List<ICar> _controlledCars = new List<ICar>();
+        private List<BasicCar> _controlledCars = new List<BasicCar>();
 
-        //updates and sets light state in order: green, yellow, red
+        //updates and sets light state in order: green, red
         public void ChangeLight()
         {
             SetLight(++_lightIndex);
@@ -29,15 +29,22 @@ namespace Script.Lights
             PassStates(LightState);
         }
 
-        public void AddNewCar(ICar NewCar)
+        public void AddNewCar(BasicCar NewCar)
         {
-            NewCar.PassLightState(LightState);
-            _controlledCars.Add(NewCar);
+            if (!_controlledCars.Contains(NewCar))
+            {
+                _controlledCars.Add(NewCar);
+                NewCar.PassLightState(LightState);
+            }
         }
 
-        public void RemoveCar(ICar OldCar)
+        public void RemoveCar(BasicCar OldCar)
         {
-            _controlledCars.Remove(OldCar);
+            if (_controlledCars.Contains(OldCar))
+            {
+                _controlledCars.Remove(OldCar);
+                OldCar.ExitLightControl();
+            }
         }
 
         //Inform cars about state changes
