@@ -1,3 +1,4 @@
+using Script.Lights;
 using UnityEngine;
 
 public class LightSwitch : MonoBehaviour, IInteractable

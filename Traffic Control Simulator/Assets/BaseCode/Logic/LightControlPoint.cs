@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Script.Lights;
 using UnityEngine;
 //Marks all enter and exit points for space controlled by parent light
 public class LightControlPoint : MonoBehaviour
