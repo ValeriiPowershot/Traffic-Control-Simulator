@@ -8,7 +8,7 @@ namespace Script.Vehicles.States
     public class VehicleGoState : IVehicleState
     {
         private readonly float _rayDistance = 5f; // Adjust distance as needed
-        private LayerMask _carLayer = LayerMask.GetMask("Car"); // Ensure cars are on a "Car" layer
+        private readonly LayerMask _carLayer = LayerMask.GetMask("Car"); // Ensure cars are on a "Car" layer
 
         public VehicleController VehicleController { get; set; }
         public VehicleGoState(VehicleController vehicleController)
