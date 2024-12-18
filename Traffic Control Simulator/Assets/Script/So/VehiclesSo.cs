@@ -9,5 +9,6 @@ namespace Script.So
     {
         // later I can change it to a vehicle type that has vehicles. 
         public List<VehicleSo> vehicles = new List<VehicleSo>();
+        
     }
 }
