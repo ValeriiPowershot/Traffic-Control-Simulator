@@ -1,36 +1,43 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using Script.Lights;
 using UnityEngine;
-//Marks all enter and exit points for space controlled by parent light
-public class LightControlPoint : MonoBehaviour
+
+namespace BaseCode.Logic
 {
-    [SerializeField] private LightPointType _pointType;
-    private BasicLight _parentLight;
-
-    //These objects should always be child for light they using
-    private void Awake()
+    //Marks all enter and exit points for space controlled by parent light
+    public class LightControlPoint : MonoBehaviour
     {
-        _parentLight = GetComponentInParent<BasicLight>();
-    }
+        [SerializeField] private LightPointType _pointType;
+        private BasicLight _parentLight;
 
-    //collider on this object should include interactions only with car layer
-    private void OnTriggerEnter(Collider Other)
-    {
-        if (Other.TryGetComponent<ICar>(out ICar CollidedCar))
+        //These objects should always be child for light they using
+        private void Awake()
         {
-            if(_pointType == LightPointType.Entry)
-                _parentLight.AddNewCar(CollidedCar);
+            _parentLight = GetComponentInParent<BasicLight>();
+        }
 
-            else if(_pointType == LightPointType.Exit)
-                _parentLight.RemoveCar(CollidedCar);
+        //collider on this object should include interactions only with car layer
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent(out ICar collidedCar))
+            {
+                _parentLight.AddNewCar(collidedCar);
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.TryGetComponent(out ICar collidedCar))
+            {
+                _parentLight.RemoveCar(collidedCar);
+            }
         }
     }
-}
 
-public enum LightPointType
-{
-    None,
-    Entry,
-    Exit,
+    public enum LightPointType
+    {
+        None,
+        Entry,
+        Exit,
+    }
 }
