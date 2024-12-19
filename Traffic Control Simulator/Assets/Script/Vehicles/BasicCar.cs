@@ -28,5 +28,5 @@ public enum LightState
     None,
     Green,
     Red,
-    Yellow
+    Yellow,
 }

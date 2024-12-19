@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Script.ScoringSystem
 {
-    public class ScoreObjectCar : MonoBehaviour
+    public class ScoreObjectCar : MonoBehaviour, IScoringObject
     {
         [SerializeField] private float ACCEPTABLE_WAITING_TIME = 1f;
         [Tooltip("Amount of points player will gain in best scenario (for this certain car)")]
@@ -12,11 +12,18 @@ namespace Script.ScoringSystem
         [Tooltip("Amount of time have to pass after acceptable time runs out to reach worst scenario")]
         [SerializeField] private float TIME_TO_WORST_SCORE;
 
+        //temporary 
+        [SerializeField] private MeshRenderer scoreShower;
+        [SerializeField] private Material good, medium, bad;
+
+        private ScoringManager _manager;
         private BasicCar _car;
+
+        private ScoreType _scoreType = ScoreType.Good;
         private Vector3 _prevPosition;
         private float _waitingTime;
 
-        private float MIN_MOVING_RANGE = 0.001f;
+        private const float MIN_MOVING_RANGE = 0.001f;
 
         private void Awake()
         {
@@ -32,10 +39,13 @@ namespace Script.ScoringSystem
             _car.LightExited -= ExitLight;
         }
 
-        public void Update()
+        public void Initialize(ScoringManager Manager)
         {
-            float DeltaTime = Time.deltaTime;
+            _manager = Manager;
+        }
 
+        public void Calculate(float DeltaTime)
+        {
             if (_car.CarLightState == LightState.Red)
             {
                 //recognize if car is standing still 
@@ -43,6 +53,20 @@ namespace Script.ScoringSystem
                 if ((_prevPosition - transform.position).sqrMagnitude <= MIN_MOVING_RANGE * MIN_MOVING_RANGE)
                 {
                     _waitingTime += DeltaTime;
+
+                    if (_scoreType == ScoreType.Good && 
+                        _waitingTime >= ACCEPTABLE_WAITING_TIME)
+                    {
+                        scoreShower.material = medium;
+                        _scoreType = ScoreType.Medium;
+                    }
+
+                    else if (_scoreType == ScoreType.Medium && 
+                    _waitingTime - ACCEPTABLE_WAITING_TIME >= TIME_TO_WORST_SCORE)
+                    {
+                        scoreShower.material = bad;
+                        _scoreType = ScoreType.Bad;
+                    }
                 }
             }
             _prevPosition = transform.position;
@@ -64,7 +88,18 @@ namespace Script.ScoringSystem
                 ResultPoints += (FAIL_POINTS - SUCCESS_POINTS) * Ratio;
             }
             _waitingTime = 0f;
-            //here scoring system will be notified of losing or gaining points
+            scoreShower.material = good;
+            _scoreType = ScoreType.Good;
+
+            _manager.ChangeScore(ResultPoints);
         }
     }
+}
+
+public enum ScoreType
+{
+    None,
+    Good,
+    Medium,
+    Bad,
 }

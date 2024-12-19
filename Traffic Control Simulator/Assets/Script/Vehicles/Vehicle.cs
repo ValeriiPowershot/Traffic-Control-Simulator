@@ -15,8 +15,6 @@ namespace Script.Vehicles
         public LightState carLightState; // re u in light space or on free space - if it is none then it is on free space
         public Transform rayStartPoint;
 
-        public event Action LightPassed;
-
         private void Start() // this will be called by spawn manager
         {
             vehicleController.Starter(this);

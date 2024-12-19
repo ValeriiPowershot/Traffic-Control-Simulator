@@ -12,9 +12,15 @@ namespace Script.Lights
         
         public LightState LightState { get; private set; } = (LightState)1;
         private int _lightIndex = 1;
-        private int MAX_LIGHT_INDEX = 2;
+        private const int MAX_LIGHT_INDEX = 2;
 
         private List<BasicCar> _controlledCars = new List<BasicCar>();
+
+        public void SetChangeoverState()
+        {
+            _lightMesh.material = _lightMats[^1];
+            PassStates(LightState.Yellow);
+        }
 
         //updates and sets light state in order: green, red
         public void ChangeLight()
