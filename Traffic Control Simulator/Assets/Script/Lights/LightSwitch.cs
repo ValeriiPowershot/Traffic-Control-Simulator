@@ -27,6 +27,7 @@ public class LightSwitch : MonoBehaviour, IInteractable
     {
         if (!_interactCalled)
         {
+            _light.SetChangeoverState();
             _interactCalled = true;
             _switchTimer = Time.time + _switchDelay;
         }

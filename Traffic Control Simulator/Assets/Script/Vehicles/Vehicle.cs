@@ -11,13 +11,11 @@ namespace Script.Vehicles
         [SerializeField] private VehicleController _vehicleController;
         
         public VehicleScriptableObjects VehicleScriptableObject;
-        public LightState CarLightState { get; private set; }
         public Transform RayStartPoint;
 
+        // this will be called by spawn manager
         private void Start() =>
             _vehicleController.Starter(this);
-
-        public event Action LightPassed;
 
         public void Update() =>
             _vehicleController.Update();
@@ -46,8 +44,6 @@ namespace Script.Vehicles
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
-
-            CarLightState = state;
         }
     }
 }
