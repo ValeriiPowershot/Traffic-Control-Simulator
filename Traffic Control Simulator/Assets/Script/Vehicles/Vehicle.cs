@@ -1,37 +1,29 @@
 using System;
-using Script.So;
+using Script.ScriptableObject;
 using Script.Vehicles.Controllers;
 using Script.Vehicles.States;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Script.Vehicles
 {
     public class Vehicle : BasicCar
     {
-        public VehicleController vehicleController;
-        public VehicleSo vehicleSo;
+        [SerializeField] private VehicleController _vehicleController;
+        
+        public VehicleScriptableObjects VehicleScriptableObject;
+        public LightState CarLightState { get; private set; }
+        public Transform RayStartPoint;
 
-        public LightState carLightState; // re u in light space or on free space - if it is none then it is on free space
-        public Transform rayStartPoint;
+        private void Start() =>
+            _vehicleController.Starter(this);
 
         public event Action LightPassed;
 
-        private void Start() // this will be called by spawn manager
-        {
-            vehicleController.Starter(this);
-        }
+        public void Update() =>
+            _vehicleController.Update();
 
-        public void Update()
-        {
-            // every car had a update but then i added dotween and it was not needed anymore, i realize dotween is bullshit for managing multiple cars 
-            vehicleController.Update();
-        }
-
-        public void OnDestroy()
-        {
-            vehicleController.CleanUp();
-        }
+        public void OnDestroy() =>
+            _vehicleController.CleanUp();
 
         public override void PassLightState(LightState state)
         {
@@ -41,19 +33,21 @@ namespace Script.Vehicles
             switch (state)
             {
                 case LightState.Green:
-                    vehicleController.SetState<VehicleGoState>();
+                    _vehicleController.SetState<VehicleGoState>();
                     break;
                 case LightState.Red:
-                    vehicleController.SetState<VehicleStopState>();
+                    _vehicleController.SetState<VehicleStopState>();
                     break;
                 case LightState.Yellow:
-                    vehicleController.SetState<VehicleSlowDownState>();
+                    _vehicleController.SetState<VehicleSlowDownState>();
                     break;
                 case LightState.None:
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
 
-            carLightState = state;
+            CarLightState = state;
         }
     }
 }

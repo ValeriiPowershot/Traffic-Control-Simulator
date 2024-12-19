@@ -1,5 +1,5 @@
 using DG.Tweening;
-using Script.So;
+using Script.ScriptableObject;
 using Script.Vehicles.Controllers;
 using UnityEngine;
 
@@ -16,7 +16,7 @@ namespace Script.Vehicles.States
 
         public void MovementEnter()
         {
-            VehicleController.MoveTween.timeScale = VehicleSo.slowDownSpeed; // Adjust tween speed dynamically
+            VehicleController.MoveTween.timeScale = VehicleScriptableObjects.slowDownSpeed; // Adjust tween speed dynamically
         }
 
         public void MovementUpdate()
@@ -27,6 +27,6 @@ namespace Script.Vehicles.States
         {
             // Restart the tween to full speed on exit 
         }
-        private VehicleSo VehicleSo => VehicleController.Vehicle.vehicleSo;
+        private VehicleScriptableObjects VehicleScriptableObjects => VehicleController.Vehicle.VehicleScriptableObject;
     }
 }
