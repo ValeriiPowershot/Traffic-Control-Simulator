@@ -1,5 +1,5 @@
 using DG.Tweening;
-using Script.So;
+using Script.ScriptableObject;
 using Script.Vehicles.Controllers;
 using UnityEngine;
 
@@ -7,7 +7,7 @@ namespace Script.Vehicles.States
 {
     public class VehicleGoState : IVehicleState
     {
-        private readonly float _rayDistance = 5f; // Adjust distance as needed
+        private readonly float _rayDistance = 5f; 
         private readonly LayerMask _carLayer = LayerMask.GetMask("Car"); // Ensure cars are on a "Car" layer
 
         public VehicleController VehicleController { get; set; }
@@ -19,12 +19,12 @@ namespace Script.Vehicles.States
         public void MovementEnter()
         {
             VehicleController.MoveTween.Play();
-            VehicleController.MoveTween.timeScale = VehicleSo.speed; // Adjust tween speed dynamically
+            VehicleController.MoveTween.timeScale = VehicleScriptableObjects.speed; // Adjust tween speed dynamically
         }
         
         public void MovementUpdate()
         {
-            var ray = new Ray(VehicleController.Vehicle.rayStartPoint.position, VehicleController.Vehicle.transform.forward);
+            Ray ray = new Ray(VehicleController.Vehicle.RayStartPoint.position, VehicleController.Vehicle.transform.forward);
 
             if (Physics.Raycast(ray, out var hit, _rayDistance,_carLayer))
             {
@@ -37,13 +37,11 @@ namespace Script.Vehicles.States
             }
         }
 
-
         public void MovementExit()
         {
         }
-        
-
        
-        private VehicleSo VehicleSo => VehicleController.Vehicle.vehicleSo;
+        private VehicleScriptableObjects VehicleScriptableObjects =>
+            VehicleController.Vehicle.VehicleScriptableObject;
     }
 }

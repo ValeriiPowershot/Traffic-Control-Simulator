@@ -1,10 +1,9 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Script.So
+namespace Script.ScriptableObject
 {
     [CreateAssetMenu(fileName = "Vehicle", menuName = "So/Vehicle", order = 0)]
-    public class VehicleSo : ScriptableObject
+    public class VehicleScriptableObjects : UnityEngine.ScriptableObject
     {
         public GameObject vehiclePrefab;
         
