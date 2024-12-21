@@ -17,11 +17,11 @@ namespace Script.Vehicles.Controllers
 
         public void DefinePath() // Define the path for the vehicle to follow
         {
-            /*Vehicle vehicle = _vehicleController.Vehicle;
+            Vehicle vehicle = _vehicleController.Vehicle;
             List<Transform> targets = _vehicleController.targets;
             
             Vector3[] path = targets.ConvertAll(t => t.position).ToArray();
-            float tweenSpeed = vehicle.VehicleScriptableObject.speed; // Speed-based movement
+            float tweenSpeed = vehicle.VehicleScriptableObject.Speed; // Speed-based movement
 
             _vehicleController.MoveTween = vehicle.transform.DOPath(path, tweenSpeed, PathType.CatmullRom)
                 .SetEase(Ease.InOutSine)
@@ -29,12 +29,12 @@ namespace Script.Vehicles.Controllers
                 .SetLoops(-1, LoopType.Restart) // Infinite loop
                 .OnWaypointChange(OnWaypointReached); // Handle direction change
 
-            _vehicleController.MoveTween.Pause();*/
+            _vehicleController.MoveTween.Pause();
         }
 
         private void OnWaypointReached(int waypointIndex)
         {
-            /*List<Transform> targets = _vehicleController.targets;
+            List<Transform> targets = _vehicleController.targets;
             
             waypointIndex--; // it is counting its spawn point
             
@@ -47,7 +47,7 @@ namespace Script.Vehicles.Controllers
                 Quaternion targetRotation = Quaternion.LookRotation(direction);
                 
                 vehicle.transform.rotation = targetRotation;
-            }*/
+            }
         }
         
     }

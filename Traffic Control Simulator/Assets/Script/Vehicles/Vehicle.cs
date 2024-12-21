@@ -6,14 +6,14 @@ using UnityEngine;
 
 namespace Script.Vehicles
 {
-    public class Vehicle : MonoBehaviour, ICar
+    public class Vehicle : BasicCar
     {
         [SerializeField] private VehicleController _vehicleController;
         
         public VehicleScriptableObject VehicleScriptableObject;
-        public LightState CarLightState { get; private set; }
         public Transform RayStartPoint;
 
+        // this will be called by spawn manager
         private void Start() =>
             _vehicleController.Starter(this);
 
@@ -23,9 +23,11 @@ namespace Script.Vehicles
         public void OnDestroy() =>
             _vehicleController.CleanUp();
 
-        public void PassLightState(LightState state)
+        public override void PassLightState(LightState state)
         {
             Debug.Log("Passing light state to vehicle " + state);
+            base.PassLightState(state);
+
             switch (state)
             {
                 case LightState.Green:
@@ -42,8 +44,6 @@ namespace Script.Vehicles
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
-
-            CarLightState = state;
         }
     }
 }

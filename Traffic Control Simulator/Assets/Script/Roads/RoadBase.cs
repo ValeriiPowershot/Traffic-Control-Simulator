@@ -174,6 +174,7 @@ namespace Script.Roads
         
         public virtual void OnDrawGizmos()
         {
+            return;
             if (startPoint != null)
             {
                 Gizmos.color = Color.cyan;
