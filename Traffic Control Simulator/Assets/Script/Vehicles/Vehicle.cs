@@ -10,7 +10,7 @@ namespace Script.Vehicles
     {
         [SerializeField] private VehicleController _vehicleController;
         
-        public VehicleScriptableObjects VehicleScriptableObject;
+        public VehicleScriptableObject VehicleScriptableObject;
         public LightState CarLightState { get; private set; }
         public Transform RayStartPoint;
 

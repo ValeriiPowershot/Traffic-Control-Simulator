@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Basic class for all lights
-namespace Script.Lights
+namespace BaseCode.Logic.Lights
 {
     public class BasicLight : MonoBehaviour
     {

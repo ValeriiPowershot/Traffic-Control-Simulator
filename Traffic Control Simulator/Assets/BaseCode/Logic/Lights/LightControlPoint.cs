@@ -1,8 +1,6 @@
-using System;
-using Script.Lights;
 using UnityEngine;
 
-namespace BaseCode.Logic
+namespace BaseCode.Logic.Lights
 {
     //Marks all enter and exit points for space controlled by parent light
     public class LightControlPoint : MonoBehaviour

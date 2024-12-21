@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using BaseCode.Logic.Ways;
+using Script.ScriptableObject;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -6,23 +8,19 @@ namespace BaseCode.Logic.CarMovement
 {
     public class CarMovement : MonoBehaviour
     {
+        [SerializeField] private VehicleScriptableObject carData; 
         [SerializeField] private AllWaysContainer _allWaysContainer;
-        [SerializeField] private Transform[] _waypoints;
-        [SerializeField] private float _speed = 5f;
-        [SerializeField] private float _rotationSpeed = 10f;
     
-        private WaypointContainer _waypointContainer;
-        private int _currentSlowdownPointIndex;
-        private int _currentAccelerationPointIndex;
+        public WaypointContainer waypointContainer;
+        private List<Transform> _waypoints = new List<Transform>();
 
         private int _currentWaypointIndex;
+        private float _speed;
 
         private void OnEnable()
         {
-            _waypointContainer = _allWaysContainer.AllWays[Random.Range(0, _allWaysContainer.AllWays.Length)];
-            _waypoints = _waypointContainer.Waypoints;
-            _currentSlowdownPointIndex = _waypointContainer.SlowdownPointIndex;
-            _currentAccelerationPointIndex = _waypointContainer.AccelerationPointIndex;
+           // _waypointContainer = _allWaysContainer.AllWays[Random.Range(0, _allWaysContainer.AllWays.Length)];
+            _waypoints = waypointContainer.Waypoints; 
         }
 
         private void FixedUpdate()
@@ -42,20 +40,17 @@ namespace BaseCode.Logic.CarMovement
 
         private void AdjustSpeed()
         {
-            if (_currentWaypointIndex == _currentSlowdownPointIndex + 1)
-                _speed = 4;
-            else if (_currentWaypointIndex == _currentAccelerationPointIndex + 1) 
-                _speed = 6;
+            _speed = carData.Speed;
         }
 
         private bool HasWaypoints()
         {
-            return _waypoints.Length > 0;
+            return _waypoints.Count > 0;
         }
 
         private bool IsAtFinalWaypoint()
         {
-            return _currentWaypointIndex == _waypoints.Length;
+            return _currentWaypointIndex == _waypoints.Count;
         }
 
         private void MoveTowardsWaypoint()
@@ -77,7 +72,7 @@ namespace BaseCode.Logic.CarMovement
             transform.rotation = Quaternion.RotateTowards(
                 transform.rotation, 
                 targetRotation, 
-                _rotationSpeed * Time.fixedDeltaTime
+                carData.RotationSpeed * Time.fixedDeltaTime
             );
         }
 
@@ -91,7 +86,7 @@ namespace BaseCode.Logic.CarMovement
         {
             _currentWaypointIndex++;
 
-            if (_currentWaypointIndex >= _waypoints.Length)
+            if (_currentWaypointIndex >= _waypoints.Count)
             {
                 Debug.Log("Final waypoint reached");
             }

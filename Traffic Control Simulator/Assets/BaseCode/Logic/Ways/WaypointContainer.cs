@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,17 +9,16 @@ namespace BaseCode.Logic.Ways
     {
         [SerializeField] private Transform _slowdownPoint;
         [SerializeField] private Transform _accelerationPoint;
-    
-        public Transform[] Waypoints;
 
+        public List<Transform> Waypoints = new List<Transform>();
         public int SlowdownPointIndex { get; set; }
         public int AccelerationPointIndex { get; set; }
 
-        private void OnValidate()
+        /*private void OnValidate()
         {
-            Transform[] childWaypoints = GetComponentsInChildren<Transform>()
+            List<Transform> childWaypoints = GetComponentsInChildren<Transform>()
                 .Where(t => t != transform)
-                .ToArray();
+                .ToList();
         
             Waypoints = childWaypoints;
         
@@ -28,7 +28,16 @@ namespace BaseCode.Logic.Ways
     
         private int GetWaypointIndex(Transform target)
         {
-            return Array.IndexOf(Waypoints, target);
+            return Waypoints.IndexOf(target);
+        }*/
+
+        public void OnDrawGizmos()
+        {
+            foreach (var waypoint in Waypoints)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawSphere(waypoint.position, 0.5f);
+            }
         }
     }
 }
