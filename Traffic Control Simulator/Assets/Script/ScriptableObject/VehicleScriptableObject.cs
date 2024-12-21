@@ -11,9 +11,14 @@ namespace Script.ScriptableObject
         [SerializeField] private int rotationSpeed = 4;
         
         [SerializeField] private int speed = 5;
-        [SerializeField] private int slowDownSpeed = 3;
+        [SerializeField] private int slowDownSpeed = 4;
+        [SerializeField] private int accelerationSpeed = 6;
 
-        public int Speed
+        // for eys
+        public float rayDistance = 5f; 
+        public LayerMask carLayer = LayerMask.GetMask("Car"); // Ensure cars are on a "Car" layer
+
+        public int NormalSpeed
         {
             get => speed;
             set => speed = value;
@@ -29,6 +34,13 @@ namespace Script.ScriptableObject
         {
             get => rotationSpeed;
             private set => rotationSpeed = value;
+        }
+
+        public int AccelerationSpeed
+        {
+            get => accelerationSpeed;
+            set => accelerationSpeed = value;
+
         }
     }
 }

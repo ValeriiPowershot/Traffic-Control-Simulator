@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BaseCode.Logic.Ways;
 using Script.Vehicles.States;
 using UnityEngine;
 
@@ -7,10 +8,9 @@ namespace Script.Vehicles.Controllers
 {
     public class VehicleMovementStateController
     {
+        
         private readonly VehicleController _vehicleController;
-        
         private readonly Dictionary<Type, IVehicleState> _states = new Dictionary<Type, IVehicleState>();
-        
         private IVehicleState _currentMovementState;
 
         public VehicleMovementStateController(VehicleController vehicleController)
@@ -38,9 +38,7 @@ namespace Script.Vehicles.Controllers
                 Debug.LogWarning($"State {typeof(T)} not found in the dictionary.");
             }
         }
-
         
-
         // Used to test the states
         
     }

@@ -260,7 +260,7 @@ namespace BaseCode.Editor.Path
                 roadBase.startPoint = null;
                 roadBase.endPoint = null;
                 
-                waypointContainer.Waypoints.AddRange(roadBase.path);
+                waypointContainer.waypoints.AddRange(roadBase.path);
                 roadBase.path.Clear();
             }          
         }

@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
-using DG.Tweening;
+using BaseCode.Logic.Ways;
 using Script.Vehicles.States;
-using UnityEngine;
 
 namespace Script.Vehicles.Controllers
 {
@@ -10,18 +8,13 @@ namespace Script.Vehicles.Controllers
     public class VehicleController 
     {
         private VehicleMovementStateController _movementStateController;
-        private VehiclePathController _vehiclePathController;
+        
 
-        public List<Transform> targets = new();
-        public Tween MoveTween; 
- 
         public void Starter(Vehicle vehicle)
         {
             Vehicle = vehicle;
             _movementStateController = new VehicleMovementStateController(this);
-            _vehiclePathController = new VehiclePathController(this);
-
-            _vehiclePathController.DefinePath();
+            
             StartEngine();
         }
 
@@ -34,22 +27,7 @@ namespace Script.Vehicles.Controllers
         {
             _movementStateController.Update();
         }
-
-        public bool IsTweenWorking()
-        {
-            if (MoveTween != null && MoveTween.IsPlaying() == false)
-            {
-                MoveTween.Play();
-                return false;
-            }
-
-            return true;
-        }
-        public void CleanUp()
-        {
-            MoveTween?.Kill();
-        }
-
+ 
         public void SetState<T>() where T : IVehicleState
         {
             _movementStateController.SetState<T>(); // Start in the stopped state

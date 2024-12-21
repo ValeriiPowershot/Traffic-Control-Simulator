@@ -1,4 +1,5 @@
 using System;
+using BaseCode.Logic.Ways;
 using Script.ScriptableObject;
 using Script.Vehicles.Controllers;
 using Script.Vehicles.States;
@@ -10,6 +11,7 @@ namespace Script.Vehicles
     {
         [SerializeField] private VehicleController _vehicleController;
         
+        public AllWaysContainer AllWaysContainer;
         public VehicleScriptableObject VehicleScriptableObject;
         public Transform RayStartPoint;
 
@@ -19,9 +21,6 @@ namespace Script.Vehicles
 
         public void Update() =>
             _vehicleController.Update();
-
-        public void OnDestroy() =>
-            _vehicleController.CleanUp();
 
         public override void PassLightState(LightState state)
         {

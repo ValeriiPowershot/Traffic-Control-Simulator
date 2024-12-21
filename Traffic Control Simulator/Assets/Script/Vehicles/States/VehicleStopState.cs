@@ -16,7 +16,6 @@ namespace Script.Vehicles.States
         }
         public void MovementEnter()
         {
-            VehicleController.MoveTween.Pause();
         }
 
         public void MovementUpdate() 
