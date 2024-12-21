@@ -1,4 +1,5 @@
 using System;
+using BaseCode.Logic.Lights;
 using BaseCode.Logic.Ways;
 using Script.ScriptableObject;
 using Script.Vehicles.Controllers;
@@ -22,10 +23,10 @@ namespace Script.Vehicles
         public void Update() =>
             _vehicleController.Update();
 
-        public override void PassLightState(LightState state)
+        public override void PassLightState(LightState state, LightPlace lightPlace)
         {
             Debug.Log("Passing light state to vehicle " + state);
-            base.PassLightState(state);
+            base.PassLightState(state,lightPlace);
 
             switch (state)
             {
@@ -44,5 +45,6 @@ namespace Script.Vehicles
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
         }
+        
     }
 }

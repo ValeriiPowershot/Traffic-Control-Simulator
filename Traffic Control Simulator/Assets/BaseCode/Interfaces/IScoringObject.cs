@@ -1,3 +1,5 @@
+using BaseCode.Logic.ScoringSystem;
+
 public interface IScoringObject
 {
     public void Initialize(ScoringManager manager);

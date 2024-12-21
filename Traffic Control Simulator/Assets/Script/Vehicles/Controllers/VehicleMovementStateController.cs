@@ -8,7 +8,6 @@ namespace Script.Vehicles.Controllers
 {
     public class VehicleMovementStateController
     {
-        
         private readonly VehicleController _vehicleController;
         private readonly Dictionary<Type, IVehicleState> _states = new Dictionary<Type, IVehicleState>();
         private IVehicleState _currentMovementState;
@@ -21,7 +20,7 @@ namespace Script.Vehicles.Controllers
             _states[typeof(VehicleSlowDownState)] = new VehicleSlowDownState(_vehicleController);
             _states[typeof(VehicleStopState)] = new VehicleStopState(_vehicleController);
         }
-
+        
         public void Update() =>
             _currentMovementState.MovementUpdate();
 

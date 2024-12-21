@@ -1,3 +1,5 @@
+using BaseCode.Logic.ScoringSystem;
+using Script.Vehicles;
 using UnityEngine;
 
 namespace Script.ScoringSystem

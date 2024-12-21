@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BaseCode.Logic.Lights;
 using BaseCode.Logic.Ways;
 using DG.Tweening;
 using Script.ScriptableObject;
@@ -23,8 +24,8 @@ namespace Script.Vehicles.States
         // parameters from data
         private float _speed;
         private float _rayDistance;
-        private LayerMask _carLayer;
-        
+        private LayerMask _carLayer = LayerMask.GetMask("Car"); // Ensure cars are on a "Car" layer
+
         // controllers
         private Transform transform => VehicleController.Vehicle.transform;
         public VehicleController VehicleController { get; set; }
@@ -35,14 +36,19 @@ namespace Script.Vehicles.States
             _carData = VehicleController.Vehicle.VehicleScriptableObject;
 
             _rayDistance = _carData.rayDistance;
-            _carLayer = _carData.carLayer;
 
             InitializePath();
         }
         
         public void InitializePath()
         {
-            _waypointContainer = _allWaysContainer.AllWays[Random.Range(0, _allWaysContainer.AllWays.Length)];
+            if (_allWaysContainer.AllWays.Length == 0)
+            {
+                Debug.LogError("No waypoints found, Add A Path Container");
+            }
+            
+            _waypointContainer = _allWaysContainer.AllWays[_carData.indexPath];
+//            _waypointContainer = _allWaysContainer.AllWays[Random.Range(0, _allWaysContainer.AllWays.Length)];
 
             List<Transform> slowdownPoints = _waypointContainer.SlowdownPoints();
             List<Transform> accelerationPoints = _waypointContainer.AccelerationPoints();
@@ -81,14 +87,24 @@ namespace Script.Vehicles.States
             if (Physics.Raycast(ray, out var hit, _rayDistance,_carLayer))
             {
                 Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
+                Vehicle hitVehicle = hit.collider.gameObject.GetComponent<Vehicle>();
+                
+                if (hitVehicle.lightPlaceSave != LightPlace.None 
+                    && VehicleController.Vehicle.lightPlaceSave != LightPlace.None 
+                        && hitVehicle.lightPlaceSave != VehicleController.Vehicle.lightPlaceSave)
+                {
+                    Debug.Log("Game Is Over");
+                }
+                
                 VehicleController.SetState<VehicleStopState>();
+                
             }
             else
             {
                 Debug.DrawRay(ray.origin, ray.direction * _rayDistance, Color.green);
             }
 
-            FixedUpdate();
+            FixedUpdate(); // we can implement a real fixupdate also, but i am not sure
         }
 
         public void MovementExit()
@@ -152,7 +168,7 @@ namespace Script.Vehicles.States
         {
             Transform targetWaypoint = _waypoints[_currentWaypointIndex].point;
 
-            return Vector3.Distance(transform.position, targetWaypoint.position) < 0.5f;
+            return Vector3.Distance(transform.position, targetWaypoint.position) < 1f;
         }
         private void ProceedToNextWaypoint()
         {
@@ -160,6 +176,8 @@ namespace Script.Vehicles.States
             if (_currentWaypointIndex >= _waypoints.Count)
             {
                 Debug.Log("Final waypoint reached");
+                _currentWaypointIndex = 0;
+                transform.position = _waypoints[_currentWaypointIndex].point.position;
             }
         }
     }

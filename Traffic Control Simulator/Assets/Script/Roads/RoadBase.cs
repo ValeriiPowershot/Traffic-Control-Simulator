@@ -10,17 +10,17 @@ namespace Script.Roads
     public class RoadBase : MonoBehaviour
     {
         public LayerMask pointMask;
+        public List<Transform> path = new List<Transform>();
 
         public List<Transform> onLeftPathPoints; // Example for path points on the left
         public List<Transform> onRightPathPoints;
 
-        protected float rayDistance = 2f; // Adjust based on how far roads can be
+        public float rayDistance = 2f; // Adjust based on how far roads can be
         public float pointDistance = 2f; // Adjust based on how far roads can be
-        
-        public List<Transform> path = new List<Transform>();
 
         public Transform startPoint;
         public Transform endPoint;
+        
         public virtual void ConnectPath(RoadBase nextBase) 
         {
             path.Clear();
@@ -62,7 +62,6 @@ namespace Script.Roads
                     
                     if (direction == transform.forward)
                     {
-                        Debug.Log("Road continues to the Left.");
                         var distanceLa = Vector3.Distance(onLeftPathPoints[0].position, nextBase.transform.position);
                         var distanceLb = Vector3.Distance(onLeftPathPoints[1].position, nextBase.transform.position);
                         var useLa = distanceLa > distanceLb;
@@ -86,7 +85,6 @@ namespace Script.Roads
                     }
                     else
                     {
-                        Debug.Log("Road continues to the RIGHT.");
                         var distanceLa = Vector3.Distance(onRightPathPoints[0].position, nextBase.transform.position);
                         var distanceLb = Vector3.Distance(onRightPathPoints[1].position, nextBase.transform.position);
                         var useLa = distanceLa > distanceLb;
@@ -174,7 +172,6 @@ namespace Script.Roads
         
         public virtual void OnDrawGizmos()
         {
-            return;
             if (startPoint != null)
             {
                 Gizmos.color = Color.cyan;

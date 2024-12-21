@@ -2,34 +2,24 @@ using System;
 using System.Collections.Generic;
 using BaseCode.Logic.Ways;
 using Script.Roads;
+using Script.ScriptableObject;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.PathData
 {
     public class Objects : MonoBehaviour
     {
-        public List<RoadBase> prefabs = new List<RoadBase>();
+        public RoadsScriptableObject roadsSo;
+        public AllWaysContainer allWaysContainer;
+        
+        [Header("Access from SceneObjectSpawner")]
         public List<RoadBase> createdRoadBases = new();
         public List<RoadBase> selectedRoads = new List<RoadBase>();
 
-        public bool canOopenWindow = false;
-        public float offset = 10f;
-
-        [Header("Access from SceneObjectSpawner")]
         public GameObject selectedObject;
-        
         public Vector3 currentDirection = Vector3.forward;
-        public List<Vector3> directions = new List<Vector3>()
-        {
-            Vector3.forward,
-            Vector3.right,
-            Vector3.back,
-            Vector3.left
-        };
-
-        public AllWaysContainer allWaysContainer;
- 
 
         private void OnDrawGizmos()
         {
@@ -50,7 +40,7 @@ namespace BaseCode.Logic.PathData
             {
                 Vector3 startPosition = transform.position;
 
-                foreach (var direction in directions)
+                foreach (var direction in roadsSo.directions)
                 {
 
                     Handles.color = Color.cyan;

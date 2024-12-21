@@ -4,6 +4,7 @@ using BaseCode.Logic;
 using BaseCode.Logic.PathData;
 using BaseCode.Logic.Ways;
 using Script.Roads;
+using Script.ScriptableObject;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -21,9 +22,25 @@ namespace BaseCode.Editor.Path
         public static void ShowWindow()
         {
             _objects = FindObjectOfType<Objects>();
+
+            if (_objects == null)
+            {
+                var objects = new GameObject
+                {
+                    name = "----- Created Objects -----"
+                };
+                objects.transform.SetAsFirstSibling();
+                
+                _objects = objects.AddComponent<Objects>();
+                _objects.roadsSo = Resources.Load<RoadsScriptableObject>("RoadsSo");
+                
+                AllWaysContainer waysContainer = FindObjectOfType<AllWaysContainer>();
+                _objects.allWaysContainer = waysContainer;
+            }
+            
             _objects.selectedObject = _selectedObject;
 
-            if(_objects.canOopenWindow == false)
+            if(_objects.roadsSo.canOpenWindow == false)
                 return;
 
             var window = GetWindow<SceneObjectSpawner>("Object Spawner");
@@ -46,7 +63,7 @@ namespace BaseCode.Editor.Path
 
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
 
-            foreach (var roadBase in _objects.prefabs)
+            foreach (var roadBase in _objects.roadsSo.prefabs)
             {
                 if (GUILayout.Button($"Spawn {roadBase.name}"))
                 {
@@ -189,7 +206,7 @@ namespace BaseCode.Editor.Path
 
         private void SetDirection()
         {
-            List<Vector3> directions = _objects.directions;
+            List<Vector3> directions = _objects.roadsSo.directions;
             
             foreach (var direction in directions)
             {
@@ -223,7 +240,7 @@ namespace BaseCode.Editor.Path
             Vector3 currentDirection = _objects.currentDirection;
              
             GameObject prefab = (GameObject)PrefabUtility.InstantiatePrefab(objectName.gameObject,_objects.transform);
-            prefab.transform.position = _selectedObject.transform.position + currentDirection * _objects.offset;
+            prefab.transform.position = _selectedObject.transform.position + currentDirection * _objects.roadsSo.offset;
             prefab.transform.rotation = Quaternion.LookRotation(currentDirection);
             _selectedObject = prefab;
             
@@ -245,7 +262,7 @@ namespace BaseCode.Editor.Path
                 {
                     parent = _objects.allWaysContainer.transform
                 },
-                name = "PathGenerator"
+                name = "PathContainer"
             };
             var waypointContainer = createNewContainer.AddComponent<WaypointContainer>();
 

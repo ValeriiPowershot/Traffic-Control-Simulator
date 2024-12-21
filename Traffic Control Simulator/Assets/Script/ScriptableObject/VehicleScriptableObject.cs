@@ -15,8 +15,8 @@ namespace Script.ScriptableObject
         [SerializeField] private int accelerationSpeed = 6;
 
         // for eys
-        public float rayDistance = 5f; 
-        public LayerMask carLayer = LayerMask.GetMask("Car"); // Ensure cars are on a "Car" layer
+        public float rayDistance = 5f;
+        public int indexPath;
 
         public int NormalSpeed
         {

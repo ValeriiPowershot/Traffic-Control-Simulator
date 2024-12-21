@@ -1,21 +1,19 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BaseCode.Logic.Lights;
+using Script.Vehicles;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Script.Roads
 {
     public class TripleRoadIntersection : RoadBase
     {
         [Header("Triple Road Intersection")]
-        public RoadBase forwardRoad; // 0 , 0 , 1
-
-        public List<Transform> onForwardRoad;
+        public List<Transform> onForwardPathPoints;
         
-        public Transform forwardRayPoint; // Position for left ray
-
-        public List<BasicLight> basicLights;
-
+        // path
         public List<Transform> onForwardPathA;
         public List<Transform> onForwardPathB;
         
@@ -25,9 +23,8 @@ namespace Script.Roads
         public List<Transform> onRightPathA;
         public List<Transform> onRightPathB;
 
-        public List<Transform> onRightPathC;
-        
-        
+        // lights
+        public List<BasicLight> basicLights;
         public override void ConnectPath(RoadBase nextBase)
         {
             if (startPoint == null)
@@ -67,7 +64,6 @@ namespace Script.Roads
             
             // get its end
             endPoint = path[^1];
-            Debug.Log("R"); 
             
             // find next start point
             var distanceL1 = Vector3.Distance(endPoint.transform.position, nextBase.onLeftPathPoints[0].transform.position); 
@@ -103,22 +99,17 @@ namespace Script.Roads
             }
         }
         
- 
-
-        public override void OnDrawGizmos()
-        {
-            base.OnDrawGizmos();
-            
-            if (forwardRayPoint != null)
-            {
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawRay(forwardRayPoint.position, forwardRayPoint.forward * rayDistance);
-            }
-        }
-
         public override void DrawArrowDirection()
         {
             
+        }
+
+        public void OnTriggerExit(Collider other)
+        {
+            if (other.TryGetComponent<Vehicle>(out var vehicle))
+            {
+                vehicle.ResetLightPlaceSave();
+            }
         }
 
     }

@@ -1,32 +1,45 @@
 using System;
+using BaseCode.Logic.Lights;
 using UnityEngine;
 
-//Interface for all cars to be conrolled by the lights
-public class BasicCar : MonoBehaviour 
+namespace Script.Vehicles
 {
-    private LightState _carLightState;
-    public event Action LightExited;
-
-    public LightState CarLightState { get { return _carLightState; } }
-
-    //passes light state
-    //could be called multiple times to inform about state changes
-    public virtual void PassLightState(LightState State)
+    //Interface for all cars to be conrolled by the lights
+    public class BasicCar : MonoBehaviour 
     {
-        _carLightState = State;
+        public event Action LightExited;
+        
+        private LightState _carLightState;
+        public LightState CarLightState { get { return _carLightState; } }
+
+        public LightPlace lightPlaceSave;
+        //passes light state
+        //could be called multiple times to inform about state changes
+        public virtual void PassLightState(LightState State, LightPlace lightPlace)
+        {
+            _carLightState = State;
+            lightPlaceSave = lightPlace;
+        }
+
+        public virtual void ExitLightControl()
+        {
+            _carLightState = LightState.None;
+            LightExited?.Invoke(); //necessary for scoring system - (looked by tolga, its ok :D)
+        }
+
+        // call from exit of intersection
+        public void ResetLightPlaceSave()  // i hated with this method
+        {
+            lightPlaceSave = LightPlace.None;
+        }
     }
 
-    public virtual void ExitLightControl()
+    public enum LightState
     {
-        _carLightState = LightState.None;
-        LightExited?.Invoke(); //necessary for scoring system
+        None,
+        Green,
+        Red,
+        Yellow,
     }
-}
-
-public enum LightState
-{
-    None,
-    Green,
-    Red,
-    Yellow,
+    
 }

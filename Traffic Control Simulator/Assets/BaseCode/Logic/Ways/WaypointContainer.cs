@@ -34,9 +34,12 @@ namespace BaseCode.Logic.Ways
 
         public void OnDrawGizmos()
         {
+            Gizmos.color = Color.green;
+            
             foreach (var waypoint in waypoints)
             {
-                Gizmos.color = Color.green;
+                if(waypoint == null)
+                    continue;
                 Gizmos.DrawSphere(waypoint.position, 0.5f);
             }
         }
