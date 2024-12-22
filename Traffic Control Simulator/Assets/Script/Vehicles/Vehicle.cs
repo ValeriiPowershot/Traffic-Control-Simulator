@@ -1,4 +1,6 @@
 using System;
+using BaseCode.Logic.Lights;
+using BaseCode.Logic.Ways;
 using Script.ScriptableObject;
 using Script.Vehicles.Controllers;
 using Script.Vehicles.States;
@@ -10,7 +12,8 @@ namespace Script.Vehicles
     {
         [SerializeField] private VehicleController _vehicleController;
         
-        public VehicleScriptableObjects VehicleScriptableObject;
+        public AllWaysContainer AllWaysContainer;
+        public VehicleScriptableObject VehicleScriptableObject;
         public Transform RayStartPoint;
 
         // this will be called by spawn manager
@@ -20,13 +23,10 @@ namespace Script.Vehicles
         public void Update() =>
             _vehicleController.Update();
 
-        public void OnDestroy() =>
-            _vehicleController.CleanUp();
-
-        public override void PassLightState(LightState state)
+        public override void PassLightState(LightState state, LightPlace lightPlace)
         {
             Debug.Log("Passing light state to vehicle " + state);
-            base.PassLightState(state);
+            base.PassLightState(state,lightPlace);
 
             switch (state)
             {
@@ -45,5 +45,6 @@ namespace Script.Vehicles
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
         }
+        
     }
 }

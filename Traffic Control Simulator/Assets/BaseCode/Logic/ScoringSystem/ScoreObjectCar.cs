@@ -1,3 +1,5 @@
+using BaseCode.Logic.ScoringSystem;
+using Script.Vehicles;
 using UnityEngine;
 
 namespace Script.ScoringSystem
@@ -48,8 +50,6 @@ namespace Script.ScoringSystem
         {
             if (_car.CarLightState == LightState.Red)
             {
-                //recognize if car is standing still 
-                //red light shows that car stands because players actions
                 if ((_prevPosition - transform.position).sqrMagnitude <= MIN_MOVING_RANGE * MIN_MOVING_RANGE)
                 {
                     _waitingTime += DeltaTime;

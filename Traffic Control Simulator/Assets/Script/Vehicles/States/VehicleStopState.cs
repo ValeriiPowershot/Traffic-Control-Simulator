@@ -1,3 +1,4 @@
+using System.Collections;
 using DG.Tweening;
 using Script.Vehicles.Controllers;
 using UnityEngine;
@@ -8,7 +9,8 @@ namespace Script.Vehicles.States
     {
         private readonly float _rayDistance = 5f; // Adjust distance as needed
         private readonly LayerMask _carLayer = LayerMask.GetMask("Car"); // Ensure cars are on a "Car" layer
-
+        
+        private bool _isWaiting;
         public VehicleController VehicleController { get; set; }
         public VehicleStopState(VehicleController vehicleController)
         {
@@ -16,7 +18,7 @@ namespace Script.Vehicles.States
         }
         public void MovementEnter()
         {
-            VehicleController.MoveTween.Pause();
+            _isWaiting = false;
         }
 
         public void MovementUpdate() 
@@ -33,8 +35,20 @@ namespace Script.Vehicles.States
             else
             {
                 Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
-                VehicleController.SetState<VehicleGoState>();
+                // wait 1 second
+                if (_isWaiting == false)
+                {
+                    _isWaiting = true;
+                    VehicleController.Vehicle.StartCoroutine(WaitForSeconds());
+                }
             }
+        }
+        
+        private IEnumerator WaitForSeconds()
+        {
+            yield return new WaitForSeconds(1);
+            _isWaiting = false;
+            VehicleController.SetState<VehicleGoState>();
         }
 
         public void MovementExit()

@@ -1,53 +1,55 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class ScoringManager : MonoBehaviour
+namespace BaseCode.Logic.ScoringSystem
 {
-    //temporary implemetation, should be replaced with cars manager or smthn
-    [SerializeField] private Transform _carsHandler;
-    [SerializeField] private TMP_Text _scoreText;
-
-    private List<IScoringObject> _scoringObjects = new();
-
-    private float _deltaTime;
-    private float _playerScore;
-    private const string SCORE_MESSAGE = "Score: ";
-
-    public float PlayerScore { get { return _playerScore; } }
-
-    private void Awake()
+    public class ScoringManager : MonoBehaviour
     {
-        _scoringObjects.AddRange(_carsHandler.GetComponentsInChildren<IScoringObject>());
+        //temporary implemetation, should be replaced with cars manager or smthn
+        [SerializeField] private Transform _carsHandler;
+        [SerializeField] private TMP_Text _scoreText;
 
-        foreach (var ScoringObj in _scoringObjects)
-            ScoringObj.Initialize(this);
+        private List<IScoringObject> _scoringObjects = new();
 
-        ChangeScore(10);
-    }
+        private float _deltaTime;
+        private float _playerScore;
+        private const string SCORE_MESSAGE = "Score: ";
 
-    private void Update()
-    {
-        _deltaTime += Time.deltaTime;
+        public float PlayerScore { get { return _playerScore; } }
 
-        //executing once per 2 frames / may be replaced by async method for better perfomance
-        if(Time.frameCount % 2 == 0)
+        private void Awake()
         {
-            foreach(var ScoringObj in _scoringObjects)
-            {
-                ScoringObj.Calculate(_deltaTime);
-            }
-            _deltaTime = 0f;
+            _scoringObjects.AddRange(_carsHandler.GetComponentsInChildren<IScoringObject>());
+
+            foreach (var ScoringObj in _scoringObjects)
+                ScoringObj.Initialize(this);
+
+            ChangeScore(10);
         }
-    }
 
-    public void ChangeScore(float Change)
-    {
-        _playerScore += Change;
+        private void Update()
+        {
+            _deltaTime += Time.deltaTime;
 
-        _playerScore = _playerScore < 0 ? 0 : _playerScore;// if below 0 set to 0
+            //executing once per 2 frames / may be replaced by async method for better perfomance
+            if(Time.frameCount % 2 == 0)
+            {
+                foreach(var ScoringObj in _scoringObjects)
+                {
+                    ScoringObj.Calculate(_deltaTime);
+                }
+                _deltaTime = 0f;
+            }
+        }
 
-        _scoreText.text = SCORE_MESSAGE + _playerScore.ToString("F0");
+        public void ChangeScore(float Change)
+        {
+            _playerScore += Change;
+
+            _playerScore = _playerScore < 0 ? 0 : _playerScore;// if below 0 set to 0
+
+            _scoreText.text = SCORE_MESSAGE + _playerScore.ToString("F0");
+        }
     }
 }

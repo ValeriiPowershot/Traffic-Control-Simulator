@@ -1,9 +1,20 @@
+using System;
 using System.Collections.Generic;
+using Script.ScriptableObject;
+using Script.Vehicles;
 using UnityEngine;
 
 //Basic class for all lights
-namespace Script.Lights
+namespace BaseCode.Logic.Lights
 {
+    public enum LightPlace
+    {
+        None,
+        Forward,
+        Left,
+        Right,
+        Back
+    }
     public class BasicLight : MonoBehaviour
     {
         //temporary light indicator
@@ -15,6 +26,15 @@ namespace Script.Lights
         private const int MAX_LIGHT_INDEX = 2;
 
         private List<BasicCar> _controlledCars = new List<BasicCar>();
+
+        public LightControlPoint lightControlPoint;
+        public LightScriptableObject lightData;
+
+        public LightPlace lightPlace;
+        private void Awake()
+        {
+            lightControlPoint.SetParentLight(this);
+        }
 
         public void SetChangeoverState()
         {
@@ -28,19 +48,13 @@ namespace Script.Lights
             SetLight(++_lightIndex);
             PassStates(LightState);
         }
-        //Sets state by index
-        public void ChangeLight(LightState State)
-        {
-            SetLight((int)State);
-            PassStates(LightState);
-        }
-
+        
         public void AddNewCar(BasicCar NewCar)
         {
             if (!_controlledCars.Contains(NewCar))
             {
                 _controlledCars.Add(NewCar);
-                NewCar.PassLightState(LightState);
+                NewCar.PassLightState(LightState,lightPlace);
             }
         }
 
@@ -58,7 +72,7 @@ namespace Script.Lights
         {
             foreach(var Car in _controlledCars)
             {
-                Car.PassLightState(State);
+                Car.PassLightState(State,lightPlace);
             }
         }
 

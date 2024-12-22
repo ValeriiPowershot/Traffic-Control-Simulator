@@ -1,24 +1,25 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Ways
 {
     public class WaypointContainer : MonoBehaviour
     {
-        [SerializeField] private Transform _slowdownPoint;
-        [SerializeField] private Transform _accelerationPoint;
-    
-        public Transform[] Waypoints;
+        [SerializeField] private List<Transform> _slowdownPoints;
+        [SerializeField] private List<Transform> _accelerationPoints;
 
-        public int SlowdownPointIndex { get; set; }
-        public int AccelerationPointIndex { get; set; }
-
-        private void OnValidate()
+        public List<Transform> waypoints = new List<Transform>();
+        public List<Transform> SlowdownPoints() => _slowdownPoints;
+        public List<Transform> AccelerationPoints() => _accelerationPoints;
+        
+        /*private void OnValidate()
         {
-            Transform[] childWaypoints = GetComponentsInChildren<Transform>()
+            List<Transform> childWaypoints = GetComponentsInChildren<Transform>()
                 .Where(t => t != transform)
-                .ToArray();
+                .ToList();
         
             Waypoints = childWaypoints;
         
@@ -28,7 +29,19 @@ namespace BaseCode.Logic.Ways
     
         private int GetWaypointIndex(Transform target)
         {
-            return Array.IndexOf(Waypoints, target);
+            return Waypoints.IndexOf(target);
+        }*/
+
+        public void OnDrawGizmos()
+        {
+            Gizmos.color = Color.green;
+            
+            foreach (var waypoint in waypoints)
+            {
+                if(waypoint == null)
+                    continue;
+                Gizmos.DrawSphere(waypoint.position, 0.5f);
+            }
         }
     }
 }

@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 3300000}
   - component: {fileID: 2300000}
   - component: {fileID: 4443975114715807089}
-  m_Layer: 0
+  - component: {fileID: 7015378455485162711}
+  m_Layer: 8
   m_Name: Road Lane_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,8 +28,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100000}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
+  m_LocalPosition: {x: 40, y: 0, z: 20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -37,7 +38,7 @@ Transform:
   - {fileID: 251374543434579646}
   - {fileID: 5159539520821801347}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
 --- !u!33 &3300000
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -100,11 +101,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54750b7945897d93694f434024a91e21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathPoints:
+  pointMask:
+    serializedVersion: 2
+    m_Bits: 512
+  path: []
+  onLeftPathPoints:
   - {fileID: 7805144130763357685}
   - {fileID: 2502680933055340120}
-  - {fileID: 5159539520821801347}
+  onRightPathPoints:
   - {fileID: 251374543434579646}
+  - {fileID: 5159539520821801347}
+  rayDistance: 2
+  pointDistance: 15
+--- !u!65 &7015378455485162711
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 20, y: 2.8071713, z: 20}
+  m_Center: {x: 0, y: 1.4035852, z: 0}
 --- !u!1 &1732924151060895754
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,7 +146,7 @@ GameObject:
   - component: {fileID: 4766200429560515599}
   - component: {fileID: 2822729854635132941}
   - component: {fileID: 1097712774776441519}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -204,7 +233,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -222,7 +251,7 @@ GameObject:
   - component: {fileID: 6795881524702675711}
   - component: {fileID: 8085194557055900218}
   - component: {fileID: 7585160299063315511}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -309,7 +338,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -327,7 +356,7 @@ GameObject:
   - component: {fileID: 3220104299924149324}
   - component: {fileID: 3464430823117091838}
   - component: {fileID: 6668960582453385785}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -342,13 +371,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8465397208457812407}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: -3.5, y: 0, z: -5.5}
   m_LocalScale: {x: 0.29289, y: 0.29289, z: 0.29289}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 400000}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!33 &3220104299924149324
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -414,7 +443,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -432,7 +461,7 @@ GameObject:
   - component: {fileID: 2408401722107203660}
   - component: {fileID: 4017885172137781780}
   - component: {fileID: 207163629668151262}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -447,13 +476,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8879315010009949294}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 3.5, y: 0, z: -5.5}
   m_LocalScale: {x: 0.29289, y: 0.29289, z: 0.29289}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 400000}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!33 &2408401722107203660
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -519,7 +548,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

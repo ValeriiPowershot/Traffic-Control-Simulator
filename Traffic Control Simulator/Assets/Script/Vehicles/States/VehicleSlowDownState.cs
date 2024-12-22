@@ -16,7 +16,7 @@ namespace Script.Vehicles.States
 
         public void MovementEnter()
         {
-            VehicleController.MoveTween.timeScale = VehicleScriptableObjects.slowDownSpeed; // Adjust tween speed dynamically
+          //  VehicleController.MoveTween.timeScale = VehicleScriptableObject.slowDownSpeed; // Adjust tween speed dynamically
         }
 
         public void MovementUpdate()
@@ -27,6 +27,6 @@ namespace Script.Vehicles.States
         {
             // Restart the tween to full speed on exit 
         }
-        private VehicleScriptableObjects VehicleScriptableObjects => VehicleController.Vehicle.VehicleScriptableObject;
+        private VehicleScriptableObject VehicleScriptableObject => VehicleController.Vehicle.VehicleScriptableObject;
     }
 }
