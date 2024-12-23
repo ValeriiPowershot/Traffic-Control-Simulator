@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using BaseCode.Logic.Lights;
 using BaseCode.Logic.Ways;
-using DG.Tweening;
 using Script.ScriptableObject;
 using Script.Vehicles.Controllers;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Script.Vehicles.States
 {
@@ -29,6 +27,7 @@ namespace Script.Vehicles.States
         // controllers
         private Transform transform => VehicleController.Vehicle.transform;
         public VehicleController VehicleController { get; set; }
+
         public VehicleGoState(VehicleController vehicleController)
         {
             VehicleController = vehicleController;
@@ -36,8 +35,6 @@ namespace Script.Vehicles.States
             _carData = VehicleController.Vehicle.VehicleScriptableObject;
 
             _rayDistance = _carData.rayDistance;
-
-            InitializePath();
         }
         
         public void InitializePath()
@@ -46,8 +43,8 @@ namespace Script.Vehicles.States
             {
                 Debug.LogError("No waypoints found, Add A Path Container");
             }
-            
-            _waypointContainer = _allWaysContainer.AllWays[_carData.indexPath];
+            _waypointContainer = VehicleController.Vehicle.WaypointContainer;
+//            _waypointContainer = _allWaysContainer.AllWays[_carData.indexPath];
 //            _waypointContainer = _allWaysContainer.AllWays[Random.Range(0, _allWaysContainer.AllWays.Length)];
 
             List<Transform> slowdownPoints = _waypointContainer.SlowdownPoints();
@@ -175,7 +172,7 @@ namespace Script.Vehicles.States
             _currentWaypointIndex++;
             if (_currentWaypointIndex >= _waypoints.Count)
             {
-                Debug.Log("Final waypoint reached");
+                VehicleController.Vehicle.DestinationReached(); 
                 _currentWaypointIndex = 0;
                 transform.position = _waypoints[_currentWaypointIndex].point.position;
             }

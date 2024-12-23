@@ -28,6 +28,12 @@ namespace BaseCode.Logic.ScoringSystem
             ChangeScore(10);
         }
 
+        public void AddCar(IScoringObject ScoringObj)
+        {
+            ScoringObj.Initialize(this);
+            _scoringObjects.Add(ScoringObj);
+        }
+
         private void Update()
         {
             _deltaTime += Time.deltaTime;

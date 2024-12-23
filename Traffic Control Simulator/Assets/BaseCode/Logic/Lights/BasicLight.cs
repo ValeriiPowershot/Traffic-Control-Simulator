@@ -27,14 +27,9 @@ namespace BaseCode.Logic.Lights
 
         private List<BasicCar> _controlledCars = new List<BasicCar>();
 
-        public LightControlPoint lightControlPoint;
         public LightScriptableObject lightData;
 
         public LightPlace lightPlace;
-        private void Awake()
-        {
-            lightControlPoint.SetParentLight(this);
-        }
 
         public void SetChangeoverState()
         {

@@ -9,6 +9,7 @@ namespace Script.Vehicles.Controllers
     {
         private VehicleMovementStateController _movementStateController;
         
+        public VehicleMovementStateController StateController { get { return _movementStateController; } }
 
         public void Starter(Vehicle vehicle)
         {

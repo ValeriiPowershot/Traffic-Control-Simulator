@@ -5,24 +5,27 @@ using UnityEngine;
 namespace BaseCode.Logic.Lights
 {
     public class LightControlPoint : MonoBehaviour
-    {
+    { 
+        [SerializeField] private LightPointType pointType;
         private BasicLight _parentLight;
 
-        public void SetParentLight(BasicLight parentLight)
+        private void Awake()
         {
-            _parentLight = parentLight;
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.TryGetComponent(out BasicCar collidedCar))
-                _parentLight.AddNewCar(collidedCar);
+            _parentLight = GetComponentInParent<BasicLight>();
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.TryGetComponent(out BasicCar collidedCar))
-                _parentLight.RemoveCar(collidedCar);
+            if(pointType == LightPointType.Entry)
+            {
+                if (other.TryGetComponent(out BasicCar collidedCar))
+                    _parentLight.AddNewCar(collidedCar);
+            }
+            else if ( pointType == LightPointType.Exit)
+            {
+                if (other.TryGetComponent(out BasicCar collidedCar))
+                    _parentLight.RemoveCar(collidedCar);
+            }
         }
     }
 

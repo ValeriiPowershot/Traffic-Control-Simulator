@@ -38,6 +38,11 @@ namespace Script.Vehicles.Controllers
             }
         }
         
+        public void InitializePath()
+        {
+            ((VehicleGoState)_states[typeof(VehicleGoState)]).InitializePath();
+        }
+
         // Used to test the states
         
     }
