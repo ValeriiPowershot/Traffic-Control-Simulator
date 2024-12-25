@@ -65,9 +65,9 @@ namespace BaseCode.Logic.Lights
         //Inform cars about state changes
         private void PassStates(LightState State)
         {
-            foreach(var Car in _controlledCars)
+            foreach(var car in _controlledCars)
             {
-                Car.PassLightState(State,lightPlace);
+                car.PassLightState(State,lightPlace);
             }
         }
 

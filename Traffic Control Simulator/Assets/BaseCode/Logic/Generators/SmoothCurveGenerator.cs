@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace BaseCode.Logic.CarMovement
+namespace BaseCode.Logic.Generators
 {
     public class SmoothCurveGenerator : MonoBehaviour
     {

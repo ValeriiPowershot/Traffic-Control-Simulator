@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4443975114715807089}
   - component: {fileID: 7015378455485162711}
   m_Layer: 8
-  m_Name: Road Lane_01
+  m_Name: Straight Road
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -101,18 +101,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54750b7945897d93694f434024a91e21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roadMesh: {fileID: 4300000, guid: e3c71c50de390ec4190b877211ba0717, type: 3}
   pointMask:
     serializedVersion: 2
     m_Bits: 512
   path: []
+  decelerationPoints: []
+  accelerationPoints: []
   onLeftPathPoints:
   - {fileID: 7805144130763357685}
   - {fileID: 2502680933055340120}
   onRightPathPoints:
   - {fileID: 251374543434579646}
   - {fileID: 5159539520821801347}
-  rayDistance: 2
   pointDistance: 15
+  startPoint: {fileID: 0}
+  endPoint: {fileID: 0}
 --- !u!65 &7015378455485162711
 BoxCollider:
   m_ObjectHideFlags: 0

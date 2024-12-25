@@ -11,8 +11,6 @@ namespace Script.Vehicles.States
     public class VehicleGoState : IVehicleState
     {
         private readonly VehicleScriptableObject _carData;
-        
-        public AllWaysContainer _allWaysContainer;
         private WaypointContainer _waypointContainer;
         
         // points
@@ -25,92 +23,30 @@ namespace Script.Vehicles.States
         private LayerMask _carLayer = LayerMask.GetMask("Car"); // Ensure cars are on a "Car" layer
 
         // controllers
-        private Transform transform => VehicleController.Vehicle.transform;
+        private Transform CarTransform => VehicleController.Vehicle.transform;
         public VehicleController VehicleController { get; set; }
 
         public VehicleGoState(VehicleController vehicleController)
         {
             VehicleController = vehicleController;
-            _allWaysContainer = VehicleController.Vehicle.AllWaysContainer; 
             _carData = VehicleController.Vehicle.VehicleScriptableObject;
-
             _rayDistance = _carData.rayDistance;
+            _speed = _carData.NormalSpeed;
         }
-        
         public void InitializePath()
         {
-            if (_allWaysContainer.AllWays.Length == 0)
-            {
-                Debug.LogError("No waypoints found, Add A Path Container");
-            }
+            _waypoints.Clear();
             _waypointContainer = VehicleController.Vehicle.WaypointContainer;
-//            _waypointContainer = _allWaysContainer.AllWays[_carData.indexPath];
-//            _waypointContainer = _allWaysContainer.AllWays[Random.Range(0, _allWaysContainer.AllWays.Length)];
-
-            List<Transform> slowdownPoints = _waypointContainer.SlowdownPoints();
-            List<Transform> accelerationPoints = _waypointContainer.AccelerationPoints();
-            
-            foreach (var waypoint in _waypointContainer.waypoints)
-            {
-                if (slowdownPoints.Contains(waypoint))
-                {
-                    _waypoints.Add(
-                        new RoadPoint() { point = waypoint, roadPointType = RoadPointType.Slowdown}
-                    );    
-                }
-                else if (accelerationPoints.Contains(waypoint))
-                {
-                    _waypoints.Add(
-                        new RoadPoint() { point = waypoint, roadPointType = RoadPointType.Acceleration}
-                    );    
-                }
-                else
-                {
-                    _waypoints.Add(
-                        new RoadPoint() { point = waypoint, roadPointType = RoadPointType.Normal}
-                    );
-                }
-            }
+            _waypoints.AddRange(_waypointContainer.roadPoints);
         }
 
         public void MovementEnter()
         {
         }
         
-        public void MovementUpdate()
+        public void MovementUpdate() 
         {
-            Ray ray = new Ray(VehicleController.Vehicle.RayStartPoint.position, transform.forward);
-
-            if (Physics.Raycast(ray, out var hit, _rayDistance,_carLayer))
-            {
-                Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
-                Vehicle hitVehicle = hit.collider.gameObject.GetComponent<Vehicle>();
-                
-                if (hitVehicle.lightPlaceSave != LightPlace.None 
-                    && VehicleController.Vehicle.lightPlaceSave != LightPlace.None 
-                        && hitVehicle.lightPlaceSave != VehicleController.Vehicle.lightPlaceSave)
-                {
-                    Debug.Log("Game Is Over");
-                }
-                
-                VehicleController.SetState<VehicleStopState>();
-                
-            }
-            else
-            {
-                Debug.DrawRay(ray.origin, ray.direction * _rayDistance, Color.green);
-            }
-
-            FixedUpdate(); // we can implement a real fixupdate also, but i am not sure
-        }
-
-        public void MovementExit()
-        {
-            
-        }
-        
-        private void FixedUpdate()
-        {
+            // we can implement a real fixupdate also, but i am not sure
             if (!HasWaypoints()) return;
             if (IsAtFinalWaypoint()) return;
             
@@ -120,7 +56,48 @@ namespace Script.Vehicles.States
             RotateTowardsWaypoint();
             if (IsCloseToWaypoint())
                 ProceedToNextWaypoint();
+            
+            CheckForCollision();
+
         }
+
+        public void MovementExit()
+        {
+            
+        }
+
+        private void CheckForCollision()
+        {
+            Ray ray = new Ray(VehicleController.Vehicle.rayStartPoint.position, CarTransform.forward);
+
+            if (Physics.Raycast(ray, out var hit, _rayDistance,_carLayer))
+            {
+                Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
+                
+                Vehicle hitVehicle = hit.collider.gameObject.GetComponent<Vehicle>();
+
+                if (AreTheyInIntersection(hitVehicle) && AreTheyUsingDifferentPath(hitVehicle))
+                {
+                    Debug.Log("Game Is Over");
+                }
+                VehicleController.SetState<VehicleStopState>();
+            }
+            else
+            {
+                Debug.DrawRay(ray.origin, ray.direction * _rayDistance, Color.green);
+            }
+        }
+
+        private bool AreTheyUsingDifferentPath(Vehicle hitVehicle)
+        {
+            return hitVehicle.lightPlaceSave != VehicleController.Vehicle.lightPlaceSave;
+        }
+
+        private bool AreTheyInIntersection(Vehicle hitVehicle)
+        {
+            return hitVehicle.lightPlaceSave != LightPlace.None && VehicleController.Vehicle.lightPlaceSave != LightPlace.None;
+        }
+
         private void AdjustSpeed()
         {
             RoadPoint roadPoint = _waypoints[_currentWaypointIndex];
@@ -143,8 +120,8 @@ namespace Script.Vehicles.States
         private void MoveTowardsWaypoint()
         {
             Transform targetWaypoint = _waypoints[_currentWaypointIndex].point;
-            transform.position = Vector3.MoveTowards(
-                transform.position, 
+            CarTransform.position = Vector3.MoveTowards(
+                CarTransform.position, 
                 targetWaypoint.position, 
                 _speed * Time.fixedDeltaTime
             );
@@ -153,10 +130,10 @@ namespace Script.Vehicles.States
         {
             Transform targetWaypoint = _waypoints[_currentWaypointIndex].point;
 
-            Vector3 direction = (targetWaypoint.position - transform.position).normalized;
+            Vector3 direction = (targetWaypoint.position - CarTransform.position).normalized;
             Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.RotateTowards(
-                transform.rotation, 
+            CarTransform.rotation = Quaternion.RotateTowards(
+                CarTransform.rotation, 
                 targetRotation, 
                 _carData.RotationSpeed * Time.fixedDeltaTime
             );
@@ -165,7 +142,7 @@ namespace Script.Vehicles.States
         {
             Transform targetWaypoint = _waypoints[_currentWaypointIndex].point;
 
-            return Vector3.Distance(transform.position, targetWaypoint.position) < 1f;
+            return Vector3.Distance(CarTransform.position, targetWaypoint.position) < 1f;
         }
         private void ProceedToNextWaypoint()
         {
@@ -174,7 +151,7 @@ namespace Script.Vehicles.States
             {
                 VehicleController.Vehicle.DestinationReached(); 
                 _currentWaypointIndex = 0;
-                transform.position = _waypoints[_currentWaypointIndex].point.position;
+                CarTransform.position = _waypoints[_currentWaypointIndex].point.position;
             }
         }
     }

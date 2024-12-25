@@ -1,18 +1,14 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using BaseCode.Logic.Lights;
 using Script.Vehicles;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Script.Roads
 {
     public class TripleRoadIntersection : RoadBase
     {
         [Header("Triple Road Intersection")]
-        public List<Transform> onForwardPathPoints;
-        
         // path
         public List<Transform> onForwardPathA;
         public List<Transform> onForwardPathB;
@@ -27,12 +23,9 @@ namespace Script.Roads
         public List<BasicLight> basicLights;
         public override void ConnectPath(RoadBase nextBase)
         {
-            if (startPoint == null)
-            {
-                Debug.Log($" {name} start is null");
-                return;
-            }
             path.Clear();
+            accelerationPoints.Clear();
+            decelerationPoints.Clear();
             
             // find start point path
             if (startPoint == onForwardPathA[0] || startPoint == onForwardPathB[0])
@@ -61,6 +54,10 @@ namespace Script.Roads
                 var shouldIUseA = distanceA < distanceB;
                 path.AddRange(shouldIUseA ? onLeftPathA : onLeftPathB);
             }
+            
+            int halfPathLength = path.Count / 2;
+            decelerationPoints.AddRange(path.Take(halfPathLength)); // hurt me plenty
+            accelerationPoints.AddRange(path.Skip(halfPathLength));
             
             // get its end
             endPoint = path[^1];

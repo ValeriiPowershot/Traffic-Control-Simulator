@@ -6,6 +6,7 @@ using Script.ScriptableObject;
 using Script.Vehicles.Controllers;
 using Script.Vehicles.States;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 
@@ -13,43 +14,39 @@ namespace Script.Vehicles
 {
     public class Vehicle : BasicCar
     {
-        [SerializeField] private VehicleController _vehicleController;
+        [SerializeField] private VehicleController vehicleController;
 
-        public AllWaysContainer AllWaysContainer;
-        public VehicleScriptableObject VehicleScriptableObject;
-        public Transform RayStartPoint;
+        public AllWaysContainer allWaysContainer;
+        public Transform rayStartPoint;
+        
+        public WaypointContainer WaypointContainer { get; set; }
+        public VehicleScriptableObject VehicleScriptableObject { get; set; }
 
-        private CarManager _manager;
-        private WaypointContainer _wayPointContainer;
-
-        public WaypointContainer WaypointContainer { get { return _wayPointContainer; } }
-
-        // this will be called by spawn manager
-        public void Starter(CarManager Manager, AllWaysContainer Container)
+        public void Starter(CarManager Manager, AllWaysContainer Container, VehicleScriptableObject currentCar)
         {
-            AllWaysContainer = Container;
-            _manager = Manager;
-            _vehicleController.Starter(this);
+            allWaysContainer = Container;
+            CarManager = Manager;
+            VehicleScriptableObject = currentCar;
+            
+            vehicleController.Starter(this);
         }
         
-        public void Update() =>
-            _vehicleController.Update();
+        public void Update() => vehicleController.Update();
 
         public override void PassLightState(LightState state, LightPlace lightPlace)
         {
-            Debug.Log("Passing light state to vehicle " + state);
             base.PassLightState(state,lightPlace);
 
             switch (state)
             {
                 case LightState.Green:
-                    _vehicleController.SetState<VehicleGoState>();
+                    vehicleController.SetState<VehicleGoState>();
                     break;
                 case LightState.Red:
-                    _vehicleController.SetState<VehicleStopState>();
+                    vehicleController.SetState<VehicleStopState>();
                     break;
                 case LightState.Yellow:
-                    _vehicleController.SetState<VehicleSlowDownState>();
+                    vehicleController.SetState<VehicleSlowDownState>();
                     break;
                 case LightState.None:
                     break;
@@ -58,34 +55,38 @@ namespace Script.Vehicles
             }
         }
         
-        public void InitializePath()
+        public void AssignNewPathContainer()
         {
-            _wayPointContainer = AllWaysContainer.AllWays[0];
-            float rangeToCurr = (_wayPointContainer.transform.position - transform.position).sqrMagnitude;
-            
-            for (int i = 0; i < AllWaysContainer.AllWays.Length; i++)
-            {
-                float rangeToNext = (AllWaysContainer.AllWays[i].transform.position - transform.position).sqrMagnitude;
+            WaypointContainer = allWaysContainer.AllWays[0];
+            float rangeToCurr = GetSquaredDistance(WaypointContainer.transform.position);
 
+            foreach (var wayPointContainer in allWaysContainer.AllWays)
+            {
+                float rangeToNext = GetSquaredDistance(wayPointContainer.transform.position);
                 if (rangeToNext < rangeToCurr)
                 {
-                    _wayPointContainer = AllWaysContainer.AllWays[i];
-                    rangeToCurr = (_wayPointContainer.transform.position - transform.position).sqrMagnitude;
+                    WaypointContainer = wayPointContainer;
+                    rangeToCurr = GetSquaredDistance(WaypointContainer.transform.position);
                 }
                 else if (rangeToNext > rangeToCurr)
                     continue;
                 else
                 {
-                    _wayPointContainer = Random.Range(0, 2) == 0 ? _wayPointContainer : AllWaysContainer.AllWays[i];
-                    rangeToCurr = (_wayPointContainer.transform.position - transform.position).sqrMagnitude;
+                    WaypointContainer = Random.value < 0.5f ? WaypointContainer : wayPointContainer;
+                    rangeToCurr = (WaypointContainer.transform.position - transform.position).sqrMagnitude;
                 }
             }
-            _vehicleController.StateController.InitializePath();
+            vehicleController.StateController.InitializePath();
+        }
+        
+        private float GetSquaredDistance(Vector3 targetPosition)
+        {
+            return (targetPosition - transform.position).sqrMagnitude;
         }
 
         public void DestinationReached()
         {
-            _manager.CarDestinationReched(this);
+            CarManager.CarDestinationReached(this);
         }
     }
 }

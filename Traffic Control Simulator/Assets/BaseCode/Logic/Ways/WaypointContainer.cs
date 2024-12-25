@@ -1,19 +1,38 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Script.Vehicles.States;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Ways
 {
     public class WaypointContainer : MonoBehaviour
     {
-        [SerializeField] private List<Transform> _slowdownPoints;
-        [SerializeField] private List<Transform> _accelerationPoints;
-
-        public List<Transform> waypoints = new List<Transform>();
-        public List<Transform> SlowdownPoints() => _slowdownPoints;
-        public List<Transform> AccelerationPoints() => _accelerationPoints;
+        public List<RoadPoint> roadPoints = new List<RoadPoint>();
+        public void SetRoadPoints(List<Transform> waypoints,List<Transform> decelerationPoints,List<Transform> accelerationPoints)
+        {
+            foreach (var waypoint in waypoints)
+            {
+                if (decelerationPoints.Contains(waypoint))
+                {
+                    roadPoints.Add(
+                        new RoadPoint() { point = waypoint, roadPointType = RoadPointType.Slowdown}
+                    );    
+                }
+                else if (accelerationPoints.Contains(waypoint))
+                {
+                    roadPoints.Add(
+                        new RoadPoint() { point = waypoint, roadPointType = RoadPointType.Acceleration}
+                    );    
+                }
+                else
+                {
+                    roadPoints.Add(
+                        new RoadPoint() { point = waypoint, roadPointType = RoadPointType.Normal}
+                    );
+                }
+            }
+        }
         
         /*private void OnValidate()
         {
@@ -34,14 +53,28 @@ namespace BaseCode.Logic.Ways
 
         public void OnDrawGizmos()
         {
-            Gizmos.color = Color.green;
+            if(roadPoints.Count == 0)
+                return;
             
-            foreach (var waypoint in waypoints)
+            foreach (var waypoint in roadPoints)
             {
-                if(waypoint == null)
-                    continue;
-                Gizmos.DrawSphere(waypoint.position, 0.5f);
+                switch (waypoint.roadPointType)
+                {
+                    case RoadPointType.Normal:
+                        Gizmos.color = Color.green;
+                        Gizmos.DrawSphere(waypoint.point.transform.position, 0.5f);
+                        break;
+                    case RoadPointType.Slowdown:
+                        Gizmos.color = Color.red;
+                        Gizmos.DrawSphere(waypoint.point.transform.position, 0.5f);
+                        break;
+                    case RoadPointType.Acceleration:
+                        Gizmos.color = Color.yellow;
+                        Gizmos.DrawSphere(waypoint.point.transform.position, 0.5f);
+                        break;
+                }
             }
+         
         }
     }
 }

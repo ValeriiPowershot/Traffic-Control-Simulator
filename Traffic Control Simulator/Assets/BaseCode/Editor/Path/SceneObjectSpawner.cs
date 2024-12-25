@@ -5,6 +5,7 @@ using BaseCode.Logic.PathData;
 using BaseCode.Logic.Ways;
 using Script.Roads;
 using Script.ScriptableObject;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -13,10 +14,9 @@ namespace BaseCode.Editor.Path
 {
     public class SceneObjectSpawner : EditorWindow
     {
-        private static GameObject _selectedObject;
         private Vector2 _scrollPosition;
+        private static GameObject _selectedObject;
         private static Objects _objects;
-        private RoadBase _currentRoadBase;
 
         [MenuItem("Window/Object Spawner")]
         public static void ShowWindow()
@@ -37,8 +37,13 @@ namespace BaseCode.Editor.Path
                 AllWaysContainer waysContainer = FindObjectOfType<AllWaysContainer>();
                 _objects.allWaysContainer = waysContainer;
             }
-            
-            _objects.selectedObject = _selectedObject;
+
+            _objects.clickedSelectedObject = _selectedObject;            
+            RoadBase roadBase = _objects.clickedSelectedObject.GetComponent<RoadBase>();
+            if (roadBase == null)
+            {
+                _objects.selectedRoad = _objects.roadsSo.prefabs[0];
+            }
 
             if(_objects.roadsSo.canOpenWindow == false)
                 return;
@@ -49,15 +54,14 @@ namespace BaseCode.Editor.Path
         
         private void OnGUI()
         {
-            SetDirection();
-            
-            if (_selectedObject == null)
+            // SetDirection();
+            if (_objects == null || _objects.clickedSelectedObject == null)
             {
                 EditorGUILayout.LabelField("Select an object in the scene.");
                 return;
             }
 
-            EditorGUILayout.LabelField($"Selected Object: {_selectedObject.name}");
+            EditorGUILayout.LabelField($"Selected Object: {_objects.clickedSelectedObject.name}");
 
             EditorGUILayout.Space();
 
@@ -65,18 +69,24 @@ namespace BaseCode.Editor.Path
 
             foreach (var roadBase in _objects.roadsSo.prefabs)
             {
-                if (GUILayout.Button($"Spawn {roadBase.name}"))
+                GUIStyle buttonStyle = new GUIStyle(GUI.skin.button);
+
+                // Highlight the button of the selected road
+                if (roadBase == _objects.selectedRoad)
                 {
-                    SpawnObject(roadBase);
+                    buttonStyle.normal.textColor = Color.green; // Highlighted text color
+                }
+
+                if (GUILayout.Button($"{roadBase.name} Select", buttonStyle))
+                {
+                    _objects.selectedRoad = roadBase;
                 }
             }
             
             EditorGUILayout.Space();
             
             EditorGUILayout.LabelField($"Change Rotation Of Selected Object");
-
             ChangeRotation();
-
             EditorGUILayout.Space();
 
             GenerateRoad();
@@ -150,8 +160,8 @@ namespace BaseCode.Editor.Path
             
             _objects.selectedRoads.Clear();
             
-            if (selectedObjects[0].GetComponent<RoadBase>() is TripleRoadIntersection 
-                || selectedObjects[^1].GetComponent<RoadBase>() is TripleRoadIntersection )
+            if (selectedObjects[0].GetComponent<RoadBase>() is (TripleRoadIntersection or ForthRoadIntersection)
+                || selectedObjects[^1].GetComponent<RoadBase>() is (TripleRoadIntersection or ForthRoadIntersection))
             {
                 Debug.LogError("First or End of Path Cant Be Intersection");
                 return false;
@@ -185,13 +195,13 @@ namespace BaseCode.Editor.Path
         
         private void ChangeRotation()
         {
-            if (_selectedObject == null)
+            if (_objects.clickedSelectedObject == null)
             {
                 EditorGUILayout.LabelField("No object selected.");
                 return;
             }
 
-            var currentRotation = _selectedObject.transform.rotation;
+            var currentRotation = _objects.clickedSelectedObject.transform.rotation;
 
             float currentY = Mathf.Round(currentRotation.eulerAngles.y / 90f) * 90f;
 
@@ -199,59 +209,9 @@ namespace BaseCode.Editor.Path
 
             if (!Mathf.Approximately(newRotationY, currentRotation.eulerAngles.y))
             {
-                _selectedObject.transform.rotation = Quaternion.Euler(currentRotation.eulerAngles.x, newRotationY, currentRotation.eulerAngles.z);
-                EditorUtility.SetDirty(_selectedObject);
+                _objects.clickedSelectedObject.transform.rotation = Quaternion.Euler(currentRotation.eulerAngles.x, newRotationY, currentRotation.eulerAngles.z);
+                EditorUtility.SetDirty(_objects.clickedSelectedObject);
             }
-        }
-
-        private void SetDirection()
-        {
-            List<Vector3> directions = _objects.roadsSo.directions;
-            
-            foreach (var direction in directions)
-            {
-                if (GUILayout.Button(GetVectorName(direction)))
-                {
-                    Debug.Log("Direction set to: " + direction);
-                    _objects.currentDirection = direction;
-                }
-            }
-        }
-        
-        private string GetVectorName(Vector3 direction)
-        {
-            if (direction == Vector3.forward)
-                return "Vector3.forward";
-            if (direction == Vector3.right)
-                return "Vector3.right";
-            if (direction == Vector3.back)
-                return "Vector3.back";
-            if (direction == Vector3.left)
-                return "Vector3.left";
-        
-            return "Unknown direction"; // For other cases
-        }
-        
-        private void SpawnObject(RoadBase objectName)
-        {
-            if (_selectedObject == null)
-                return;
-            
-            Vector3 currentDirection = _objects.currentDirection;
-             
-            GameObject prefab = (GameObject)PrefabUtility.InstantiatePrefab(objectName.gameObject,_objects.transform);
-            prefab.transform.position = _selectedObject.transform.position + currentDirection * _objects.roadsSo.offset;
-            prefab.transform.rotation = Quaternion.LookRotation(currentDirection);
-            _selectedObject = prefab;
-            
-            _objects.selectedObject = _selectedObject;
-            _objects.currentDirection = currentDirection;
-            
-            _currentRoadBase = prefab.GetComponent<RoadBase>();
-            _objects.createdRoadBases.Add(_currentRoadBase);
-                
-            Undo.RegisterCreatedObjectUndo(prefab, $"Spawn {objectName}");
-            Selection.activeGameObject = prefab;
         }
 
         public void GenerateNewPath()
@@ -277,8 +237,11 @@ namespace BaseCode.Editor.Path
                 roadBase.startPoint = null;
                 roadBase.endPoint = null;
                 
-                waypointContainer.waypoints.AddRange(roadBase.path);
+                waypointContainer.SetRoadPoints(roadBase.path,roadBase.decelerationPoints,roadBase.accelerationPoints);
+                
                 roadBase.path.Clear();
+                roadBase.decelerationPoints.Clear();
+                roadBase.accelerationPoints.Clear();
             }          
         }
         private void CleanVisuals()
@@ -289,7 +252,10 @@ namespace BaseCode.Editor.Path
                     continue;
                 roadBase.startPoint = null;
                 roadBase.endPoint = null;
+                
                 roadBase.path.Clear();
+                roadBase.decelerationPoints.Clear();
+                roadBase.accelerationPoints.Clear();
             }
         }
 
@@ -302,7 +268,6 @@ namespace BaseCode.Editor.Path
 
         private static void OnSceneGUI(SceneView sceneView)
         {
-            
             Event e = Event.current;
 
             if (e.type == EventType.MouseDown && e.button == 0 && e.clickCount == 2 && !e.alt) // Detect double-click
@@ -316,6 +281,33 @@ namespace BaseCode.Editor.Path
                     e.Use(); // Mark the event as used to prevent propagation
                 }
             }
+
+            if (e.modifiers != EventModifiers.None)
+            {
+                if(_objects != null)
+                    _objects.selectingNewRoad = true;
+            }
+            else
+            {
+                if (_objects != null)
+                    _objects.selectingNewRoad = false;
+            }
+
+            if (e.type == EventType.MouseDown && e.button == 0 && e.modifiers == EventModifiers.None)
+            {
+                if (_objects == null || _objects.currentDirection == Vector3.zero)
+                {
+                    if(_objects != null)
+                        _objects.clickedSelectedObject = null;  
+                    return;
+                }
+                
+                if (_objects.clickedSelectedObject != null && _objects.selectedRoad != null && _objects.selectingNewRoad == false)
+                {
+                    _objects.SpawnNow();
+                }
+            }
+            
         }
     }
 }

@@ -2,14 +2,16 @@ using BaseCode.Logic.ScoringSystem;
 using BaseCode.Logic.Ways;
 using Script.Vehicles;
 using System.Collections.Generic;
+using Script.ScriptableObject;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BaseCode.Logic
 {
     public class CarManager : MonoBehaviour
     {
         [SerializeField] private Transform carHandler;
-        [SerializeField] private Vehicle[] _carPrefabs;
+        [SerializeField] private VehicleScriptableObject[] carSoObjects;
         [SerializeField] private AllWaysContainer _allWaysContainer;
         [Space]
         [SerializeField] private int ACTIVE_CARS_COUNT = 5, MAX_CARS_COUNT = 7;
@@ -45,17 +47,33 @@ namespace BaseCode.Logic
             }
             else
             {
-                //instatiate car and put in first waypoint position on a random path;
-                newCar = Instantiate(_carPrefabs[Random.Range(0, _carPrefabs.Length)], _allWaysContainer.AllWays[Random.Range(0, _allWaysContainer.AllWays.Length)].waypoints[0].transform.position, Quaternion.identity, carHandler);
-                _scoreManager.AddCar(newCar.GetComponent<IScoringObject>());
-                newCar.Starter(this, _allWaysContainer);
+                newCar = CreateNewCar();
             }
-
+            
             _active.Add(newCar);
-            newCar.InitializePath();
+            newCar.AssignNewPathContainer();
         }
 
-        public void CarDestinationReched(Vehicle Vehicle)
+        private Vehicle CreateNewCar()
+        {
+            WaypointContainer container = _allWaysContainer.AllWays[Random.Range(0, _allWaysContainer.AllWays.Length)];
+            VehicleScriptableObject currentCar = carSoObjects[Random.Range(0, carSoObjects.Length)];
+            
+            GameObject createdCar = Instantiate(currentCar.vehiclePrefab,
+                container.roadPoints[0].point.transform.position, 
+                Quaternion.identity,
+                carHandler);
+                
+            var newCar = createdCar.GetComponent<Vehicle>();
+            newCar.WaypointContainer = container;
+
+            _scoreManager.AddCar(newCar.GetComponent<IScoringObject>());
+            newCar.Starter(this, _allWaysContainer, currentCar);
+
+            return newCar;
+        }
+
+        public void CarDestinationReached(Vehicle Vehicle)
         {
             _active.Remove(Vehicle);
             Vehicle.gameObject.SetActive(false);
