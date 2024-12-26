@@ -43,7 +43,7 @@ namespace Script.Vehicles
                     vehicleController.SetState<VehicleGoState>();
                     break;
                 case LightState.Red:
-                    vehicleController.SetState<VehicleStopState>();
+                    //vehicleController.SetState<VehicleStopState>();
                     break;
                 case LightState.Yellow:
                     vehicleController.SetState<VehicleSlowDownState>();
@@ -57,7 +57,12 @@ namespace Script.Vehicles
         
         public void AssignNewPathContainer()
         {
-            WaypointContainer = allWaysContainer.AllWays[0];
+            vehicleController.StateController.InitializePath();
+
+            //the WaypointContainer is assigned in car manager and this code 
+            //was performing the same work second time and been causing the car spawn bug
+            
+            /*WaypointContainer = allWaysContainer.AllWays[0];
             float rangeToCurr = GetSquaredDistance(WaypointContainer.transform.position);
 
             foreach (var wayPointContainer in allWaysContainer.AllWays)
@@ -76,9 +81,9 @@ namespace Script.Vehicles
                     rangeToCurr = (WaypointContainer.transform.position - transform.position).sqrMagnitude;
                 }
             }
-            vehicleController.StateController.InitializePath();
+            vehicleController.StateController.InitializePath();*/
         }
-        
+
         private float GetSquaredDistance(Vector3 targetPosition)
         {
             return (targetPosition - transform.position).sqrMagnitude;

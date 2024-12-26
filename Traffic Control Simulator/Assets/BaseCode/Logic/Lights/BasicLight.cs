@@ -34,7 +34,7 @@ namespace BaseCode.Logic.Lights
         public void SetChangeoverState()
         {
             _lightMesh.material = _lightMats[^1];
-            PassStates(LightState.Yellow);
+            // PassStates(LightState.Yellow);
         }
 
         //updates and sets light state in order: green, red

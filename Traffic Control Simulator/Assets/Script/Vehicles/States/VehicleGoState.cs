@@ -20,14 +20,16 @@ namespace Script.Vehicles.States
         // parameters from data
         private float _speed;
         private float _rayDistance;
-        private LayerMask _carLayer = LayerMask.GetMask("Car"); // Ensure cars are on a "Car" layer
-
+        //private LayerMask _carLayer = LayerMask.GetMask("Car"); // Ensure cars are on a "Car" layer
+        private LayerMask _stopLayer = 0;
         // controllers
         private Transform CarTransform => VehicleController.Vehicle.transform;
         public VehicleController VehicleController { get; set; }
 
         public VehicleGoState(VehicleController vehicleController)
         {
+            _stopLayer += 1 << 7; //add car layer
+            _stopLayer += 1 << 10; //add stop line layer
             VehicleController = vehicleController;
             _carData = VehicleController.Vehicle.VehicleScriptableObject;
             _rayDistance = _carData.rayDistance;
@@ -70,17 +72,19 @@ namespace Script.Vehicles.States
         {
             Ray ray = new Ray(VehicleController.Vehicle.rayStartPoint.position, CarTransform.forward);
 
-            if (Physics.Raycast(ray, out var hit, _rayDistance,_carLayer))
+            if (Physics.Raycast(ray, out var hit, _rayDistance, _stopLayer))
             {
                 Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
                 
-                Vehicle hitVehicle = hit.collider.gameObject.GetComponent<Vehicle>();
-
-                if (AreTheyInIntersection(hitVehicle) && AreTheyUsingDifferentPath(hitVehicle))
+                if(hit.collider.TryGetComponent<Vehicle>(out Vehicle hitVehicle))
                 {
-                    Debug.Log("Game Is Over");
+                    if (AreTheyInIntersection(hitVehicle) && AreTheyUsingDifferentPath(hitVehicle))
+                        Debug.Log("Game Is Over");
+                    else if (VehicleController.Vehicle.CarLightState == LightState.Red)
+                        VehicleController.SetState<VehicleStopState>();
                 }
-                VehicleController.SetState<VehicleStopState>();
+                else if (VehicleController.Vehicle.CarLightState == LightState.Red)
+                    VehicleController.SetState<VehicleStopState>();
             }
             else
             {

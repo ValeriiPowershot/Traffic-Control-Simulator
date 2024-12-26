@@ -27,6 +27,7 @@ namespace BaseCode.Logic.Lights
         {
             if (!_interactCalled)
             {
+                _light.SetChangeoverState();
                 _interactCalled = true;
                 _switchTimer = Time.time + _light.lightData.SwitchDelay;
             }

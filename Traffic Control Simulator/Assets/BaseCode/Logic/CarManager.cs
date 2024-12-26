@@ -4,7 +4,6 @@ using Script.Vehicles;
 using System.Collections.Generic;
 using Script.ScriptableObject;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace BaseCode.Logic
 {
@@ -14,8 +13,8 @@ namespace BaseCode.Logic
         [SerializeField] private VehicleScriptableObject[] carSoObjects;
         [SerializeField] private AllWaysContainer _allWaysContainer;
         [Space]
-        [SerializeField] private int ACTIVE_CARS_COUNT = 5, MAX_CARS_COUNT = 7;
-        [SerializeField] private float TIME_TOSPAWN = 12f;
+        [SerializeField] private int _activeCarsCount= 5, _maxCarsCount = 7;
+        [SerializeField] private float _timeToSpawn;
         [SerializeField] private ScoringManager _scoreManager;
 
         private float _spawnTimer;
@@ -24,9 +23,9 @@ namespace BaseCode.Logic
 
         private void Update()
         {
-            if((_active.Count + _hided.Count) < MAX_CARS_COUNT)
+            if((_active.Count + _hided.Count) < _maxCarsCount)
             {
-                if(_active.Count < ACTIVE_CARS_COUNT && Time.time >= _spawnTimer)
+                if(_active.Count < _activeCarsCount && Time.time >= _spawnTimer)
                 {
                     print(_active.Count + _hided.Count);
                     SpawnNewCar();
@@ -36,7 +35,7 @@ namespace BaseCode.Logic
 
         private void SpawnNewCar()
         {
-            _spawnTimer = Time.time + TIME_TOSPAWN;
+            _spawnTimer = Time.time + _timeToSpawn;
             Vehicle newCar;
 
             if(_hided.Count > 0)
@@ -49,23 +48,24 @@ namespace BaseCode.Logic
             {
                 newCar = CreateNewCar();
             }
-            
+
+            //every car gets new position and path after recycle
+            WaypointContainer container = _allWaysContainer.AllWays[Random.Range(0, _allWaysContainer.AllWays.Length)];
+            newCar.transform.SetPositionAndRotation(container.roadPoints[0].point.transform.position, Quaternion.identity);
+            newCar.WaypointContainer = container;
+
             _active.Add(newCar);
             newCar.AssignNewPathContainer();
         }
 
         private Vehicle CreateNewCar()
         {
-            WaypointContainer container = _allWaysContainer.AllWays[Random.Range(0, _allWaysContainer.AllWays.Length)];
             VehicleScriptableObject currentCar = carSoObjects[Random.Range(0, carSoObjects.Length)];
-            
+
             GameObject createdCar = Instantiate(currentCar.vehiclePrefab,
-                container.roadPoints[0].point.transform.position, 
-                Quaternion.identity,
                 carHandler);
                 
             var newCar = createdCar.GetComponent<Vehicle>();
-            newCar.WaypointContainer = container;
 
             _scoreManager.AddCar(newCar.GetComponent<IScoringObject>());
             newCar.Starter(this, _allWaysContainer, currentCar);
