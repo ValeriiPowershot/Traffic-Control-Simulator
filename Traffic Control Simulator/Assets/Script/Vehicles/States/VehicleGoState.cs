@@ -51,16 +51,14 @@ namespace Script.Vehicles.States
             // we can implement a real fixupdate also, but i am not sure
             if (!HasWaypoints()) return;
             if (IsAtFinalWaypoint()) return;
-            
+            if (CheckForCollision()) return;
+
             AdjustSpeed();
             
             MoveTowardsWaypoint();
             RotateTowardsWaypoint();
             if (IsCloseToWaypoint())
                 ProceedToNextWaypoint();
-            
-            CheckForCollision();
-
         }
 
         public void MovementExit()
@@ -68,36 +66,48 @@ namespace Script.Vehicles.States
             
         }
 
-        private void CheckForCollision()
+        private bool CheckForCollision()
         {
             Ray ray = new Ray(VehicleController.Vehicle.rayStartPoint.position, CarTransform.forward);
 
-            if (Physics.Raycast(ray, out var hit, _rayDistance, _stopLayer))
+            if (Physics.Raycast(ray, out var hit, _rayDistance, _stopLayer)) // hit to stop or car
             {
                 Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
                 
-                if(hit.collider.TryGetComponent<Vehicle>(out Vehicle hitVehicle))
+                if(hit.collider.TryGetComponent(out BasicCar hitVehicle))
                 {
                     if (AreTheyInIntersection(hitVehicle) && AreTheyUsingDifferentPath(hitVehicle))
+                    {
                         Debug.Log("Game Is Over");
-                    else if (VehicleController.Vehicle.CarLightState == LightState.Red)
-                        VehicleController.SetState<VehicleStopState>();
-                }
-                else if (VehicleController.Vehicle.CarLightState == LightState.Red)
+                    }
                     VehicleController.SetState<VehicleStopState>();
+                    return true;
+                }
+
+                if (IsItRedLight())
+                {
+                    VehicleController.SetState<VehicleStopState>();
+                    return true;
+                }
             }
             else
             {
                 Debug.DrawRay(ray.origin, ray.direction * _rayDistance, Color.green);
             }
+
+            return false;
         }
 
-        private bool AreTheyUsingDifferentPath(Vehicle hitVehicle)
+        private bool IsItRedLight()
+        {
+            return VehicleController.Vehicle.CarLightState == LightState.Red;
+        }
+        private bool AreTheyUsingDifferentPath(BasicCar hitVehicle)
         {
             return hitVehicle.lightPlaceSave != VehicleController.Vehicle.lightPlaceSave;
         }
 
-        private bool AreTheyInIntersection(Vehicle hitVehicle)
+        private bool AreTheyInIntersection(BasicCar hitVehicle)
         {
             return hitVehicle.lightPlaceSave != LightPlace.None && VehicleController.Vehicle.lightPlaceSave != LightPlace.None;
         }
@@ -135,13 +145,18 @@ namespace Script.Vehicles.States
             Transform targetWaypoint = _waypoints[_currentWaypointIndex].point;
 
             Vector3 direction = (targetWaypoint.position - CarTransform.position).normalized;
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            CarTransform.rotation = Quaternion.RotateTowards(
-                CarTransform.rotation, 
-                targetRotation, 
-                _carData.RotationSpeed * Time.fixedDeltaTime
-            );
+
+            if (direction != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                CarTransform.rotation = Quaternion.RotateTowards(
+                    CarTransform.rotation, 
+                    targetRotation, 
+                    _carData.RotationSpeed * Time.fixedDeltaTime
+                );
+            }
         }
+
         private bool IsCloseToWaypoint()
         {
             Transform targetWaypoint = _waypoints[_currentWaypointIndex].point;

@@ -10,7 +10,7 @@ using UnityEngine.Serialization;
 namespace BaseCode.Logic.PathData
 {
     [ExecuteInEditMode]
-    public class Objects : MonoBehaviour
+    public class PathGenerationController : MonoBehaviour
     {
         public RoadsScriptableObject roadsSo;
         public AllWaysContainer allWaysContainer;
@@ -88,7 +88,8 @@ namespace BaseCode.Logic.PathData
         
         private void SpawnObject(RoadBase objectName)
         {
-            GameObject prefab = Instantiate(objectName.gameObject, transform);
+            GameObject prefab = (GameObject)PrefabUtility.InstantiatePrefab(objectName.gameObject, transform);
+
             prefab.SetActive(true);
             prefab.transform.position = clickedSelectedObject.transform.position + currentDirection * roadsSo.offset;
             prefab.transform.rotation = Quaternion.LookRotation(currentDirection);
