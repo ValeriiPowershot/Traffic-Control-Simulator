@@ -18,7 +18,7 @@ namespace Script.Vehicles
 
         public AllWaysContainer allWaysContainer;
         public Transform rayStartPoint;
-        
+        public Transform arrowIndicatorEndPoint;
         public WaypointContainer WaypointContainer { get; set; }
         public VehicleScriptableObject VehicleScriptableObject { get; set; }
 
@@ -33,9 +33,9 @@ namespace Script.Vehicles
         
         public void Update() => vehicleController.Update();
 
-        public override void PassLightState(LightState state, LightPlace lightPlace)
+        public override void PassLightState(LightState state)
         {
-            base.PassLightState(state,lightPlace);
+            base.PassLightState(state);
 
             switch (state)
             {
@@ -58,37 +58,7 @@ namespace Script.Vehicles
         public void AssignNewPathContainer()
         {
             vehicleController.StateController.InitializePath();
-
-            //the WaypointContainer is assigned in car manager and this code 
-            //was performing the same work second time and been causing the car spawn bug
-            
-            /*WaypointContainer = allWaysContainer.AllWays[0];
-            float rangeToCurr = GetSquaredDistance(WaypointContainer.transform.position);
-
-            foreach (var wayPointContainer in allWaysContainer.AllWays)
-            {
-                float rangeToNext = GetSquaredDistance(wayPointContainer.transform.position);
-                if (rangeToNext < rangeToCurr)
-                {
-                    WaypointContainer = wayPointContainer;
-                    rangeToCurr = GetSquaredDistance(WaypointContainer.transform.position);
-                }
-                else if (rangeToNext > rangeToCurr)
-                    continue;
-                else
-                {
-                    WaypointContainer = Random.value < 0.5f ? WaypointContainer : wayPointContainer;
-                    rangeToCurr = (WaypointContainer.transform.position - transform.position).sqrMagnitude;
-                }
-            }
-            vehicleController.StateController.InitializePath();*/
         }
-
-        private float GetSquaredDistance(Vector3 targetPosition)
-        {
-            return (targetPosition - transform.position).sqrMagnitude;
-        }
-
         public void DestinationReached()
         {
             CarManager.CarDestinationReached(this);

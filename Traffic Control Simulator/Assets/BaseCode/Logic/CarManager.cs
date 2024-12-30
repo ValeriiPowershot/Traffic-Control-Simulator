@@ -27,7 +27,7 @@ namespace BaseCode.Logic
             {
                 if(_active.Count < _activeCarsCount && Time.time >= _spawnTimer)
                 {
-                    print(_active.Count + _hided.Count);
+                   // print(_active.Count + _hided.Count); // spent 10 min to find this print 
                     SpawnNewCar();
                 }
             }

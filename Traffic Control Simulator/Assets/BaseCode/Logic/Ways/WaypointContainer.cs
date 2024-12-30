@@ -33,24 +33,6 @@ namespace BaseCode.Logic.Ways
                 }
             }
         }
-        
-        /*private void OnValidate()
-        {
-            List<Transform> childWaypoints = GetComponentsInChildren<Transform>()
-                .Where(t => t != transform)
-                .ToList();
-        
-            Waypoints = childWaypoints;
-        
-            SlowdownPointIndex = GetWaypointIndex(_slowdownPoint);
-            AccelerationPointIndex = GetWaypointIndex(_accelerationPoint);
-        }
-    
-        private int GetWaypointIndex(Transform target)
-        {
-            return Waypoints.IndexOf(target);
-        }*/
-
         public void OnDrawGizmos()
         {
             if(roadPoints.Count == 0)

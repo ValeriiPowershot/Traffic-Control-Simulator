@@ -96,6 +96,7 @@ namespace Script.Roads
             }
         }
         
+        
         public override void DrawArrowDirection()
         {
             
@@ -103,10 +104,11 @@ namespace Script.Roads
 
         public void OnTriggerExit(Collider other)
         {
-            if (other.TryGetComponent<Vehicle>(out var vehicle))
+            if (other.TryGetComponent<BasicCar>(out var vehicle))
             {
-                vehicle.ResetLightPlaceSave();
+                vehicle.ExitIntersection();
             }
+            
         }
 
     }

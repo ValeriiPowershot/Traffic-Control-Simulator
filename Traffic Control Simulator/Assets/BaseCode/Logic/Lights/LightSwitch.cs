@@ -8,7 +8,6 @@ namespace BaseCode.Logic.Lights
         private bool _interactCalled;
 
         private float _switchTimer;
-
         private void Awake()
         {
             _light = GetComponentInChildren<BasicLight>();

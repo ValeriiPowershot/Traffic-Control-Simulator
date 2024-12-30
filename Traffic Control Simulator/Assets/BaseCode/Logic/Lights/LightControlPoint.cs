@@ -13,7 +13,14 @@ namespace BaseCode.Logic.Lights
         {
             _parentLight = GetComponentInParent<BasicLight>();
         }
-
+        private void OnTriggerEnter(Collider other)
+        {
+            if ( pointType == LightPointType.Exit)
+            {
+                if (other.TryGetComponent(out BasicCar collidedCar))
+                    collidedCar.PassLightPlaceState(_parentLight.lightPlace);
+            }
+        }
         private void OnTriggerExit(Collider other)
         {
             if(pointType == LightPointType.Entry)

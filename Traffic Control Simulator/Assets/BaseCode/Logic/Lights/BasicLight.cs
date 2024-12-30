@@ -28,7 +28,6 @@ namespace BaseCode.Logic.Lights
         private List<BasicCar> _controlledCars = new List<BasicCar>();
 
         public LightScriptableObject lightData;
-
         public LightPlace lightPlace;
 
         public void SetChangeoverState()
@@ -49,7 +48,7 @@ namespace BaseCode.Logic.Lights
             if (!_controlledCars.Contains(NewCar))
             {
                 _controlledCars.Add(NewCar);
-                NewCar.PassLightState(LightState,lightPlace);
+                NewCar.PassLightState(LightState);
             }
         }
 
@@ -67,8 +66,8 @@ namespace BaseCode.Logic.Lights
         {
             foreach(var car in _controlledCars)
             {
-                car.PassLightState(State,lightPlace);
-            }
+                car.PassLightState(State);
+            }   
         }
 
         //The only way _lightIndex and _lightState should be managed

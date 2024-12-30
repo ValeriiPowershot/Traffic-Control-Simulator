@@ -5,22 +5,22 @@ using UnityEngine;
 
 namespace Script.Vehicles
 {
-    //Interface for all cars to be conrolled by the lights
     public class BasicCar : MonoBehaviour 
     {
         private CarManager _manager;
-
+        
+        public LightState _carLightState;
+        public LightPlace _lightPlaceSave;
+        
         public event Action LightExited;
-        
-        private LightState _carLightState;
-        public LightState CarLightState { get { return _carLightState; } }
 
-        public LightPlace lightPlaceSave;
-        
-        public virtual void PassLightState(LightState State, LightPlace lightPlace)
+        public virtual void PassLightState(LightState carLightState)
         {
-            _carLightState = State;
-            lightPlaceSave = lightPlace;
+            _carLightState = carLightState;
+        }
+        public virtual void PassLightPlaceState(LightPlace lightPlace)
+        {
+            _lightPlaceSave = lightPlace;
         }
 
         public virtual void ExitLightControl()
@@ -29,15 +29,23 @@ namespace Script.Vehicles
             LightExited?.Invoke(); //necessary for scoring system - (looked by tolga, its ok :D)
         }
 
-        public void ResetLightPlaceSave()  // i hated with this method
+        public void ExitIntersection()  
         {
-            lightPlaceSave = LightPlace.None;
+            _lightPlaceSave = LightPlace.None;
         }
-
+        
         public CarManager CarManager
         {
             get;
             set;
+        }
+        
+        public LightState CarLightState => _carLightState;
+
+        public LightPlace lightPlaceSave
+        {
+            get => _lightPlaceSave;
+            set => _lightPlaceSave = value;
         }
     }
 
