@@ -21,8 +21,7 @@ namespace Script.Vehicles.Controllers
             _states[typeof(VehicleStopState)] = new VehicleStopState(_vehicleController);
         }
         
-        public void Update() =>
-            _currentMovementState.MovementUpdate();
+        public void Update() => _currentMovementState.MovementUpdate();
 
         public void SetState<T>() where T : IVehicleState
         {

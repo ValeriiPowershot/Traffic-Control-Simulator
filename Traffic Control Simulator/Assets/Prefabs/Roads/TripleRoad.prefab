@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2246779615628856269}
   - component: {fileID: 7795140994106493444}
   m_Layer: 8
-  m_Name: Road T_Intersection_01
+  m_Name: TripleRoad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -100,20 +100,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27d796b198fa4ac39f5ccb843ffe938a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roadMesh: {fileID: 4300000, guid: 4026b0b37aa0fed4d95ed976da00e63f, type: 3}
   pointMask:
     serializedVersion: 2
     m_Bits: 512
   path: []
+  decelerationPoints: []
+  accelerationPoints: []
   onLeftPathPoints:
   - {fileID: 5063554724943440579}
   onRightPathPoints:
   - {fileID: 1554124614095018608}
-  rayDistance: 2
   pointDistance: 10
   startPoint: {fileID: 0}
   endPoint: {fileID: 0}
-  onForwardPathPoints:
-  - {fileID: 5495848753199117647}
   onForwardPathA:
   - {fileID: 5495848753199117647}
   - {fileID: 2107049899689813151}
@@ -4198,6 +4198,16 @@ PrefabInstance:
       propertyPath: lightPlace
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 3068391027519310935, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 63
+      objectReference: {fileID: 0}
+    - target: {fileID: 3068391027519310935, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.28
+      objectReference: {fileID: 0}
     - target: {fileID: 3363829688576596017, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4253,6 +4263,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Light (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 5528649351395624294, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_Name
+      value: CarCollector(Entry)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6976202028699165759, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 12.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6976202028699165759, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.28
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4293,6 +4318,16 @@ PrefabInstance:
         type: 3}
       propertyPath: lightPlace
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3068391027519310935, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 63
+      objectReference: {fileID: 0}
+    - target: {fileID: 3068391027519310935, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.28
       objectReference: {fileID: 0}
     - target: {fileID: 3363829688576596017, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
         type: 3}
@@ -4349,6 +4384,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Light (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 5528649351395624294, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_Name
+      value: CarCollector(Entry)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6976202028699165759, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 10.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6976202028699165759, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.28
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4389,6 +4439,16 @@ PrefabInstance:
         type: 3}
       propertyPath: lightPlace
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3068391027519310935, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 63
+      objectReference: {fileID: 0}
+    - target: {fileID: 3068391027519310935, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.28
       objectReference: {fileID: 0}
     - target: {fileID: 3363829688576596017, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
         type: 3}
@@ -4444,6 +4504,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Light (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5528649351395624294, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_Name
+      value: CarCollector(Entry)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6976202028699165759, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 9.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6976202028699165759, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.28
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

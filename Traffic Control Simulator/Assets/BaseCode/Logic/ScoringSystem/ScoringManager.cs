@@ -20,12 +20,12 @@ namespace BaseCode.Logic.ScoringSystem
 
         private void Awake()
         {
-            _scoringObjects.AddRange(_carsHandler.GetComponentsInChildren<IScoringObject>());
+            /*_scoringObjects.AddRange(_carsHandler.GetComponentsInChildren<IScoringObject>());
 
             foreach (var ScoringObj in _scoringObjects)
                 ScoringObj.Initialize(this);
 
-            ChangeScore(10);
+            ChangeScore(10);*/
         }
 
         public void AddCar(IScoringObject ScoringObj)

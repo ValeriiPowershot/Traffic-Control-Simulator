@@ -1,35 +1,38 @@
 using BaseCode.Logic.Lights;
 using UnityEngine;
 
-public class LightSwitch : MonoBehaviour, IInteractable
+namespace Script.Lights
 {
-    [SerializeField] private float _switchDelay;
-
-    private BasicLight _light;
-    private float _switchTimer;
-    private bool _interactCalled;
-
-    private void Awake()
+    public class LightSwitch : MonoBehaviour, IInteractable
     {
-        _light = GetComponentInChildren<BasicLight>();
-    }
+        [SerializeField] private float _switchDelay;
 
-    private void Update()
-    {
-        if(_interactCalled && Time.time > _switchTimer)
+        private BasicLight _light;
+        private float _switchTimer;
+        private bool _interactCalled;
+
+        private void Awake()
         {
-            _interactCalled = false;
-            _light.ChangeLight();
+            _light = GetComponentInChildren<BasicLight>();
         }
-    }
 
-    public void Interact()
-    {
-        if (!_interactCalled)
+        private void Update()
         {
-            _light.SetChangeoverState();
-            _interactCalled = true;
-            _switchTimer = Time.time + _switchDelay;
+            if(_interactCalled && Time.time > _switchTimer)
+            {
+                _interactCalled = false;
+                _light.ChangeLight();
+            }
+        }
+
+        public void Interact()
+        {
+            if (!_interactCalled)
+            {
+                _light.SetChangeoverState();
+                _interactCalled = true;
+                _switchTimer = Time.time + _switchDelay;
+            }
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 
-namespace BaseCode.Logic.CarMovement
+namespace BaseCode.Utilities.Generators
 {
+    // this script generate a curve and its point between a nd b points with c angle.
     public class SmoothCurveGenerator : MonoBehaviour
     {
         public Transform positionA;

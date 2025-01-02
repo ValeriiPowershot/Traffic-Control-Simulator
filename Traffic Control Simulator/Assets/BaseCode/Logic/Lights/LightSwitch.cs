@@ -8,7 +8,6 @@ namespace BaseCode.Logic.Lights
         private bool _interactCalled;
 
         private float _switchTimer;
-
         private void Awake()
         {
             _light = GetComponentInChildren<BasicLight>();
@@ -27,6 +26,7 @@ namespace BaseCode.Logic.Lights
         {
             if (!_interactCalled)
             {
+                _light.SetChangeoverState();
                 _interactCalled = true;
                 _switchTimer = Time.time + _light.lightData.SwitchDelay;
             }
