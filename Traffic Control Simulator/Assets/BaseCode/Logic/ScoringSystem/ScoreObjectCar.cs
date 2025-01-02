@@ -1,5 +1,6 @@
+using BaseCode.Logic.EntityHandler;
+using BaseCode.Logic.EntityHandler.Vehicles;
 using BaseCode.Logic.ScoringSystem;
-using Script.Vehicles;
 using UnityEngine;
 
 namespace Script.ScoringSystem
@@ -19,7 +20,7 @@ namespace Script.ScoringSystem
         [SerializeField] private Material good, medium, bad;
 
         private ScoringManager _manager;
-        private BasicCar _car;
+        private VehicleBase _car;
 
         private ScoreType _scoreType = ScoreType.Good;
         private Vector3 _prevPosition;
@@ -29,16 +30,16 @@ namespace Script.ScoringSystem
 
         private void Awake()
         {
-            _car = GetComponent<BasicCar>();
+            _car = GetComponent<VehicleBase>();
         }
 
         private void OnEnable()
         {
-            _car.LightExited += ExitLight;
+            _car.CarLightService.LightExited += ExitLight;
         }
         private void OnDisable()
         {
-            _car.LightExited -= ExitLight;
+            _car.CarLightService.LightExited -= ExitLight;
         }
 
         public void Initialize(ScoringManager Manager)
@@ -48,7 +49,7 @@ namespace Script.ScoringSystem
 
         public void Calculate(float DeltaTime)
         {
-            if (_car.CarLightState == LightState.Red)
+            if (_car.CarLightService.CarLightState == LightState.Red)
             {
                 if ((_prevPosition - transform.position).sqrMagnitude <= MIN_MOVING_RANGE * MIN_MOVING_RANGE)
                 {

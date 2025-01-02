@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Script.Vehicles.States;
+using BaseCode.Logic.EntityHandler.Vehicles.States;
 using UnityEngine;
 
 namespace BaseCode.Logic.Ways
 {
     public class WaypointContainer : MonoBehaviour
     {
-        public List<RoadPoint> roadPoints = new List<RoadPoint>();
+        public List<RoadPoint> roadPoints = new();
+        
         public void SetRoadPoints(List<Transform> waypoints,List<Transform> decelerationPoints,List<Transform> accelerationPoints)
         {
             foreach (var waypoint in waypoints)
@@ -33,6 +34,7 @@ namespace BaseCode.Logic.Ways
                 }
             }
         }
+        
         public void OnDrawGizmos()
         {
             if(roadPoints.Count == 0)

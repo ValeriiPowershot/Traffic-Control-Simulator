@@ -13,6 +13,5 @@ namespace BaseCode.Infrastructure.Factory
 
         public GameObject CreateHUD() =>
             _assets.Instantiate(AssetPath.HUDPath);
-        
     }
 }

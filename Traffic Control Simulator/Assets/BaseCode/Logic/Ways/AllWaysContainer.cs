@@ -1,11 +1,13 @@
-    using UnityEngine;
+using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Ways
 {
     public class AllWaysContainer : MonoBehaviour
     {
-        public WaypointContainer[] AllWays;
-        
-        
+        [FormerlySerializedAs("AllWays")] 
+        public WaypointContainer[] allWays;
     }
+    
+    
 }

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using BaseCode.Infrastructure.ScriptableObject;
 using BaseCode.Logic;
+using BaseCode.Logic.EntityHandler.Roads;
 using BaseCode.Logic.PathData;
 using BaseCode.Logic.Ways;
-using Script.Roads;
-using Script.ScriptableObject;
 using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEditor;
 using UnityEngine;
