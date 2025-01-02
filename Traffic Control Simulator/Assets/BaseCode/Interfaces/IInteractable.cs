@@ -1,7 +1,10 @@
 //For all objects player can with
 
-public interface IInteractable
+namespace BaseCode.Interfaces
 {
-    //called once when player taps on the object
-    public void Interact();
+    public interface IInteractable
+    {
+        //called once when player taps on the object
+        public void Interact();
+    }
 }
