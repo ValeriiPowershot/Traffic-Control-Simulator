@@ -15,8 +15,9 @@ namespace Script.Vehicles
     public class Vehicle : BasicCar
     {
         [SerializeField] private VehicleController vehicleController;
-
-        public AllWaysContainer allWaysContainer;
+        [SerializeField] private GameObject _turnLight;
+        [SerializeField] private Transform _rightTurn, _leftTurn;
+        //public AllWaysContainer allWaysContainer;
         public Transform rayStartPoint;
         public Transform arrowIndicatorEndPoint;
         public WaypointContainer WaypointContainer { get; set; }
@@ -24,14 +25,14 @@ namespace Script.Vehicles
 
         public void Starter(CarManager Manager, AllWaysContainer Container, VehicleScriptableObject currentCar)
         {
-            allWaysContainer = Container;
+            //allWaysContainer = Container;
             CarManager = Manager;
             VehicleScriptableObject = currentCar;
             
             vehicleController.Starter(this);
         }
         
-        public void Update() => vehicleController.Update();
+        public virtual void Update() => vehicleController.Update();
 
         public override void PassLightState(LightState state)
         {
@@ -55,13 +56,42 @@ namespace Script.Vehicles
             }
         }
         
-        public void AssignNewPathContainer()
+        public virtual void AssignNewPathContainer()
         {
             vehicleController.StateController.InitializePath();
         }
-        public void DestinationReached()
+        public virtual void DestinationReached()
         {
             CarManager.CarDestinationReached(this);
         }
+
+        public void ShowTurn(TurnType TurnType)
+        {
+            switch (TurnType)
+            {
+                case TurnType.None:
+                    _turnLight.SetActive(false);
+                    break;
+                case TurnType.Right:
+                    SetTurnLight(_rightTurn.position);
+                    break;
+                case TurnType.Left:
+                    SetTurnLight(_leftTurn.position);
+                    break;
+            }
+        }
+
+        private void SetTurnLight(Vector3 pos)
+        {
+            _turnLight.transform.position = pos;
+            _turnLight.SetActive(true);
+        }
+    }
+
+    public enum TurnType
+    {
+        None,
+        Right,
+        Left,
     }
 }

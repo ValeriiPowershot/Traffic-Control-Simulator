@@ -25,6 +25,8 @@ namespace Script.Vehicles.States
         // controllers
         private Transform CarTransform => VehicleController.Vehicle.transform;
         public VehicleController VehicleController { get; set; }
+        private const float TURN_ANGLE = 0.5f;
+        private const int CHECK_COUNT = 12;
 
         public VehicleGoState(VehicleController vehicleController)
         {
@@ -168,22 +170,48 @@ namespace Script.Vehicles.States
             }
         }
 
-
         private bool IsCloseToWaypoint()
         {
             Transform targetWaypoint = _waypoints[_currentWaypointIndex].point;
 
             return Vector3.Distance(CarTransform.position, targetWaypoint.position) < 1f;
         }
+
         private void ProceedToNextWaypoint()
         {
             _currentWaypointIndex++;
+
+            CheckForTurn();
+
             if (_currentWaypointIndex >= _waypoints.Count)
             {
                 VehicleController.Vehicle.DestinationReached(); 
                 _currentWaypointIndex = 0;
                 CarTransform.position = _waypoints[_currentWaypointIndex].point.position;
             }
+        }
+
+        private void CheckForTurn()
+        {
+            int i = 0;
+            if (_currentWaypointIndex + CHECK_COUNT < _waypoints.Count)
+                i = _currentWaypointIndex + CHECK_COUNT;
+            else
+                i = _waypoints.Count - 1;
+
+            Vector3 pointing = _waypoints[i].point.position - VehicleController.Vehicle.transform.position;
+            pointing.Normalize();
+            pointing -= VehicleController.Vehicle.transform.forward * 0.9f;
+            pointing.Normalize();
+
+            float dot = Vector3.Dot(pointing, VehicleController.Vehicle.transform.right);
+
+            if (dot > TURN_ANGLE)
+                VehicleController.Vehicle.ShowTurn(TurnType.Right);
+            else if (dot < -TURN_ANGLE)
+                VehicleController.Vehicle.ShowTurn(TurnType.Left);
+            else
+                VehicleController.Vehicle.ShowTurn(TurnType.None);
         }
     }
     

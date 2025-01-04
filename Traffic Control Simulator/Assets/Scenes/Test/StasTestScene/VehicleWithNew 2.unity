@@ -38,6 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
+  m_IndirectSpecularColor: {r: 0.18028355, g: 0.22571374, b: 0.30692255, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2733,10 +2734,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   carHandler: {fileID: 2116034432}
   carSoObjects:
+  - {fileID: 11400000, guid: 701c57607ed30844eb60337c4985ee47, type: 2}
   - {fileID: 11400000, guid: a1a445e1d8dea484993ed49660c1c741, type: 2}
   _allWaysContainer: {fileID: 1965856750}
-  _activeCarsCount: 15
-  _maxCarsCount: 20
+  _activeCarsCount: 3
+  _maxCarsCount: 5
   _timeToSpawn: 1.5
   _scoreManager: {fileID: 1102048019}
 --- !u!1 &2116034431
