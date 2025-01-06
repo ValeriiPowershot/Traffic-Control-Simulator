@@ -28,7 +28,8 @@ namespace BaseCode.Logic.Vehicles
             vehicleController.Starter(this);
         }
         
-        public virtual void Update() => vehicleController.Update();
+        public virtual void Update()
+            => vehicleController.Update();
 
         public override void PassLightState(LightState state)
         {
@@ -56,6 +57,7 @@ namespace BaseCode.Logic.Vehicles
         {
             vehicleController.StateController.InitializePath();
         }
+        
         public virtual void DestinationReached()
         {
             CarManager.CarDestinationReached(this);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BaseCode.Infrastructure;
 using BaseCode.Logic.Lights;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Controllers;
@@ -30,8 +31,8 @@ namespace BaseCode.Logic.Vehicles.States
 
         public VehicleGoState(VehicleController vehicleController)
         {
-            _stopLayer += 1 << 7; //add car layer
-            _stopLayer += 1 << 10; //add stop line layer
+            _stopLayer += Layers.Car;
+            _stopLayer += Layers.StopLine;
             VehicleController = vehicleController;
             _carData = VehicleController.Vehicle.VehicleScriptableObject;
             _rayDistance = _carData.rayDistance;
@@ -64,8 +65,6 @@ namespace BaseCode.Logic.Vehicles.States
                 ProceedToNextWaypoint();
  
         }
-
-      
 
         public void MovementExit()
         {
