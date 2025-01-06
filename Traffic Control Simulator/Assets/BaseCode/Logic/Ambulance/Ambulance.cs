@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using BaseCode.Logic.Vehicles;
 using UnityEngine;
-using Script.Vehicles;
 
 namespace BaseCode.Logic.Ambulance
 {

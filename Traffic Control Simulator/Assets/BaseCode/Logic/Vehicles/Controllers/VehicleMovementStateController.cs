@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using BaseCode.Logic.Ways;
-using Script.Vehicles.States;
+using BaseCode.Logic.Vehicles.States;
 using UnityEngine;
 
-namespace Script.Vehicles.Controllers
+namespace BaseCode.Logic.Vehicles.Controllers
 {
     public class VehicleMovementStateController
     {

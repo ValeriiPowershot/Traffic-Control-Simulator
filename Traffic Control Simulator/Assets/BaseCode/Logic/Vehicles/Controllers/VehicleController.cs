@@ -1,8 +1,7 @@
 using System;
-using BaseCode.Logic.Ways;
-using Script.Vehicles.States;
+using BaseCode.Logic.Vehicles.States;
 
-namespace Script.Vehicles.Controllers
+namespace BaseCode.Logic.Vehicles.Controllers
 {
     [Serializable]
     public class VehicleController 

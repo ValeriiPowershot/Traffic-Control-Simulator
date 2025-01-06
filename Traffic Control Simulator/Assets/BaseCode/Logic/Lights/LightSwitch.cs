@@ -1,3 +1,4 @@
+using BaseCode.Interfaces;
 using UnityEngine;
 
 namespace BaseCode.Logic.Lights

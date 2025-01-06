@@ -1,9 +1,8 @@
 using System;
-using BaseCode.Logic;
 using BaseCode.Logic.Lights;
 using UnityEngine;
 
-namespace Script.Vehicles
+namespace BaseCode.Logic.Vehicles
 {
     public class BasicCar : MonoBehaviour 
     {

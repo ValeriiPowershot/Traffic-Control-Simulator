@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using BaseCode.Logic.Lights;
+using BaseCode.Logic.ScriptableObject;
+using BaseCode.Logic.Vehicles.Controllers;
 using BaseCode.Logic.Ways;
-using Script.ScriptableObject;
-using Script.Vehicles.Controllers;
 using UnityEngine;
 
-namespace Script.Vehicles.States
+namespace BaseCode.Logic.Vehicles.States
 {
     public class VehicleGoState : IVehicleState
     {

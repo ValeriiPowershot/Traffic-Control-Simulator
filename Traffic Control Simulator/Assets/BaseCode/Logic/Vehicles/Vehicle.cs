@@ -1,16 +1,12 @@
 using System;
-using BaseCode.Logic;
-using BaseCode.Logic.Lights;
+using BaseCode.Logic.ScriptableObject;
+using BaseCode.Logic.Vehicles.Controllers;
+using BaseCode.Logic.Vehicles.States;
 using BaseCode.Logic.Ways;
-using Script.ScriptableObject;
-using Script.Vehicles.Controllers;
-using Script.Vehicles.States;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 
 
-namespace Script.Vehicles
+namespace BaseCode.Logic.Vehicles
 {
     public class Vehicle : BasicCar
     {

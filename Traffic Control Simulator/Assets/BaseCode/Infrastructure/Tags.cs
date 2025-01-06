@@ -1,4 +1,4 @@
-﻿namespace Infrastructure
+﻿namespace BaseCode.Infrastructure
 {
     public static class Tags
     {

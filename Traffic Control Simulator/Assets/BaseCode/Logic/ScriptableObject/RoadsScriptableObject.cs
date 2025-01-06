@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Script.Roads;
+using BaseCode.Logic.Roads;
 using UnityEngine;
 
-namespace Script.ScriptableObject
+namespace BaseCode.Logic.ScriptableObject
 {
     [CreateAssetMenu(fileName = "RoadsSo", menuName = "So/RoadsSo", order = 0)]
     public class RoadsScriptableObject : UnityEngine.ScriptableObject

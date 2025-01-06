@@ -1,8 +1,8 @@
-using BaseCode.Logic.ScoringSystem;
-using Script.Vehicles;
+using BaseCode.Interfaces;
+using BaseCode.Logic.Vehicles;
 using UnityEngine;
 
-namespace Script.ScoringSystem
+namespace BaseCode.Logic.ScoringSystem
 {
     public class ScoreObjectCar : MonoBehaviour, IScoringObject
     {
@@ -62,7 +62,7 @@ namespace Script.ScoringSystem
                     }
 
                     else if (_scoreType == ScoreType.Medium && 
-                    _waitingTime - ACCEPTABLE_WAITING_TIME >= TIME_TO_WORST_SCORE)
+                             _waitingTime - ACCEPTABLE_WAITING_TIME >= TIME_TO_WORST_SCORE)
                     {
                         scoreShower.material = bad;
                         _scoreType = ScoreType.Bad;
@@ -94,12 +94,12 @@ namespace Script.ScoringSystem
             _manager.ChangeScore(ResultPoints);
         }
     }
-}
 
-public enum ScoreType
-{
-    None,
-    Good,
-    Medium,
-    Bad,
+    public enum ScoreType
+    {
+        None,
+        Good,
+        Medium,
+        Bad,
+    }
 }

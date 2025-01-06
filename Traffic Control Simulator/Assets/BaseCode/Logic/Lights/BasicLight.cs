@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Script.ScriptableObject;
-using Script.Vehicles;
+using BaseCode.Logic.ScriptableObject;
+using BaseCode.Logic.Vehicles;
 using UnityEngine;
 
 //Basic class for all lights

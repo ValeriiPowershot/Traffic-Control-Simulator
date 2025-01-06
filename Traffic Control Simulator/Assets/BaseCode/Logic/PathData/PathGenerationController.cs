@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using BaseCode.Logic.Roads;
+using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Ways;
-using Script.Roads;
-using Script.ScriptableObject;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;

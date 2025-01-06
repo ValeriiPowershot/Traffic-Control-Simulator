@@ -1,5 +1,5 @@
 using System;
-using Script.Vehicles;
+using BaseCode.Logic.Vehicles;
 using UnityEngine;
 
 namespace BaseCode.Logic.Lights

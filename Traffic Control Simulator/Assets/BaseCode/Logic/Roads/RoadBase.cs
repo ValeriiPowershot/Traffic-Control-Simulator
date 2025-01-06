@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Script.Roads
+namespace BaseCode.Logic.Roads
 {
     public class RoadBase : MonoBehaviour
     {

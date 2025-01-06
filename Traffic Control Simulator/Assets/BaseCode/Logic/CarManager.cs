@@ -1,8 +1,9 @@
 using BaseCode.Logic.ScoringSystem;
 using BaseCode.Logic.Ways;
-using Script.Vehicles;
 using System.Collections.Generic;
-using Script.ScriptableObject;
+using BaseCode.Interfaces;
+using BaseCode.Logic.ScriptableObject;
+using BaseCode.Logic.Vehicles;
 using UnityEngine;
 
 namespace BaseCode.Logic
