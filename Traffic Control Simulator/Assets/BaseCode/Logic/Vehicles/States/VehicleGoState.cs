@@ -31,8 +31,8 @@ namespace BaseCode.Logic.Vehicles.States
 
         public VehicleGoState(VehicleController vehicleController)
         {
-            _stopLayer += Layers.Car;
-            _stopLayer += Layers.StopLine;
+            _stopLayer += 1 << 7;
+            _stopLayer += 1 << 10;
             VehicleController = vehicleController;
             _carData = VehicleController.Vehicle.VehicleScriptableObject;
             _rayDistance = _carData.rayDistance;
@@ -75,7 +75,7 @@ namespace BaseCode.Logic.Vehicles.States
         {
             Ray ray = new Ray(VehicleController.Vehicle.rayStartPoint.position, CarTransform.forward);
 
-            if (Physics.Raycast(ray, out var hit, _rayDistance, _stopLayer)) // hit to stop or car
+            if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _stopLayer)) // hit to stop or car
             {
                 Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
                 

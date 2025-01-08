@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using BaseCode.Logic.Vehicles;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Ambulance
 {
@@ -8,18 +9,19 @@ namespace BaseCode.Logic.Ambulance
     {
         [SerializeField] private GameObject pointer;
         [SerializeField] private float signsDist;
+        [Range(0, 16)] [SerializeField] private float _arriveDelay = 0f;
+
 
         private List<GameObject> arrows = new List<GameObject>();
         private List<GameObject> hiddenArrows = new();
 
         private float arriveTime;
-        private const float ARRIVE_DELAY = 3f;
         private bool canArrive;
 
         public override void AssignNewPathContainer()
         {
             canArrive = true;
-            arriveTime = Time.time + ARRIVE_DELAY;
+            arriveTime = Time.time + _arriveDelay;
 
             base.AssignNewPathContainer();
 
