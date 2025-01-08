@@ -22,17 +22,16 @@ namespace BaseCode.Editor.CarCreation
         private int _timeToWorstScore;
     
         private string _prefabSavePath = "Assets/Prefabs/Vehicles";
+        private string _prefabSaveName;
 
         [MenuItem("Window/Vehicle Prefab Creator")]
-        public static void ShowWindow()
-        {
+        public static void ShowWindow() =>
             GetWindow<VehiclePrefabCreator>("Vehicle Prefab Creator");
-        }
 
         private void OnGUI()
         {
             GUILayout.Space(10);
-            GUILayout.Label("🚗 Vehicle Prefab Creator 🚗", EditorStyles.boldLabel);
+            GUILayout.Label("Vehicle Prefab Creator", EditorStyles.boldLabel);
             GUILayout.Space(10);
 
             // Section 1
@@ -71,9 +70,18 @@ namespace BaseCode.Editor.CarCreation
         
             // Section 4
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-            GUILayout.Label("Step 4: Save Settings", EditorStyles.boldLabel);
+            GUILayout.Label("Step 4: Path Settings", EditorStyles.boldLabel);
             _prefabSavePath = EditorGUILayout.TextField("Prefab Save Path", _prefabSavePath);
             GUILayout.Label("Path where the prefab will be saved. Default: 'Assets/Prefabs/Vehicles'.", EditorStyles.wordWrappedLabel);
+            EditorGUILayout.EndVertical();
+
+            GUILayout.Space(20);
+            
+            // Section 5
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            GUILayout.Label("Step 5: Name Settings", EditorStyles.boldLabel);
+            _prefabSaveName = EditorGUILayout.TextField("Prefab Save Name", _prefabSaveName);
+            GUILayout.Label("The name of the prefab will be called. Default: 'vehicleObject.name + .prefab.", EditorStyles.wordWrappedLabel);
             EditorGUILayout.EndVertical();
 
             GUILayout.Space(20);
@@ -81,10 +89,10 @@ namespace BaseCode.Editor.CarCreation
             // CreateButton
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("🛠️ Create Vehicle Prefab", GUILayout.Width(250), GUILayout.Height(40)))
-            {
+            
+            if (GUILayout.Button("Create Vehicle Prefab", GUILayout.Width(250), GUILayout.Height(40))) 
                 CreateVehiclePrefab();
-            }
+            
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
         }
@@ -109,6 +117,7 @@ namespace BaseCode.Editor.CarCreation
 
             EditorUtility.DisplayDialog("Success", "Vehicle prefab created and saved to: " + _prefabSavePath, "OK");
         }
+        
         private GameObject ParentObjectCreating()
         {
             GameObject vehicleObject = Instantiate(_carModelPrefab);
@@ -190,19 +199,18 @@ namespace BaseCode.Editor.CarCreation
             }
         }
 
-        private Transform FindChildByName(Transform parent, string name)
-        {
-            return parent.Cast<Transform>().FirstOrDefault(child => child.name == name);
-        }
-    
+        private Transform FindChildByName(Transform parent, string objectName) =>
+            parent.Cast<Transform>().FirstOrDefault(child => child.name == objectName);
+
         private void SaveAsPrefab(GameObject vehicleObject)
         {
-            if (!Directory.Exists(_prefabSavePath))
-            {
+            if (!Directory.Exists(_prefabSavePath)) 
                 Directory.CreateDirectory(_prefabSavePath);
-            }
 
-            string filePath = System.IO.Path.Combine(_prefabSavePath, vehicleObject.name + ".prefab");
+            string filePath = _prefabSaveName == null 
+                ? System.IO.Path.Combine(_prefabSavePath, vehicleObject.name + ".prefab") 
+                : System.IO.Path.Combine(_prefabSavePath, _prefabSaveName + ".prefab");
+            
             PrefabUtility.SaveAsPrefabAsset(vehicleObject, filePath);
         }
     }
