@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Script.ScriptableObject
+namespace BaseCode.Logic.ScriptableObject
 {
     [CreateAssetMenu(fileName = "Vehicle", menuName = "So/Vehicle", order = 0)]
     public class VehicleScriptableObject : UnityEngine.ScriptableObject

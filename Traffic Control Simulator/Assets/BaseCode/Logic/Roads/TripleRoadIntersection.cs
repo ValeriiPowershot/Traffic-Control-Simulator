@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using BaseCode.Logic.Lights;
-using Script.Vehicles;
+using BaseCode.Logic.Vehicles;
 using UnityEngine;
 
-namespace Script.Roads
+namespace BaseCode.Logic.Roads
 {
     public class TripleRoadIntersection : RoadBase
     {

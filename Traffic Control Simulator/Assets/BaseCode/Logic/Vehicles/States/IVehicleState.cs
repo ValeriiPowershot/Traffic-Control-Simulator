@@ -1,6 +1,6 @@
-using Script.Vehicles.Controllers;
+using BaseCode.Logic.Vehicles.Controllers;
 
-namespace Script.Vehicles.States
+namespace BaseCode.Logic.Vehicles.States
 {
     public interface IVehicleState
     {

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Logic
+namespace BaseCode.Logic
 {
   public class LoadingCurtain : MonoBehaviour
   {

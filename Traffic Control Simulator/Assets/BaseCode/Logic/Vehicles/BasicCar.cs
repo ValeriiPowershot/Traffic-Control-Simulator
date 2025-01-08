@@ -1,16 +1,15 @@
 using System;
-using BaseCode.Logic;
 using BaseCode.Logic.Lights;
 using UnityEngine;
 
-namespace Script.Vehicles
+namespace BaseCode.Logic.Vehicles
 {
     public class BasicCar : MonoBehaviour 
     {
         private CarManager _manager;
         
-        public LightState _carLightState;
-        public LightPlace _lightPlaceSave;
+        private LightState _carLightState;
+        private LightPlace _lightPlaceSave;
         
         public event Action LightExited;
 

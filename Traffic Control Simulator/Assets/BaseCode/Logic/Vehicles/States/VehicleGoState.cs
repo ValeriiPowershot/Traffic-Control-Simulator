@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using BaseCode.Infrastructure;
 using BaseCode.Logic.Lights;
+using BaseCode.Logic.ScriptableObject;
+using BaseCode.Logic.Vehicles.Controllers;
 using BaseCode.Logic.Ways;
-using Script.ScriptableObject;
-using Script.Vehicles.Controllers;
 using UnityEngine;
 
-namespace Script.Vehicles.States
+namespace BaseCode.Logic.Vehicles.States
 {
     public class VehicleGoState : IVehicleState
     {
@@ -30,8 +31,8 @@ namespace Script.Vehicles.States
 
         public VehicleGoState(VehicleController vehicleController)
         {
-            _stopLayer += 1 << 7; //add car layer
-            _stopLayer += 1 << 10; //add stop line layer
+            _stopLayer += 1 << 7;
+            _stopLayer += 1 << 10;
             VehicleController = vehicleController;
             _carData = VehicleController.Vehicle.VehicleScriptableObject;
             _rayDistance = _carData.rayDistance;
@@ -65,8 +66,6 @@ namespace Script.Vehicles.States
  
         }
 
-      
-
         public void MovementExit()
         {
             
@@ -74,9 +73,9 @@ namespace Script.Vehicles.States
 
         private bool CheckForCollision()
         {
-            Ray ray = new Ray(VehicleController.Vehicle.rayStartPoint.position, CarTransform.forward);
+            Ray ray = new Ray(VehicleController.Vehicle.RayStartPoint.position, CarTransform.forward);
 
-            if (Physics.Raycast(ray, out var hit, _rayDistance, _stopLayer)) // hit to stop or car
+            if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _stopLayer)) // hit to stop or car
             {
                 Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
                 
@@ -161,12 +160,12 @@ namespace Script.Vehicles.States
                     _carData.RotationSpeed * Time.fixedDeltaTime
                 );
 
-                Vector3 arrowForward = (_endPoint.position - VehicleController.Vehicle.arrowIndicatorEndPoint.position).normalized;
+                Vector3 arrowForward = (_endPoint.position - VehicleController.Vehicle.ArrowIndicatorEndPoint.position).normalized;
                 Quaternion arrowRotation = Quaternion.LookRotation(arrowForward);
         
                 arrowRotation = Quaternion.Euler(arrowRotation.eulerAngles.x, arrowRotation.eulerAngles.y, 0);
 
-                VehicleController.Vehicle.arrowIndicatorEndPoint.rotation = arrowRotation;
+                VehicleController.Vehicle.ArrowIndicatorEndPoint.rotation = arrowRotation;
             }
         }
 
