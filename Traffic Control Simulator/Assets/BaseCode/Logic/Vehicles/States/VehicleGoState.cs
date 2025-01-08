@@ -73,7 +73,7 @@ namespace BaseCode.Logic.Vehicles.States
 
         private bool CheckForCollision()
         {
-            Ray ray = new Ray(VehicleController.Vehicle.rayStartPoint.position, CarTransform.forward);
+            Ray ray = new Ray(VehicleController.Vehicle.RayStartPoint.position, CarTransform.forward);
 
             if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _stopLayer)) // hit to stop or car
             {
@@ -160,12 +160,12 @@ namespace BaseCode.Logic.Vehicles.States
                     _carData.RotationSpeed * Time.fixedDeltaTime
                 );
 
-                Vector3 arrowForward = (_endPoint.position - VehicleController.Vehicle.arrowIndicatorEndPoint.position).normalized;
+                Vector3 arrowForward = (_endPoint.position - VehicleController.Vehicle.ArrowIndicatorEndPoint.position).normalized;
                 Quaternion arrowRotation = Quaternion.LookRotation(arrowForward);
         
                 arrowRotation = Quaternion.Euler(arrowRotation.eulerAngles.x, arrowRotation.eulerAngles.y, 0);
 
-                VehicleController.Vehicle.arrowIndicatorEndPoint.rotation = arrowRotation;
+                VehicleController.Vehicle.ArrowIndicatorEndPoint.rotation = arrowRotation;
             }
         }
 

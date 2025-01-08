@@ -4,6 +4,7 @@ using BaseCode.Logic.Vehicles.Controllers;
 using BaseCode.Logic.Vehicles.States;
 using BaseCode.Logic.Ways;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 
 namespace BaseCode.Logic.Vehicles
@@ -11,11 +12,12 @@ namespace BaseCode.Logic.Vehicles
     public class Vehicle : BasicCar
     {
         [SerializeField] private VehicleController vehicleController;
-        [SerializeField] private GameObject _turnLight;
-        [SerializeField] private Transform _rightTurn, _leftTurn;
+        public GameObject TurnLight;
+        public Transform RightTurn;
+        public Transform LeftTurn;
         //public AllWaysContainer allWaysContainer;
-        public Transform rayStartPoint;
-        public Transform arrowIndicatorEndPoint;
+        public Transform RayStartPoint;
+        public Transform ArrowIndicatorEndPoint;
         public WaypointContainer WaypointContainer { get; set; }
         public VehicleScriptableObject VehicleScriptableObject { get; set; }
 
@@ -68,21 +70,21 @@ namespace BaseCode.Logic.Vehicles
             switch (TurnType)
             {
                 case TurnType.None:
-                    _turnLight.SetActive(false);
+                    TurnLight.SetActive(false);
                     break;
                 case TurnType.Right:
-                    SetTurnLight(_rightTurn.position);
+                    SetTurnLight(RightTurn.position);
                     break;
                 case TurnType.Left:
-                    SetTurnLight(_leftTurn.position);
+                    SetTurnLight(LeftTurn.position);
                     break;
             }
         }
 
         private void SetTurnLight(Vector3 pos)
         {
-            _turnLight.transform.position = pos;
-            _turnLight.SetActive(true);
+            TurnLight.transform.position = pos;
+            TurnLight.SetActive(true);
         }
     }
 

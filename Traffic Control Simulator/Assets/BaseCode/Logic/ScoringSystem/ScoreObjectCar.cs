@@ -1,22 +1,23 @@
 using BaseCode.Interfaces;
 using BaseCode.Logic.Vehicles;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.ScoringSystem
 {
     public class ScoreObjectCar : MonoBehaviour, IScoringObject
     {
-        [SerializeField] private float _acceptableWaitingTime = 1f;
+        public float AcceptableWaitingTime = 1f;
         [Tooltip("Amount of points player will gain in best scenario (for this certain car)")]
-        [SerializeField] private float _successPoints;
+        public float SuccessPoints;
         [Tooltip("(Negative value) this amount of points player will lose in worst scenario (for this certain car)")]
-        [SerializeField] private float _failPoints;
+        public float FailPoints;
         [Tooltip("Amount of time have to pass after acceptable time runs out to reach worst scenario")]
-        [SerializeField] private float _timeToWorstScore;
+        public float TimeToWorstScore;
 
         //temporary 
-        [SerializeField] private MeshRenderer _indicatorOfScore;
-        [SerializeField] private ScoringMaterials _materials;
+        public MeshRenderer IndicatorOfScore;
+        public ScoringMaterials ScoreMaterialsComponent;
 
         private ScoringManager _manager;
         private BasicCar _car;
@@ -48,16 +49,16 @@ namespace BaseCode.Logic.ScoringSystem
                     _waitingTime += DeltaTime;
 
                     if (_scoreType == ScoreType.Good && 
-                        _waitingTime >= _acceptableWaitingTime)
+                        _waitingTime >= AcceptableWaitingTime)
                     {
-                        _indicatorOfScore.material = _materials.Neutral;
+                        IndicatorOfScore.material = ScoreMaterialsComponent.Neutral;
                         _scoreType = ScoreType.Neuteral;
                     }
 
                     else if (_scoreType == ScoreType.Neuteral && 
-                             _waitingTime - _acceptableWaitingTime >= _timeToWorstScore)
+                             _waitingTime - AcceptableWaitingTime >= TimeToWorstScore)
                     {
-                        _indicatorOfScore.material = _materials.Bad;
+                        IndicatorOfScore.material = ScoreMaterialsComponent.Bad;
                         _scoreType = ScoreType.Bad;
                     }
                 }
@@ -67,21 +68,21 @@ namespace BaseCode.Logic.ScoringSystem
 
         private void ExitLight()
         {
-            float ResultPoints = _successPoints;
+            float ResultPoints = SuccessPoints;
 
             //Cars waited more than acceptable
             //player losses points
-            if(_waitingTime > _acceptableWaitingTime)
+            if(_waitingTime > AcceptableWaitingTime)
             {
-                float UnAcceptWaitTime = _waitingTime - _acceptableWaitingTime;
+                float UnAcceptWaitTime = _waitingTime - AcceptableWaitingTime;
                 //even if cars waited more than acceptable player can gain points
                 //if was fast enough
-                float Ratio = (UnAcceptWaitTime / _timeToWorstScore) < 1 ? (UnAcceptWaitTime / _timeToWorstScore) : 1;
+                float Ratio = (UnAcceptWaitTime / TimeToWorstScore) < 1 ? (UnAcceptWaitTime / TimeToWorstScore) : 1;
                 //reaching TIME_TO_WORST_SCORE leads to losing FAIL_POINTS amount of points
-                ResultPoints += (_failPoints - _successPoints) * Ratio;
+                ResultPoints += (FailPoints - SuccessPoints) * Ratio;
             }
             _waitingTime = 0f;
-            _indicatorOfScore.material = _materials.Good;
+            IndicatorOfScore.material = ScoreMaterialsComponent.Good;
             _scoreType = ScoreType.Good;
 
             _manager.ChangeScore(ResultPoints);
