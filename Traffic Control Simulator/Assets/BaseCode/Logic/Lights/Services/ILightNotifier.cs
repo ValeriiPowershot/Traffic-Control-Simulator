@@ -1,6 +1,7 @@
-using BaseCode.Logic.Vehicles;
+using LightState = BaseCode.Logic.Vehicles.Vehicles.LightState;
+using VehicleBase = BaseCode.Logic.Vehicles.Vehicles.VehicleBase;
 
-namespace BaseCode.Logic.Lights.Services
+namespace BaseCode.Logic.Entity.Lights.Services
 {
     public interface ILightNotifier
     {

@@ -1,6 +1,6 @@
 using System;
-using BaseCode.Logic.Lights;
-using BaseCode.Logic.Vehicles;
+using BaseCode.Logic.Entity.Lights;
+using BaseCode.Logic.Vehicles.Vehicles;
 
 namespace BaseCode.Logic.Services.Interfaces.Car
 {

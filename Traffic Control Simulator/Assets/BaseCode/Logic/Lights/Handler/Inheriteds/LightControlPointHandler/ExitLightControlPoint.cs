@@ -1,5 +1,5 @@
 using BaseCode.Logic.Lights.Handler.Abstracts;
-using BaseCode.Logic.Vehicles;
+using VehicleBase = BaseCode.Logic.Vehicles.Vehicles.VehicleBase;
 
 namespace BaseCode.Logic.Lights.Handler.Inheriteds.LightControlPointHandler
 {
@@ -12,7 +12,7 @@ namespace BaseCode.Logic.Lights.Handler.Inheriteds.LightControlPointHandler
 
         public override void OnVehicleEnter(VehicleBase vehicle)
         {
-            vehicle.PassLightPlaceState(ParentLightControlPoint.Place);
+            vehicle.CarLightService.PassLightPlaceState(ParentLightControlPoint.Place);
         }
     }
 

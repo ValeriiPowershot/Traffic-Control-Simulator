@@ -1,15 +1,15 @@
 using System;
-using BaseCode.Logic.Lights;
+using BaseCode.Logic.Entity.Lights;
 using BaseCode.Logic.Services.Interfaces.Car;
-using BaseCode.Logic.Vehicles;
 using BaseCode.Logic.Vehicles.Controllers;
-using BaseCode.Logic.Vehicles.States;
+using BaseCode.Logic.Vehicles.States.Movement;
+using BaseCode.Logic.Vehicles.Vehicles;
 
 namespace BaseCode.Logic.Services.Handler.Car
 {
     public class CarLightServiceHandler : ICarLightService
     {
-        /*private VehicleController _vehicleController;
+        private VehicleController _vehicleController;
         private LightState _carLightState;
         private LightPlace _lightPlaceSave;
         
@@ -27,13 +27,13 @@ namespace BaseCode.Logic.Services.Handler.Car
             switch (_carLightState)
             {
                 case LightState.Green:
-                    _vehicleController.SetState<VehicleGoState>();
+                    _vehicleController.SetState<VehicleMovementGoState>();
                     break;
                 case LightState.Red:
                     //vehicleController.SetState<VehicleStopState>();
                     break;
                 case LightState.Yellow:
-                    _vehicleController.SetState<VehicleSlowDownState>();
+                    _vehicleController.SetState<VehicleMovementGoState>();
                     break;
                 case LightState.None:
                     break;
@@ -64,25 +64,6 @@ namespace BaseCode.Logic.Services.Handler.Car
         {
             get => _lightPlaceSave;
             set => _lightPlaceSave = value;
-        }*/
-        public void PassLightState(LightState carLightState)
-        {
         }
-
-        public void PassLightPlaceState(LightPlace lightPlace)
-        {
-        }
-
-        public void ExitLightControl()
-        {
-        }
-
-        public void ExitIntersection()
-        {
-        }
-
-        public LightState CarLightState { get; }
-        public LightPlace LightPlaceSave { get; set; }
-        public event Action LightExited;
     }
 }

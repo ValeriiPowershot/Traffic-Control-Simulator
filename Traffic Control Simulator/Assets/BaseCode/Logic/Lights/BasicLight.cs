@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
-using BaseCode.Logic.Lights.Handler;
+using BaseCode.Logic.Entity.Lights.Handler.Abstracts;
 using BaseCode.Logic.Lights.Handler.Abstracts;
-using BaseCode.Logic.ScriptableObject;
-using BaseCode.Logic.Vehicles;
 using UnityEngine;
+using LightState = BaseCode.Logic.Vehicles.Vehicles.LightState;
 
 //Basic class for all lights
-namespace BaseCode.Logic.Lights
+namespace BaseCode.Logic.Entity.Lights
 {
     public enum LightPlace
     {

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace BaseCode.Core.ObjectPool {
+namespace BaseCode.Core.ObjectPool.Base {
    
    public interface IPoolObject
    {
