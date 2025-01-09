@@ -1,4 +1,5 @@
 using BaseCode.Interfaces;
+using BaseCode.Logic.Entity.Lights;
 using UnityEngine;
 
 namespace BaseCode.Logic.Lights.Controllers

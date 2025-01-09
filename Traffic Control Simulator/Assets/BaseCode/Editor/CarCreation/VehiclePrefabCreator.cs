@@ -2,6 +2,7 @@
 using System.Linq;
 using BaseCode.Logic.ScoringSystem;
 using BaseCode.Logic.Vehicles;
+using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEditor;
 using UnityEngine;
 

@@ -1,5 +1,7 @@
+using BaseCode.Logic.Entity.Lights;
+using BaseCode.Logic.Entity.Lights.Services;
 using BaseCode.Logic.Lights.Services;
-using BaseCode.Logic.Vehicles;
+using BaseCode.Logic.Vehicles.Vehicles;
 
 namespace BaseCode.Logic.Lights.Handler.Abstracts
 {

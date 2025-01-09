@@ -1,5 +1,7 @@
 using System;
 using BaseCode.Logic.Services.Interfaces.Car;
+using BaseCode.Logic.Vehicles.States;
+using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Ways;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -14,7 +16,7 @@ namespace BaseCode.Logic.Services.Handler.Car
 
         public void Starter(CarManager carManager)
         {
-           // _allWaysContainer = carManager.allWaysContainer;
+           _allWaysContainer = carManager.allWaysContainer;
         }
 
         public void SetNewPathContainerRandomly()
@@ -24,7 +26,6 @@ namespace BaseCode.Logic.Services.Handler.Car
         
         public WaypointContainer GetPathContainer(int pathIndex)
         {
-            /*
             if (pathIndex < 0 || pathIndex >= _allWaysContainer.allWays.Length)
             {
                 Debug.LogError("Invalid path index!");
@@ -32,8 +33,7 @@ namespace BaseCode.Logic.Services.Handler.Car
             }
 
             return _allWaysContainer.allWays[pathIndex];
-        */
-            return null;
+       
         }
         public WaypointContainer GetPathContainer()
         {
@@ -47,9 +47,12 @@ namespace BaseCode.Logic.Services.Handler.Car
 
         public WaypointContainer GetPathRandom()
         {
-            return null;
-            
-            // return GetPathContainer(Random.Range(0, _allWaysContainer.allWays.Length));
+            return GetPathContainer(Random.Range(0, _allWaysContainer.allWays.Length));
+        }
+
+        public RoadPoint GetIndexWaypoint(int i)
+        {
+            return GetPathContainer().roadPoints[i];
         }
     }
 }

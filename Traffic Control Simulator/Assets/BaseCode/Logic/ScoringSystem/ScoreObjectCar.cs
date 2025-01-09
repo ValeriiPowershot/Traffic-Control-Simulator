@@ -1,5 +1,6 @@
 using BaseCode.Interfaces;
 using BaseCode.Logic.Vehicles;
+using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -32,17 +33,17 @@ namespace BaseCode.Logic.ScoringSystem
             _car = GetComponent<VehicleBase>();
 
         private void OnEnable() =>
-            _car.LightExited += ExitLight;
+            _car.CarLightService.LightExited += ExitLight;
 
         private void OnDisable() =>
-            _car.LightExited -= ExitLight;
+            _car.CarLightService.LightExited -= ExitLight;
 
         public void Initialize(ScoringManager Manager) =>
             _manager = Manager;
 
         public void Calculate(float DeltaTime)
         {
-            if (_car.CarLightState == LightState.Red)
+            if (_car.CarLightService.CarLightState == LightState.Red)
             {
                 if ((_prevPosition - transform.position).sqrMagnitude <= MIN_MOVING_RANGE * MIN_MOVING_RANGE)
                 {
