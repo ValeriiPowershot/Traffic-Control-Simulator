@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Ambulance
 {
-    public class Ambulance : Vehicle
+    public class Ambulance : BasicCar
     {
         [SerializeField] private GameObject pointer;
         [SerializeField] private float signsDist;

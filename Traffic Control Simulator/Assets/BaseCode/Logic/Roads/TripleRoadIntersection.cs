@@ -104,7 +104,7 @@ namespace BaseCode.Logic.Roads
 
         public void OnTriggerExit(Collider other)
         {
-            if (other.TryGetComponent<BasicCar>(out var vehicle))
+            if (other.TryGetComponent<VehicleBase>(out var vehicle))
             {
                 vehicle.ExitIntersection();
             }

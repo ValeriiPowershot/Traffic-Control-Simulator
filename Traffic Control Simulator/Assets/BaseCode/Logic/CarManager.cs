@@ -19,8 +19,8 @@ namespace BaseCode.Logic
         [SerializeField] private ScoringManager _scoreManager;
 
         private float _spawnTimer;
-        private List<Vehicle> _active = new();
-        private List<Vehicle> _hided = new();
+        private List<BasicCar> _active = new();
+        private List<BasicCar> _hided = new();
 
         private void Update()
         {
@@ -37,7 +37,7 @@ namespace BaseCode.Logic
         private void SpawnNewCar()
         {
             _spawnTimer = Time.time + _timeToSpawn;
-            Vehicle newCar;
+            BasicCar newCar;
 
             if(_hided.Count > 0)
             {
@@ -59,14 +59,14 @@ namespace BaseCode.Logic
             newCar.AssignNewPathContainer();
         }
 
-        private Vehicle CreateNewCar()
+        private BasicCar CreateNewCar()
         {
             VehicleScriptableObject currentCar = carSoObjects[Random.Range(0, carSoObjects.Length)];
 
             GameObject createdCar = Instantiate(currentCar.vehiclePrefab,
                 carHandler);
                 
-            var newCar = createdCar.GetComponent<Vehicle>();
+            var newCar = createdCar.GetComponent<BasicCar>();
 
             _scoreManager.AddCar(newCar.GetComponent<IScoringObject>());
             newCar.Starter(this, _allWaysContainer, currentCar);
@@ -74,11 +74,11 @@ namespace BaseCode.Logic
             return newCar;
         }
 
-        public void CarDestinationReached(Vehicle Vehicle)
+        public void CarDestinationReached(BasicCar basicCar)
         {
-            _active.Remove(Vehicle);
-            Vehicle.gameObject.SetActive(false);
-            _hided.Add(Vehicle);
+            _active.Remove(basicCar);
+            basicCar.gameObject.SetActive(false);
+            _hided.Add(basicCar);
         }
     }
 }

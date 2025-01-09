@@ -22,7 +22,7 @@ namespace BaseCode.Logic.Vehicles.States
 
         public void MovementUpdate() 
         {
-            var ray = new Ray(VehicleController.Vehicle.RayStartPoint.position, VehicleController.Vehicle.transform.forward);
+            var ray = new Ray(VehicleController.BasicCar.RayStartPoint.position, VehicleController.BasicCar.transform.forward);
 
             if (Physics.Raycast(ray, out var hit, _rayDistance,_carLayer))
             {
@@ -35,7 +35,7 @@ namespace BaseCode.Logic.Vehicles.States
                 if (_isWaiting == false)
                 {
                     _isWaiting = true;
-                    VehicleController.Vehicle.StartCoroutine(WaitForSeconds());
+                    VehicleController.BasicCar.StartCoroutine(WaitForSeconds());
                 }
             }
         }

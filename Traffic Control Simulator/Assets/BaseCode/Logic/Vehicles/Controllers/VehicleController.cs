@@ -10,9 +10,9 @@ namespace BaseCode.Logic.Vehicles.Controllers
         
         public VehicleMovementStateController StateController { get { return _movementStateController; } }
 
-        public void Starter(Vehicle vehicle)
+        public void Starter(BasicCar basicCar)
         {
-            Vehicle = vehicle;
+            BasicCar = basicCar;
             _movementStateController = new VehicleMovementStateController(this);
             
             StartEngine();
@@ -33,7 +33,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
             _movementStateController.SetState<T>(); // Start in the stopped state
         }
         
-        public Vehicle Vehicle { get; private set; }
+        public BasicCar BasicCar { get; private set; }
     }
 }
 
