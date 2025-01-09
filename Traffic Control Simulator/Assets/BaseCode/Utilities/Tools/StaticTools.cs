@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BaseCode.Logic.Tools
+namespace BaseCode.Utilities.Tools
 {
     public class StaticTools
     {

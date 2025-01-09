@@ -1,16 +1,13 @@
 using System.Collections.Generic;
-using BaseCode.Logic.Vehicles;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace BaseCode.Logic.Ambulance
+namespace BaseCode.Logic.Vehicles.Vehicles
 {
     public class Ambulance : BasicCar
     {
         [SerializeField] private GameObject pointer;
         [SerializeField] private float signsDist;
         [Range(0, 16)] [SerializeField] private float _arriveDelay = 0f;
-
 
         private List<GameObject> arrows = new List<GameObject>();
         private List<GameObject> hiddenArrows = new();
@@ -26,9 +23,11 @@ namespace BaseCode.Logic.Ambulance
             base.AssignNewPathContainer();
 
             float distance = 0;
-            for(int i = 1; i < WaypointContainer.roadPoints.Count; i++)
+            
+            for(int i = 1; i < PathContainerService.GetPathContainer().roadPoints.Count; i++)
             {
-                float pointsDist = Vector3.Distance(WaypointContainer.roadPoints[i].point.position, WaypointContainer.roadPoints[i - 1].point.position);
+                float pointsDist = Vector3.Distance(PathContainerService.GetIndexWaypoint(i).point.position, 
+                    PathContainerService.GetIndexWaypoint(i - 1).point.position);
 
                 if (distance + pointsDist >= signsDist)
                 {
@@ -36,10 +35,11 @@ namespace BaseCode.Logic.Ambulance
                     pointsDist -= extraDist;
                     pointsDist = pointsDist < 0 ? 0 : pointsDist;
 
-                    Vector3 pos = WaypointContainer.roadPoints[i].point.position - WaypointContainer.roadPoints[i - 1].point.position;
+                    Vector3 pos = PathContainerService.GetIndexWaypoint(i).point.position
+                                  - PathContainerService.GetIndexWaypoint(i - 1).point.position;
                     pos.Normalize();
                     Quaternion rot = Quaternion.LookRotation(pos);
-                    Vector3 pointerPos = WaypointContainer.roadPoints[i - 1].point.position + pos * pointsDist;
+                    Vector3 pointerPos = PathContainerService.GetIndexWaypoint(i - 1).point.position + pos * pointsDist;
                     pointerPos.y = transform.position.y + 0.1f;
 
                     AddArrow(pointerPos, rot);

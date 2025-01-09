@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Object = UnityEngine.Object;
 
-namespace BaseCode.Core.ObjectPool {
+namespace BaseCode.Core.ObjectPool.Base {
 
    [Serializable]
    public class Pool 
@@ -20,7 +20,7 @@ namespace BaseCode.Core.ObjectPool {
 
       protected readonly Queue<IPoolObject> Queue = new Queue<IPoolObject>();
       
-      public Pool(GameObject poolObjectPrefab, Transform spawnPoint)
+      public Pool(GameObject poolObjectPrefab, Transform spawnPoint = null)
       {
          _poolObjectPrefab = poolObjectPrefab;
          _spawnPoint = spawnPoint;
@@ -36,7 +36,7 @@ namespace BaseCode.Core.ObjectPool {
 
       public virtual IPoolObject InsertObjectToQueue()
       {
-         var createdPoolObj = Object.Instantiate(_poolObjectPrefab, _spawnPoint);
+         var createdPoolObj = Object.Instantiate(_poolObjectPrefab, _spawnPoint, true);
          var poolObj = createdPoolObj.GetComponent<IPoolObject>();
          
          poolObj.Initialize(this, createdPoolObj);

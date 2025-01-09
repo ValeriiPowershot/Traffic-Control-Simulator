@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace BaseCode.Core.ObjectPool
+namespace BaseCode.Core.ObjectPool.Base
 {
     public abstract class PoolObjectBase : MonoBehaviour,IPoolObject
     {

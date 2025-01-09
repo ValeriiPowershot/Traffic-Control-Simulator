@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using BaseCode.Logic.Entity;
-using BaseCode.Logic.Lights.Services;
+using BaseCode.Logic.Entity.Lights;
+using BaseCode.Logic.Entity.Lights.Handler.Abstracts;
+using BaseCode.Logic.Entity.Lights.Services;
 using BaseCode.Logic.ScriptableObject;
-using BaseCode.Logic.Vehicles;
+using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
 
 namespace BaseCode.Logic.Lights.Handler.Abstracts
@@ -35,7 +37,7 @@ namespace BaseCode.Logic.Lights.Handler.Abstracts
             if (!_controlledVehicles.Contains(vehicle)) return;
             
             _controlledVehicles.Remove(vehicle);
-            vehicle.ExitLightControl();
+            vehicle.CarLightService.ExitLightControl();
         }
 
         public abstract void ChangeLight();

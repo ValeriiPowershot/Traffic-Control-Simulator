@@ -2,16 +2,16 @@ using System.Collections;
 using BaseCode.Logic.Vehicles.Controllers;
 using UnityEngine;
 
-namespace BaseCode.Logic.Vehicles.States
+namespace BaseCode.Logic.Vehicles.States.Movement
 {
-    public class VehicleStopState : IVehicleState
+    public class VehicleMovementStopState : IVehicleMovementState
     {
         private readonly float _rayDistance = 5f; // Adjust distance as needed
         private readonly LayerMask _carLayer = LayerMask.GetMask("Car"); // Ensure cars are on a "Car" layer
         
         private bool _isWaiting;
         public VehicleController VehicleController { get; set; }
-        public VehicleStopState(VehicleController vehicleController)
+        public VehicleMovementStopState(VehicleController vehicleController)
         {
             VehicleController = vehicleController;
         }
@@ -44,7 +44,7 @@ namespace BaseCode.Logic.Vehicles.States
         {
             yield return new WaitForSeconds(1);
             _isWaiting = false;
-            VehicleController.SetState<VehicleGoState>();
+            VehicleController.SetState<VehicleMovementGoState>();
         }
 
         public void MovementExit()

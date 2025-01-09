@@ -1,34 +1,32 @@
 using System;
 using System.Collections.Generic;
 using BaseCode.Logic.Vehicles.States;
+using BaseCode.Logic.Vehicles.States.Movement;
 using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles.Controllers
 {
     public class VehicleMovementStateController
     {
-        private readonly VehicleController _vehicleController;
-        private readonly Dictionary<Type, IVehicleState> _states = new Dictionary<Type, IVehicleState>();
-        private IVehicleState _currentMovementState;
+        private readonly Dictionary<Type, IVehicleMovementState> _states = new Dictionary<Type, IVehicleMovementState>();
+        private IVehicleMovementState _currentMovementMovementState;
 
         public VehicleMovementStateController(VehicleController vehicleController)
         {
-            _vehicleController = vehicleController;
-
-            _states[typeof(VehicleGoState)] = new VehicleGoState(_vehicleController);
-            _states[typeof(VehicleSlowDownState)] = new VehicleSlowDownState(_vehicleController);
-            _states[typeof(VehicleStopState)] = new VehicleStopState(_vehicleController);
+            _states[typeof(VehicleMovementGoState)] = new VehicleMovementGoState(vehicleController);
+            _states[typeof(VehicleMovementSlowDownState)] = new VehicleMovementSlowDownState(vehicleController);
+            _states[typeof(VehicleMovementStopState)] = new VehicleMovementStopState(vehicleController);
         }
         
-        public void Update() => _currentMovementState.MovementUpdate();
+        public void Update() => _currentMovementMovementState.MovementUpdate();
 
-        public void SetState<T>() where T : IVehicleState
+        public void SetState<T>() where T : IVehicleMovementState
         {
             if (_states.TryGetValue(typeof(T), out var newState))
             {
-                _currentMovementState?.MovementExit();
-                _currentMovementState = newState;
-                _currentMovementState.MovementEnter();
+                _currentMovementMovementState?.MovementExit();
+                _currentMovementMovementState = newState;
+                _currentMovementMovementState.MovementEnter();
             }
             else
             {
@@ -38,7 +36,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
         
         public void InitializePath()
         {
-            ((VehicleGoState)_states[typeof(VehicleGoState)]).InitializePath();
+            ((VehicleMovementGoState)_states[typeof(VehicleMovementGoState)]).InitializePath();
         }
 
         // Used to test the states

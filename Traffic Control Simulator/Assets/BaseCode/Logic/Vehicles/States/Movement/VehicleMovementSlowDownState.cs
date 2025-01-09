@@ -1,20 +1,19 @@
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Controllers;
 
-namespace BaseCode.Logic.Vehicles.States
+namespace BaseCode.Logic.Vehicles.States.Movement
 {
-    public class VehicleSlowDownState : IVehicleState
+    public class VehicleMovementSlowDownState : IVehicleMovementState
     {
         public VehicleController VehicleController { get; set; }
 
-        public VehicleSlowDownState(VehicleController vehicleController)
+        public VehicleMovementSlowDownState(VehicleController vehicleController)
         {
             VehicleController = vehicleController;
         }
 
         public void MovementEnter()
         {
-          //  VehicleController.MoveTween.timeScale = VehicleScriptableObject.slowDownSpeed; // Adjust tween speed dynamically
         }
 
         public void MovementUpdate()
@@ -23,7 +22,6 @@ namespace BaseCode.Logic.Vehicles.States
 
         public void MovementExit()
         {
-            // Restart the tween to full speed on exit 
         }
         private VehicleScriptableObject VehicleScriptableObject => VehicleController.BasicCar.VehicleScriptableObject;
     }

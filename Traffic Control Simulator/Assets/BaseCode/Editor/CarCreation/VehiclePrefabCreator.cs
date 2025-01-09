@@ -1,7 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
+using BaseCode.Infrastructure;
 using BaseCode.Logic.ScoringSystem;
-using BaseCode.Logic.Vehicles;
+using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEditor;
 using UnityEngine;
 
@@ -12,7 +13,6 @@ namespace BaseCode.Editor.CarCreation
         private GameObject _carModelPrefab;
         private GameObject _arrow;
         private GameObject _frontRayStartPoint;
-        private GameObject _indicatorOfScore;
         private GameObject _scoringMaterials;
         private GameObject _turnIndicators;
     
@@ -48,7 +48,6 @@ namespace BaseCode.Editor.CarCreation
             GUILayout.Label("Step 2: Add Additional Components", EditorStyles.boldLabel);
             _arrow = (GameObject)EditorGUILayout.ObjectField("Arrow Prefab", _arrow, typeof(GameObject), false);
             _frontRayStartPoint = (GameObject)EditorGUILayout.ObjectField("Front Ray Start Point", _frontRayStartPoint, typeof(GameObject), false);
-            _indicatorOfScore = (GameObject)EditorGUILayout.ObjectField("Indicator of Score", _indicatorOfScore, typeof(GameObject), false);
             _scoringMaterials = (GameObject)EditorGUILayout.ObjectField("Scoring Materials", _scoringMaterials, typeof(GameObject), false);
             _turnIndicators = (GameObject)EditorGUILayout.ObjectField("Turn Indicators", _turnIndicators, typeof(GameObject), false);
             GUILayout.Label("Optional components to enhance your vehicle prefab.", EditorStyles.wordWrappedLabel);
@@ -122,6 +121,7 @@ namespace BaseCode.Editor.CarCreation
         {
             GameObject vehicleObject = Instantiate(_carModelPrefab);
             vehicleObject.name = _carModelPrefab.name;
+            vehicleObject.layer = Layers.Car;
             return vehicleObject;
         }
         
@@ -138,13 +138,7 @@ namespace BaseCode.Editor.CarCreation
                 GameObject rayStartPoint = Instantiate(_frontRayStartPoint, vehicleObject.transform);
                 rayStartPoint.name = "FrontRayStartPoint";
             }
-
-            if (_indicatorOfScore != null)
-            {
-                GameObject scoreIndicator = Instantiate(_indicatorOfScore, vehicleObject.transform);
-                scoreIndicator.name = "IndicatorOfScore";
-            }
-
+            
             if (_turnIndicators != null)
             {
                 GameObject turnIndicators = Instantiate(_turnIndicators, vehicleObject.transform);
@@ -194,7 +188,6 @@ namespace BaseCode.Editor.CarCreation
                 scoreObjectCar.FailPoints = _failPoints;
                 scoreObjectCar.TimeToWorstScore = _timeToWorstScore;
             
-                scoreObjectCar.IndicatorOfScore = _indicatorOfScore.GetComponent<MeshRenderer>();
                 scoreObjectCar.ScoreMaterialsComponent = _scoringMaterials.GetComponent<ScoringMaterials>();
             }
         }

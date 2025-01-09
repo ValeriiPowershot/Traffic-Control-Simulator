@@ -1,7 +1,9 @@
-using BaseCode.Logic.Lights.Services;
-using BaseCode.Logic.Vehicles;
+using BaseCode.Logic.Entity.Lights.Services;
+using BaseCode.Logic.Lights.Handler.Abstracts;
+using LightState = BaseCode.Logic.Vehicles.Vehicles.LightState;
+using VehicleBase = BaseCode.Logic.Vehicles.Vehicles.VehicleBase;
 
-namespace BaseCode.Logic.Lights.Handler.Abstracts
+namespace BaseCode.Logic.Entity.Lights.Handler.Abstracts
 {
     public class LightNotifier : ILightNotifier
     {
@@ -14,7 +16,7 @@ namespace BaseCode.Logic.Lights.Handler.Abstracts
 
         public void NotifyVehicle(VehicleBase vehicle, LightState state)
         {
-            vehicle.PassLightState(state);
+            vehicle.CarLightService.PassLightState(state);
         }
         public void NotifyVehicles(LightState state)
         {
