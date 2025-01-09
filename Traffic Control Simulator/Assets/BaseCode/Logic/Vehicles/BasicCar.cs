@@ -1,59 +1,97 @@
 using System;
-using BaseCode.Logic.Lights;
+using BaseCode.Logic.ScriptableObject;
+using BaseCode.Logic.Vehicles.Controllers;
+using BaseCode.Logic.Vehicles.States;
+using BaseCode.Logic.Ways;
 using UnityEngine;
+using UnityEngine.Serialization;
+
 
 namespace BaseCode.Logic.Vehicles
 {
-    public class BasicCar : MonoBehaviour 
+    public class BasicCar : VehicleBase
     {
-        private CarManager _manager;
-        
-        private LightState _carLightState;
-        private LightPlace _lightPlaceSave;
-        
-        public event Action LightExited;
+        [SerializeField] private VehicleController vehicleController;
+        public GameObject TurnLight;
+        public Transform RightTurn;
+        public Transform LeftTurn;
+        //public AllWaysContainer allWaysContainer;
+        public Transform RayStartPoint;
+        public Transform ArrowIndicatorEndPoint;
+        public WaypointContainer WaypointContainer { get; set; }
+        public VehicleScriptableObject VehicleScriptableObject { get; set; }
 
-        public virtual void PassLightState(LightState carLightState)
+        public void Starter(CarManager Manager, AllWaysContainer Container, VehicleScriptableObject currentCar)
         {
-            _carLightState = carLightState;
-        }
-        public virtual void PassLightPlaceState(LightPlace lightPlace)
-        {
-            _lightPlaceSave = lightPlace;
-        }
-
-        public virtual void ExitLightControl()
-        {
-            _carLightState = LightState.None;
-            LightExited?.Invoke(); //necessary for scoring system - (looked by tolga, its ok :D)
-        }
-
-        public void ExitIntersection()  
-        {
-            _lightPlaceSave = LightPlace.None;
+            //allWaysContainer = Container;
+            CarManager = Manager;
+            VehicleScriptableObject = currentCar;
+            
+            vehicleController.Starter(this);
         }
         
-        public CarManager CarManager
+        public virtual void Update()
+            => vehicleController.Update();
+
+        public override void PassLightState(LightState state)
         {
-            get;
-            set;
+            base.PassLightState(state);
+
+            switch (state)
+            {
+                case LightState.Green:
+                    vehicleController.SetState<VehicleGoState>();
+                    break;
+                case LightState.Red:
+                    //vehicleController.SetState<VehicleStopState>();
+                    break;
+                case LightState.Yellow:
+                    vehicleController.SetState<VehicleSlowDownState>();
+                    break;
+                case LightState.None:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
+            }
         }
         
-        public LightState CarLightState => _carLightState;
-
-        public LightPlace lightPlaceSave
+        public virtual void AssignNewPathContainer()
         {
-            get => _lightPlaceSave;
-            set => _lightPlaceSave = value;
+            vehicleController.StateController.InitializePath();
+        }
+        
+        public virtual void DestinationReached()
+        {
+            CarManager.CarDestinationReached(this);
+        }
+
+        public void ShowTurn(TurnType TurnType)
+        {
+            switch (TurnType)
+            {
+                case TurnType.None:
+                    TurnLight.SetActive(false);
+                    break;
+                case TurnType.Right:
+                    SetTurnLight(RightTurn.position);
+                    break;
+                case TurnType.Left:
+                    SetTurnLight(LeftTurn.position);
+                    break;
+            }
+        }
+
+        private void SetTurnLight(Vector3 pos)
+        {
+            TurnLight.transform.position = pos;
+            TurnLight.SetActive(true);
         }
     }
 
-    public enum LightState
+    public enum TurnType
     {
         None,
-        Green,
-        Red,
-        Yellow,
+        Right,
+        Left,
     }
-    
 }

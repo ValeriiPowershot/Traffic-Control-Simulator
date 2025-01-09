@@ -20,7 +20,7 @@ namespace BaseCode.Logic.ScoringSystem
         public ScoringMaterials ScoreMaterialsComponent;
 
         private ScoringManager _manager;
-        private BasicCar _car;
+        private VehicleBase _car;
 
         private ScoreType _scoreType = ScoreType.Good;
         private Vector3 _prevPosition;
@@ -29,7 +29,7 @@ namespace BaseCode.Logic.ScoringSystem
         private const float MIN_MOVING_RANGE = 0.001f;
 
         private void Awake() =>
-            _car = GetComponent<BasicCar>();
+            _car = GetComponent<VehicleBase>();
 
         private void OnEnable() =>
             _car.LightExited += ExitLight;

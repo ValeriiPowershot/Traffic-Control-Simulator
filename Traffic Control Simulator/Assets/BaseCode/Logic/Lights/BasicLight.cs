@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using BaseCode.Logic.Lights.Handler;
+using BaseCode.Logic.Lights.Handler.Abstracts;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles;
 using UnityEngine;
@@ -15,73 +17,43 @@ namespace BaseCode.Logic.Lights
         Right,
         Back
     }
-    public class BasicLight : MonoBehaviour
+    public class BasicLight : LightBase
     {
-        //temporary light indicator
         [SerializeField] private Material[] _lightMats;
         [SerializeField] private MeshRenderer _lightMesh;
         
-        public LightState LightState { get; private set; } = (LightState)1;
-        private int _lightIndex = 1;
-        private const int MAX_LIGHT_INDEX = 2;
-
-        private List<BasicCar> _controlledCars = new List<BasicCar>();
-
-        public LightScriptableObject lightData;
-        public LightPlace lightPlace;
-
-        public void SetChangeoverState()
-        {
-            _lightMesh.material = _lightMats[^1];
-            // PassStates(LightState.Yellow);
-        }
-
-        //updates and sets light state in order: green, red
-        public void ChangeLight()
-        {
-            SetLight(++_lightIndex);
-            PassStates(LightState);
-        }
+        private int _currentIndex = 1;
+        private const int MaxIndex = 2;
         
-        public void AddNewCar(BasicCar NewCar)
+        public override void ChangeLight()
         {
-            if (!_controlledCars.Contains(NewCar))
+            UpdateLightIndex();
+            UpdateVisualState();
+            NotifyStateChange();
+        }
+
+        private void UpdateLightIndex()
+        {
+            _currentIndex++;
+            if (_currentIndex > MaxIndex) _currentIndex = 1;
+
+            CurrentState = (LightState)_currentIndex;
+        }
+
+        public override void SetChangeoverState()
+        {
+            if (_lightMesh != null)
             {
-                _controlledCars.Add(NewCar);
-                NewCar.PassLightState(LightState);
+                _lightMesh.material = _lightMats[^1]; // Set to the last material as a temporary changeover indicator
             }
         }
 
-        public void RemoveCar(BasicCar OldCar)
+        private void UpdateVisualState()
         {
-            if (_controlledCars.Contains(OldCar))
+            if (_lightMesh != null && _lightMats.Length > 0)
             {
-                _controlledCars.Remove(OldCar);
-                OldCar.ExitLightControl();
+                _lightMesh.material = _lightMats[_currentIndex - 1];
             }
         }
-
-        //Inform cars about state changes
-        private void PassStates(LightState State)
-        {
-            foreach(var car in _controlledCars)
-            {
-                car.PassLightState(State);
-            }   
-        }
-
-        //The only way _lightIndex and _lightState should be managed
-        private void SetLight(int NewIndex)
-        {
-            if (NewIndex > MAX_LIGHT_INDEX)
-                NewIndex = 1;
-
-            _lightIndex = NewIndex;
-            LightState = (LightState)_lightIndex;
-
-            //temporary light indication
-            _lightMesh.material = _lightMats[_lightIndex - 1];
-        }
-
     }
 }

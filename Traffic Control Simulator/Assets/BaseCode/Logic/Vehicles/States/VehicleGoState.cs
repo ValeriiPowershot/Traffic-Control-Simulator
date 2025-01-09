@@ -24,7 +24,7 @@ namespace BaseCode.Logic.Vehicles.States
         //private LayerMask _carLayer = LayerMask.GetMask("Car"); // Ensure cars are on a "Car" layer
         private LayerMask _stopLayer = 0;
         // controllers
-        private Transform CarTransform => VehicleController.Vehicle.transform;
+        private Transform CarTransform => VehicleController.BasicCar.transform;
         public VehicleController VehicleController { get; set; }
         private const float TURN_ANGLE = 0.5f;
         private const int CHECK_COUNT = 12;
@@ -34,14 +34,14 @@ namespace BaseCode.Logic.Vehicles.States
             _stopLayer += 1 << 7;
             _stopLayer += 1 << 10;
             VehicleController = vehicleController;
-            _carData = VehicleController.Vehicle.VehicleScriptableObject;
+            _carData = VehicleController.BasicCar.VehicleScriptableObject;
             _rayDistance = _carData.rayDistance;
             _speed = _carData.NormalSpeed;
         }
         public void InitializePath()
         {
             _waypoints.Clear();
-            _waypointContainer = VehicleController.Vehicle.WaypointContainer;
+            _waypointContainer = VehicleController.BasicCar.WaypointContainer;
             _waypoints.AddRange(_waypointContainer.roadPoints);
             _endPoint = _waypoints[^1].point;
         }
@@ -73,13 +73,13 @@ namespace BaseCode.Logic.Vehicles.States
 
         private bool CheckForCollision()
         {
-            Ray ray = new Ray(VehicleController.Vehicle.RayStartPoint.position, CarTransform.forward);
+            Ray ray = new Ray(VehicleController.BasicCar.RayStartPoint.position, CarTransform.forward);
 
             if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _stopLayer)) // hit to stop or car
             {
                 Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
                 
-                if(hit.collider.TryGetComponent(out BasicCar hitVehicle))
+                if(hit.collider.TryGetComponent(out VehicleBase hitVehicle))
                 {
                     if (AreTheyInIntersection(hitVehicle) && AreTheyUsingDifferentPath(hitVehicle))
                     {
@@ -105,16 +105,16 @@ namespace BaseCode.Logic.Vehicles.States
 
         private bool IsItRedLight()
         {
-            return VehicleController.Vehicle.CarLightState == LightState.Red;
+            return VehicleController.BasicCar.CarLightState == LightState.Red;
         }
-        private bool AreTheyUsingDifferentPath(BasicCar hitVehicle)
+        private bool AreTheyUsingDifferentPath(VehicleBase hitVehicle)
         {
-            return hitVehicle.lightPlaceSave != VehicleController.Vehicle.lightPlaceSave;
+            return hitVehicle.lightPlaceSave != VehicleController.BasicCar.lightPlaceSave;
         }
 
-        private bool AreTheyInIntersection(BasicCar hitVehicle)
+        private bool AreTheyInIntersection(VehicleBase hitVehicle)
         {
-            return hitVehicle.lightPlaceSave != LightPlace.None && VehicleController.Vehicle.lightPlaceSave != LightPlace.None;
+            return hitVehicle.lightPlaceSave != LightPlace.None && VehicleController.BasicCar.lightPlaceSave != LightPlace.None;
         }
 
         private void AdjustSpeed()
@@ -160,12 +160,12 @@ namespace BaseCode.Logic.Vehicles.States
                     _carData.RotationSpeed * Time.fixedDeltaTime
                 );
 
-                Vector3 arrowForward = (_endPoint.position - VehicleController.Vehicle.ArrowIndicatorEndPoint.position).normalized;
+                Vector3 arrowForward = (_endPoint.position - VehicleController.BasicCar.ArrowIndicatorEndPoint.position).normalized;
                 Quaternion arrowRotation = Quaternion.LookRotation(arrowForward);
         
                 arrowRotation = Quaternion.Euler(arrowRotation.eulerAngles.x, arrowRotation.eulerAngles.y, 0);
 
-                VehicleController.Vehicle.ArrowIndicatorEndPoint.rotation = arrowRotation;
+                VehicleController.BasicCar.ArrowIndicatorEndPoint.rotation = arrowRotation;
             }
         }
 
@@ -184,7 +184,7 @@ namespace BaseCode.Logic.Vehicles.States
 
             if (_currentWaypointIndex >= _waypoints.Count)
             {
-                VehicleController.Vehicle.DestinationReached(); 
+                VehicleController.BasicCar.DestinationReached(); 
                 _currentWaypointIndex = 0;
                 CarTransform.position = _waypoints[_currentWaypointIndex].point.position;
             }
@@ -198,19 +198,19 @@ namespace BaseCode.Logic.Vehicles.States
             else
                 i = _waypoints.Count - 1;
 
-            Vector3 pointing = _waypoints[i].point.position - VehicleController.Vehicle.transform.position;
+            Vector3 pointing = _waypoints[i].point.position - VehicleController.BasicCar.transform.position;
             pointing.Normalize();
-            pointing -= VehicleController.Vehicle.transform.forward * 0.9f;
+            pointing -= VehicleController.BasicCar.transform.forward * 0.9f;
             pointing.Normalize();
 
-            float dot = Vector3.Dot(pointing, VehicleController.Vehicle.transform.right);
+            float dot = Vector3.Dot(pointing, VehicleController.BasicCar.transform.right);
 
             if (dot > TURN_ANGLE)
-                VehicleController.Vehicle.ShowTurn(TurnType.Right);
+                VehicleController.BasicCar.ShowTurn(TurnType.Right);
             else if (dot < -TURN_ANGLE)
-                VehicleController.Vehicle.ShowTurn(TurnType.Left);
+                VehicleController.BasicCar.ShowTurn(TurnType.Left);
             else
-                VehicleController.Vehicle.ShowTurn(TurnType.None);
+                VehicleController.BasicCar.ShowTurn(TurnType.None);
         }
     }
     

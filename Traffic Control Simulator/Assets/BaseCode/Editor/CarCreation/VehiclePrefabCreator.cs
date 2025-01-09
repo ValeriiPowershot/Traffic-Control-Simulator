@@ -175,14 +175,14 @@ namespace BaseCode.Editor.CarCreation
                 boxCollider.size = new Vector3(2f, 1f, 5f);
             }
         
-            if (vehicleObject.GetComponent<Vehicle>() == null)
+            if (vehicleObject.GetComponent<BasicCar>() == null)
             {
-                Vehicle vehicle = vehicleObject.AddComponent<Vehicle>();
-                vehicle.TurnLight = _turnIndicators;
-                vehicle.LeftTurn = FindChildByName(_turnIndicators.transform, "LeftTurn");
-                vehicle.RightTurn = FindChildByName(_turnIndicators.transform, "RightTurn");
-                vehicle.RayStartPoint = _frontRayStartPoint.transform;
-                vehicle.ArrowIndicatorEndPoint = _arrow.transform;
+                BasicCar basicCar = vehicleObject.AddComponent<BasicCar>();
+                basicCar.TurnLight = _turnIndicators;
+                basicCar.LeftTurn = FindChildByName(_turnIndicators.transform, "LeftTurn");
+                basicCar.RightTurn = FindChildByName(_turnIndicators.transform, "RightTurn");
+                basicCar.RayStartPoint = _frontRayStartPoint.transform;
+                basicCar.ArrowIndicatorEndPoint = _arrow.transform;
             }
         
             if (vehicleObject.GetComponent<ScoreObjectCar>() == null)

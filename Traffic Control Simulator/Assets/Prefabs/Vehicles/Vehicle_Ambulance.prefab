@@ -125,11 +125,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3695838e2687da45b925a75253eb108, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _turnLight: {fileID: 3997196300540391023}
-  _rightTurn: {fileID: 6129311605594753743}
-  _leftTurn: {fileID: 2706957429564949956}
-  rayStartPoint: {fileID: 6871348071339208683}
-  arrowIndicatorEndPoint: {fileID: 5453163292523487991}
+  TurnLight: {fileID: 3997196300540391023}
+  RightTurn: {fileID: 6129311605594753743}
+  LeftTurn: {fileID: 2706957429564949956}
+  RayStartPoint: {fileID: 6871348071339208683}
+  ArrowIndicatorEndPoint: {fileID: 5453163292523487991}
   pointer: {fileID: 3113437527698326767, guid: 8f27b9241cd62aa438d757bafd520d35, type: 3}
   signsDist: 7
   _arriveDelay: 0
@@ -172,12 +172,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03796a6b4a51ab94fb80e9651a4190d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _acceptableWaitingTime: 1
-  _successPoints: 1
-  _failPoints: 5
-  _timeToWorstScore: 10
-  _indicatorOfScore: {fileID: 7568528926754178934}
-  _materials: {fileID: 2821845616486743038}
+  AcceptableWaitingTime: 1
+  SuccessPoints: 2
+  FailPoints: 3
+  TimeToWorstScore: 4
+  IndicatorOfScore: {fileID: 7568528926754178934}
+  ScoreMaterialsComponent: {fileID: 2821845616486743038}
 --- !u!1001 &2493690410158961441
 PrefabInstance:
   m_ObjectHideFlags: 0
