@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles
 {
-    public class BasicCar : MonoBehaviour 
+    public class VehicleBase : MonoBehaviour 
     {
         private CarManager _manager;
         

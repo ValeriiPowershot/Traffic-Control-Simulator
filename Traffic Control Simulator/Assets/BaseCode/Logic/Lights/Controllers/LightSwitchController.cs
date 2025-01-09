@@ -1,14 +1,15 @@
 using BaseCode.Interfaces;
 using UnityEngine;
 
-namespace BaseCode.Logic.Lights
+namespace BaseCode.Logic.Lights.Controllers
 {
-    public class LightSwitch : MonoBehaviour, IInteractable
+    public class LightSwitchController : MonoBehaviour, IInteractable,ITimeUsable
     {
         private BasicLight _light;
         private bool _interactCalled;
 
-        private float _switchTimer;
+        public float Timer { get; set; }
+
         private void Awake()
         {
             _light = GetComponentInChildren<BasicLight>();
@@ -16,7 +17,7 @@ namespace BaseCode.Logic.Lights
 
         private void Update()
         {
-            if(_interactCalled && Time.time > _switchTimer)
+            if(_interactCalled && IsTimerUp())
             {
                 _interactCalled = false;
                 _light.ChangeLight();
@@ -29,8 +30,18 @@ namespace BaseCode.Logic.Lights
             {
                 _light.SetChangeoverState();
                 _interactCalled = true;
-                _switchTimer = Time.time + _light.lightData.SwitchDelay;
+                AddDelay(_light.lightData.SwitchDelay);
             }
+        }
+        
+        public bool IsTimerUp()
+        {
+            return Time.time > Timer;
+        }
+
+        public void AddDelay(float delay)
+        {
+            Timer = Time.time + delay;
         }
     }
 }

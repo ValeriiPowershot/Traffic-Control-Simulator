@@ -25,6 +25,6 @@ namespace BaseCode.Logic.Vehicles.States
         {
             // Restart the tween to full speed on exit 
         }
-        private VehicleScriptableObject VehicleScriptableObject => VehicleController.Vehicle.VehicleScriptableObject;
+        private VehicleScriptableObject VehicleScriptableObject => VehicleController.BasicCar.VehicleScriptableObject;
     }
 }

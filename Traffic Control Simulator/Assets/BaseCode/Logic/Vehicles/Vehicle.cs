@@ -9,7 +9,7 @@ using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Vehicles
 {
-    public class Vehicle : BasicCar
+    public class BasicCar : VehicleBase
     {
         [SerializeField] private VehicleController vehicleController;
         public GameObject TurnLight;
