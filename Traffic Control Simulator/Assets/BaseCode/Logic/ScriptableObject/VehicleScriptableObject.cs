@@ -2,44 +2,42 @@ using UnityEngine;
 
 namespace BaseCode.Logic.ScriptableObject
 {
-    [CreateAssetMenu(fileName = "Vehicle", menuName = "So/Vehicle", order = 0)]
+    [CreateAssetMenu(fileName = "Vehicle", menuName = "ScriptableObject/Vehicle", order = 0)]
     public class VehicleScriptableObject : UnityEngine.ScriptableObject
     {
-        public GameObject vehiclePrefab;
+        public GameObject VehiclePrefab;
         
-        [SerializeField] private int rotationSpeed = 4;
+        [SerializeField] private int _rotationSpeed = 4;
         
-        [SerializeField] private int speed = 5;
-        [SerializeField] private int slowDownSpeed = 4;
-        [SerializeField] private int accelerationSpeed = 6;
+        [SerializeField] private int _speed = 5;
+        [SerializeField] private int _slowdownSpeed = 4;
+        [SerializeField] private int _accelerationSpeed = 6;
 
-        // for eys
-        public float rayDistance = 5f;
-        public int indexPath;
+        public float RayLenght = 5f;
+        public int IndexPath;
 
-        public int NormalSpeed
+        public int DefaultSpeed
         {
-            get => speed;
-            set => speed = value;
-        }
-
-        public int SlowDownSpeed
-        {
-            get => slowDownSpeed;
-            set => slowDownSpeed = value;
-        }
-
-        public int RotationSpeed
-        {
-            get => rotationSpeed;
-            private set => rotationSpeed = value;
+            get => _speed;
+            set => _speed = value;
         }
 
         public int AccelerationSpeed
         {
-            get => accelerationSpeed;
-            set => accelerationSpeed = value;
+            get => _accelerationSpeed;
+            set => _accelerationSpeed = value;
+        }
+        
+        public int SlowdownSpeed
+        {
+            get => _slowdownSpeed;
+            set => _slowdownSpeed = value;
+        }
 
+        public int RotationSpeed
+        {
+            get => _rotationSpeed;
+            set => _rotationSpeed = value;
         }
     }
 }

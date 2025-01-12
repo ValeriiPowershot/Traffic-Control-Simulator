@@ -1,5 +1,6 @@
 using BaseCode.Interfaces;
 using BaseCode.Logic.Vehicles;
+using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -15,12 +16,10 @@ namespace BaseCode.Logic.ScoringSystem
         [Tooltip("Amount of time have to pass after acceptable time runs out to reach worst scenario")]
         public float TimeToWorstScore;
 
-        //temporary 
-        public MeshRenderer IndicatorOfScore;
         public ScoringMaterials ScoreMaterialsComponent;
 
         private ScoringManager _manager;
-        private BasicCar _car;
+        private VehicleBase _car;
 
         private ScoreType _scoreType = ScoreType.Good;
         private Vector3 _prevPosition;
@@ -29,20 +28,20 @@ namespace BaseCode.Logic.ScoringSystem
         private const float MIN_MOVING_RANGE = 0.001f;
 
         private void Awake() =>
-            _car = GetComponent<BasicCar>();
+            _car = GetComponentInParent<VehicleBase>();
 
         private void OnEnable() =>
-            _car.LightExited += ExitLight;
+            _car.CarLightService.LightExited += ExitLight;
 
         private void OnDisable() =>
-            _car.LightExited -= ExitLight;
+            _car.CarLightService.LightExited -= ExitLight;
 
         public void Initialize(ScoringManager Manager) =>
             _manager = Manager;
 
         public void Calculate(float DeltaTime)
         {
-            if (_car.CarLightState == LightState.Red)
+            if (_car.CarLightService.CarLightState == LightState.Red)
             {
                 if ((_prevPosition - transform.position).sqrMagnitude <= MIN_MOVING_RANGE * MIN_MOVING_RANGE)
                 {
@@ -51,14 +50,14 @@ namespace BaseCode.Logic.ScoringSystem
                     if (_scoreType == ScoreType.Good && 
                         _waitingTime >= AcceptableWaitingTime)
                     {
-                        IndicatorOfScore.material = ScoreMaterialsComponent.Neutral;
                         _scoreType = ScoreType.Neuteral;
+                        ScoreMaterialsComponent.SetNewMaterial(ScoreType.Neuteral);
                     }
 
                     else if (_scoreType == ScoreType.Neuteral && 
                              _waitingTime - AcceptableWaitingTime >= TimeToWorstScore)
                     {
-                        IndicatorOfScore.material = ScoreMaterialsComponent.Bad;
+                        ScoreMaterialsComponent.SetNewMaterial(ScoreType.Bad);
                         _scoreType = ScoreType.Bad;
                     }
                 }
@@ -82,7 +81,7 @@ namespace BaseCode.Logic.ScoringSystem
                 ResultPoints += (FailPoints - SuccessPoints) * Ratio;
             }
             _waitingTime = 0f;
-            IndicatorOfScore.material = ScoreMaterialsComponent.Good;
+            ScoreMaterialsComponent.SetNewMaterial(ScoreType.Good);
             _scoreType = ScoreType.Good;
 
             _manager.ChangeScore(ResultPoints);

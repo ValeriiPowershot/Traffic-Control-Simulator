@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using BaseCode.Logic.Lights;
-using BaseCode.Logic.Vehicles;
+using BaseCode.Logic.Entity.Lights;
+using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
 
 namespace BaseCode.Logic.Roads
@@ -104,9 +104,9 @@ namespace BaseCode.Logic.Roads
 
         public void OnTriggerExit(Collider other)
         {
-            if (other.TryGetComponent<BasicCar>(out var vehicle))
+            if (other.TryGetComponent<VehicleBase>(out var vehicle))
             {
-                vehicle.ExitIntersection();
+                vehicle.CarLightService.ExitIntersection();
             }
             
         }

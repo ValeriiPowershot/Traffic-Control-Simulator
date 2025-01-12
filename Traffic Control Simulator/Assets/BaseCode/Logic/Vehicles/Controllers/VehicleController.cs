@@ -1,51 +1,35 @@
 using System;
-using BaseCode.Logic.Vehicles.States;
+using BaseCode.Logic.Vehicles.States.Movement;
 
 namespace BaseCode.Logic.Vehicles.Controllers
 {
-    [Serializable]
     public class VehicleController 
     {
-        private VehicleMovementStateController _movementStateController;
-        
-        public VehicleMovementStateController StateController { get { return _movementStateController; } }
+        public VehicleMovementStateController StateController { get; private set; }
 
-        public void Starter(Vehicle vehicle)
+        public void Starter(Vehicles.BasicCar basicCar)
         {
-            Vehicle = vehicle;
-            _movementStateController = new VehicleMovementStateController(this);
+            BasicCar = basicCar;
+            StateController = new VehicleMovementStateController(this);
             
             StartEngine();
         }
 
         public void StartEngine()
         {
-            SetState<VehicleGoState>(); // Start in the stopped state
+            SetState<VehicleMovementGoState>(); // Start in the stopped state
         }
 
         public void Update()
         {
-            _movementStateController.Update();
+            StateController.Update();
         }
  
-        public void SetState<T>() where T : IVehicleState
+        public void SetState<T>() where T : IVehicleMovementState
         {
-            _movementStateController.SetState<T>(); // Start in the stopped state
+            StateController.SetState<T>(); // Start in the stopped state
         }
         
-        public Vehicle Vehicle { get; private set; }
+        public Vehicles.BasicCar BasicCar { get; private set; }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
