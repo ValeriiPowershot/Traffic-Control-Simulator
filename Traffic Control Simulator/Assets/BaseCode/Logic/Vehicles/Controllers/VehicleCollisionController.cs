@@ -17,7 +17,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
             
             _stopLayer += 1 << 7; //add car layer
             _stopLayer += 1 << 10; //add stop line layer
-            _rayDistance = _vehicleGoState.CarData.rayDistance;
+            _rayDistance = _vehicleGoState.CarData.RayLenght;
         }
 
         public bool CheckForCollision()

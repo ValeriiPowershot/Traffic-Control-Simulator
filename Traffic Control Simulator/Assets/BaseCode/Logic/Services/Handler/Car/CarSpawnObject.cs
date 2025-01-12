@@ -24,7 +24,7 @@ namespace BaseCode.Logic.Services.Handler.Car
         public void Initialize(CarManager carManagerInScene,CarSpawnServiceHandler carSpawnServiceHandler)
         {
             CarManager = carManagerInScene;
-            Pool = new CarPool(carSpawnServiceHandler,carSoObjects.vehiclePrefab, poolSize, carSoObjects);
+            Pool = new CarPool(carSpawnServiceHandler,carSoObjects.VehiclePrefab, poolSize, carSoObjects);
         }
         
         public void Update()

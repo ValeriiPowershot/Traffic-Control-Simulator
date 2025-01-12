@@ -21,7 +21,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         {
             VehicleController = vehicleController;
             CarData = VehicleController.BasicCar.VehicleScriptableObject;
-            _speed = CarData.NormalSpeed;
+            _speed = CarData.DefaultSpeed;
             
             _vehiclePathController = new VehiclePathController(this);
             _vehicleCollisionController = new VehicleCollisionController(this);
@@ -62,9 +62,9 @@ namespace BaseCode.Logic.Vehicles.States.Movement
 
             _speed = roadPoint.roadPointType switch
             {
-                RoadPointType.Slowdown => CarData.SlowDownSpeed,
+                RoadPointType.Slowdown => CarData.SlowdownSpeed,
                 RoadPointType.Acceleration => CarData.AccelerationSpeed,
-                _ => CarData.NormalSpeed
+                _ => CarData.DefaultSpeed
             };
         }
 
