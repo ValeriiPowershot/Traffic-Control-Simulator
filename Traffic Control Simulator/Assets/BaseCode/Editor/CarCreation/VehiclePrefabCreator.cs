@@ -260,7 +260,12 @@ namespace BaseCode.Editor.CarCreation
 
         private void AddComponentsToVehicle(GameObject vehicleObject)
         {
-            Rigidbody rigidBody = vehicleObject.GetComponent<Rigidbody>() ?? vehicleObject.AddComponent<Rigidbody>();
+            Rigidbody rigidBody;
+            if(!vehicleObject.TryGetComponent<Rigidbody>(out rigidBody))
+            {
+                rigidBody = vehicleObject.AddComponent<Rigidbody>();
+            }
+
             rigidBody.mass = 1;
             rigidBody.useGravity = false;
             rigidBody.isKinematic = true;

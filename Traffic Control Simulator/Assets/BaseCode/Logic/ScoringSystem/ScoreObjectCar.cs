@@ -36,8 +36,14 @@ namespace BaseCode.Logic.ScoringSystem
         private void OnDisable() =>
             _car.CarLightService.LightExited -= ExitLight;
 
-        public void Initialize(ScoringManager Manager) =>
+        /*public void Initialize(ScoringManager Manager) =>
+            _manager = Manager;*/
+
+        public void Initialize(ScoringManager Manager)
+        {
             _manager = Manager;
+            Debug.Log("Initialized");
+        }
 
         public void Calculate(float DeltaTime)
         {

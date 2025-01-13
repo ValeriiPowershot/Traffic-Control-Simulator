@@ -6,7 +6,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
 {
     public class VehicleMovementStopState : IVehicleMovementState
     {
-        private readonly float _rayDistance = 5f; // Adjust distance as needed
+        private readonly float _rayDistance = 0.2f; // Adjust distance as needed
         private readonly LayerMask _carLayer = LayerMask.GetMask("Car"); // Ensure cars are on a "Car" layer
         
         private bool _isWaiting;
@@ -42,7 +42,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         
         private IEnumerator WaitForSeconds()
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.1f);
             _isWaiting = false;
             VehicleController.SetState<VehicleMovementGoState>();
         }
