@@ -1,3 +1,4 @@
+using BaseCode.Interfaces;
 using BaseCode.Logic.ScriptableObject;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         public Transform LeftTurn;
         public Transform RayStartPoint;
         public Transform ArrowIndicatorEndPoint;
-        
+
         public override void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             base.Starter(manager, currentCar);

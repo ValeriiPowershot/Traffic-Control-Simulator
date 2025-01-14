@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8608091330825702370}
   - component: {fileID: 1522486741841530228}
-  - component: {fileID: 6149131613382923885}
   m_Layer: 0
   m_Name: ScoringMaterials
   m_TagString: Untagged
@@ -50,23 +49,6 @@ MonoBehaviour:
   good: {fileID: 2100000, guid: 9a058f7641059ab4b81b34d511308f91, type: 2}
   neutral: {fileID: 2100000, guid: 5bda8d130c540ee4d9e06eeb799d4be6, type: 2}
   bad: {fileID: 2100000, guid: 12a12924a7822534b92e2199573a713e, type: 2}
---- !u!114 &6149131613382923885
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2976430420415701908}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03796a6b4a51ab94fb80e9651a4190d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AcceptableWaitingTime: 1
-  SuccessPoints: 2
-  FailPoints: 3
-  TimeToWorstScore: 4
-  ScoreMaterialsComponent: {fileID: 1522486741841530228}
 --- !u!1001 &7992978098216270807
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -75,6 +57,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8608091330825702370}
     m_Modifications:
+    - target: {fileID: 196313576273989748, guid: 08480c1a90ea23646b4b6fe695fcc992,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9a058f7641059ab4b81b34d511308f91, type: 2}
     - target: {fileID: 1311999572317179770, guid: 08480c1a90ea23646b4b6fe695fcc992,
         type: 3}
       propertyPath: m_Name

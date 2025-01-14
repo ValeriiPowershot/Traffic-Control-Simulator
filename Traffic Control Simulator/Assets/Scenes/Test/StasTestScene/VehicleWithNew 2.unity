@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028355, g: 0.22571374, b: 0.30692255, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2628,11 +2628,39 @@ MonoBehaviour:
   carSpawnServiceHandler:
     spawnObjects:
     - poolSize: 3
-      timeToSpawn: 1
-      carSoObjects: {fileID: 11400000, guid: d7d944b14ff409142b1b50a41c08172a, type: 2}
-    - poolSize: 4
-      timeToSpawn: 1
-      carSoObjects: {fileID: 11400000, guid: d7d944b14ff409142b1b50a41c08172a, type: 2}
+      timeToSpawn: 2
+      carSoObjects: {fileID: 11400000, guid: e7e123bc5c9ecfa4c94c251af06087ad, type: 2}
+--- !u!1 &2116034431
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2116034432}
+  m_Layer: 0
+  m_Name: CarHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2116034432
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116034431}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2118898046
 GameObject:
   m_ObjectHideFlags: 0
@@ -2877,3 +2905,4 @@ SceneRoots:
   - {fileID: 676010480}
   - {fileID: 601113901}
   - {fileID: 308420800}
+  - {fileID: 2116034432}

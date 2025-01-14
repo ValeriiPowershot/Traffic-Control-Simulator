@@ -1,6 +1,7 @@
 using System;
 using BaseCode.Core.ObjectPool.Base;
 using BaseCode.Interfaces;
+using BaseCode.Logic.ScoringSystem;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.Interfaces.Car;
 using BaseCode.Logic.Vehicles.Vehicles;
@@ -13,7 +14,8 @@ namespace BaseCode.Core.ObjectPool.CarPool
     {
         private ICarSpawnService _carSpawnService;
         private VehicleScriptableObject _currentCar;
-        public CarPool(ICarSpawnService carSpawnService, GameObject poolObjectPrefab, int maxCarsCount, VehicleScriptableObject currentCar) : 
+
+        public CarPool(ICarSpawnService carSpawnService, GameObject poolObjectPrefab, int maxCarsCount, VehicleScriptableObject currentCar, ScoringManager manager) : 
             base(poolObjectPrefab)
         {
             _currentCar = currentCar;
@@ -22,11 +24,11 @@ namespace BaseCode.Core.ObjectPool.CarPool
             
             InitializeQueue(Capacity);
         } 
+
         public override IPoolObject InsertObjectToQueue()
         {
             VehicleBase newCar = (VehicleBase)base.InsertObjectToQueue();
-            
-            _carSpawnService.CarManager.ScoringManager.AddCar(newCar.GetComponentInChildren<IScoringObject>());
+            _carSpawnService.CarManager.ScoringManager.AddCar(newCar.GetComponent<IScoringObject>());
             newCar.Starter(_carSpawnService.CarManager, _currentCar);
 
             return newCar;
