@@ -5,20 +5,20 @@ namespace BaseCode.Logic.Vehicles.Vehicles
 {
     public class Ambulance : BasicCar
     {
-        [SerializeField] private GameObject pointer;
-        [SerializeField] private float signsDist;
-        [Range(0, 16)] [SerializeField] private float _arriveDelay = 0f;
+        [SerializeField] private GameObject _pointer;
+        [SerializeField] private float _signsDist;
+        [Range(0, 16)] [SerializeField] private float _arriveDelay;
 
-        private List<GameObject> arrows = new List<GameObject>();
-        private List<GameObject> hiddenArrows = new();
+        private List<GameObject> _arrows = new();
+        private List<GameObject> _hiddenArrows = new();
 
-        private float arriveTime;
-        private bool canArrive;
+        private float _arriveTime;
+        private bool _canArrive;
 
         public override void AssignNewPathContainer()
         {
-            canArrive = true;
-            arriveTime = Time.time + _arriveDelay;
+            _canArrive = true;
+            _arriveTime = Time.time + _arriveDelay;
 
             base.AssignNewPathContainer();
 
@@ -29,9 +29,9 @@ namespace BaseCode.Logic.Vehicles.Vehicles
                 float pointsDist = Vector3.Distance(PathContainerService.GetIndexWaypoint(i).point.position, 
                     PathContainerService.GetIndexWaypoint(i - 1).point.position);
 
-                if (distance + pointsDist >= signsDist)
+                if (distance + pointsDist >= _signsDist)
                 {
-                    float extraDist = distance + pointsDist - signsDist;
+                    float extraDist = distance + pointsDist - _signsDist;
                     pointsDist -= extraDist;
                     pointsDist = pointsDist < 0 ? 0 : pointsDist;
 
@@ -53,9 +53,9 @@ namespace BaseCode.Logic.Vehicles.Vehicles
 
         public override void Update()
         {
-            if(canArrive && Time.time > arriveTime)
-                canArrive = false;
-            else if(!canArrive)
+            if(_canArrive && Time.time > _arriveTime)
+                _canArrive = false;
+            else if(!_canArrive)
                 base.Update();
         }
 
@@ -63,29 +63,29 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         {
             base.DestinationReached();
 
-            foreach(var arr in arrows)
+            foreach(var arr in _arrows)
             {
                 arr.SetActive(false);
-                hiddenArrows.Add(arr);
+                _hiddenArrows.Add(arr);
             }
         }
 
         private void AddArrow(Vector3 pointerPos, Quaternion rot)
         {
             GameObject newArrow;
-            if(hiddenArrows.Count > 0)
+            if(_hiddenArrows.Count > 0)
             {
-                newArrow = hiddenArrows[0];
+                newArrow = _hiddenArrows[0];
                 newArrow.SetActive(true);
-                hiddenArrows.RemoveAt(0);
+                _hiddenArrows.RemoveAt(0);
             }
             else
             {
-                newArrow = Instantiate(pointer);
+                newArrow = Instantiate(_pointer);
             }
 
             newArrow.transform.SetPositionAndRotation(pointerPos, rot);
-            arrows.Add(newArrow);
+            _arrows.Add(newArrow);
         }
     }
 }

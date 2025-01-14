@@ -1,4 +1,3 @@
-using BaseCode.Core.ObjectPool;
 using BaseCode.Core.ObjectPool.Base;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.Handler.Car;
@@ -28,12 +27,12 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         {
             
         }
+        
         public virtual void DestinationReached()
         {
             Debug.Log("Reached");
             Pool.DestroyObject(this);
         }
-
     }
 
     public enum LightState

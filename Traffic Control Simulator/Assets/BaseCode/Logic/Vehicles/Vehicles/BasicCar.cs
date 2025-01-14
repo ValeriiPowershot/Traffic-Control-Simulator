@@ -1,4 +1,3 @@
-using BaseCode.Interfaces;
 using BaseCode.Logic.ScriptableObject;
 using UnityEngine;
 
