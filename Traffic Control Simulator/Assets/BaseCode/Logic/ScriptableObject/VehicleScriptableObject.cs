@@ -7,12 +7,10 @@ namespace BaseCode.Logic.ScriptableObject
     {
         public GameObject VehiclePrefab;
         
-        [SerializeField] private int _rotationSpeed = 4;
-        
         [SerializeField] private int _speed = 5;
         [SerializeField] private int _slowdownSpeed = 4;
         [SerializeField] private int _accelerationSpeed = 6;
-
+        
         public float RayLenght = 5f;
         public int IndexPath;
 
@@ -34,10 +32,6 @@ namespace BaseCode.Logic.ScriptableObject
             set => _slowdownSpeed = value;
         }
 
-        public int RotationSpeed
-        {
-            get => _rotationSpeed;
-            set => _rotationSpeed = value;
-        }
+        public int RotationSpeed => 960;
     }
 }

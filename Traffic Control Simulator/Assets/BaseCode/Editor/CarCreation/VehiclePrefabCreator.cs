@@ -21,7 +21,6 @@ namespace BaseCode.Editor.CarCreation
         private int _failPoints;
         private int _timeToWorstScore;
 
-        private int _rotationSpeed;
         private int _speed;
         private int _acceleration;
         private int _slowdown;
@@ -105,8 +104,7 @@ namespace BaseCode.Editor.CarCreation
         {
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             GUILayout.Label("Step 3: Set Vehicle Parameters", EditorStyles.boldLabel);
-
-            _rotationSpeed = EditorGUILayout.IntField("Rotation Speed", _rotationSpeed);
+            
             _speed = EditorGUILayout.IntField("Vehicle Speed", _speed);
             _acceleration = EditorGUILayout.IntField("Vehicle Acceleration", _acceleration);
             _slowdown = EditorGUILayout.IntField("Slowdown", _slowdown);
@@ -260,11 +258,8 @@ namespace BaseCode.Editor.CarCreation
 
         private void AddComponentsToVehicle(GameObject vehicleObject)
         {
-            Rigidbody rigidBody;
-            if(!vehicleObject.TryGetComponent<Rigidbody>(out rigidBody))
-            {
+            if(!vehicleObject.TryGetComponent(out Rigidbody rigidBody)) 
                 rigidBody = vehicleObject.AddComponent<Rigidbody>();
-            }
 
             rigidBody.mass = 1;
             rigidBody.useGravity = false;
@@ -335,7 +330,6 @@ namespace BaseCode.Editor.CarCreation
             vehicleScriptableObject.DefaultSpeed = _speed;
             vehicleScriptableObject.AccelerationSpeed = _acceleration;
             vehicleScriptableObject.SlowdownSpeed = _slowdown;
-            vehicleScriptableObject.RotationSpeed = _rotationSpeed;
             vehicleScriptableObject.RayLenght = _rayLenght;
             vehicleScriptableObject.IndexPath = _indexPath;
 

@@ -8,7 +8,6 @@ namespace BaseCode.Logic.Vehicles.States.Movement
     public class VehicleMovementGoState : IVehicleMovementState
     {
         public VehicleScriptableObject CarData { get; }
-        private float _speed;
         
         // controllers
         public Transform CarTransform => VehicleController.BasicCar.transform;
@@ -16,6 +15,8 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         
         private readonly VehiclePathController _vehiclePathController;
         private readonly VehicleCollisionController _vehicleCollisionController;
+        
+        private float _speed;
 
         public VehicleMovementGoState(VehicleController vehicleController)
         {
@@ -48,7 +49,6 @@ namespace BaseCode.Logic.Vehicles.States.Movement
 
             if (_vehiclePathController.IsCloseToWaypoint())
                 _vehiclePathController.ProceedToNextWaypoint();
- 
         }
 
         public void MovementExit()
@@ -108,6 +108,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         public Transform point;
         public RoadPointType roadPointType = RoadPointType.Normal;
     }
+    
     public enum RoadPointType
     {
         Slowdown,

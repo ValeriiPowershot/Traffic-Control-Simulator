@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Vehicles.Vehicles
 {
@@ -7,7 +8,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
     {
         [SerializeField] private GameObject _pointer;
         [SerializeField] private float _signsDist;
-        [Range(0, 16)] [SerializeField] private float _arriveDelay;
+        [Range(0, 16)] [SerializeField] private float _spawnDelay;
 
         private List<GameObject> _arrows = new();
         private List<GameObject> _hiddenArrows = new();
@@ -18,7 +19,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         public override void AssignNewPathContainer()
         {
             _canArrive = true;
-            _arriveTime = Time.time + _arriveDelay;
+            _arriveTime = Time.time - _spawnDelay;
 
             base.AssignNewPathContainer();
 
@@ -55,7 +56,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         {
             if(_canArrive && Time.time > _arriveTime)
                 _canArrive = false;
-            else if(!_canArrive)
+            if(!_canArrive)
                 base.Update();
         }
 
@@ -63,7 +64,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         {
             base.DestinationReached();
 
-            foreach(var arr in _arrows)
+            foreach(GameObject arr in _arrows)
             {
                 arr.SetActive(false);
                 _hiddenArrows.Add(arr);

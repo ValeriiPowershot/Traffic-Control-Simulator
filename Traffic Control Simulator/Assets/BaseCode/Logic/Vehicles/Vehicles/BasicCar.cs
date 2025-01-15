@@ -17,7 +17,8 @@ namespace BaseCode.Logic.Vehicles.Vehicles
             VehicleController.Starter(this);
         }
         
-        public virtual void Update() => VehicleController.Update();
+        public virtual void Update()
+            => VehicleController.Update();
         
         public override void AssignNewPathContainer()
         {
