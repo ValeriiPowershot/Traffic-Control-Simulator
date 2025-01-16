@@ -10,6 +10,7 @@ namespace BaseCode.Logic.Ways
     public class WaypointContainer : MonoBehaviour
     {
         public List<RoadPoint> roadPoints = new List<RoadPoint>();
+        
         public void SetRoadPoints(List<Transform> waypoints,List<Transform> decelerationPoints,List<Transform> accelerationPoints)
         {
             foreach (var waypoint in waypoints)
@@ -34,7 +35,7 @@ namespace BaseCode.Logic.Ways
                 }
             }
         }
-        public void OnDrawGizmos()
+        public void OnDrawGizmosSelected()
         {
             if(roadPoints.Count == 0)
                 return;

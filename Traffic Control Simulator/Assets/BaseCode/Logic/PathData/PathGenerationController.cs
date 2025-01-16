@@ -5,104 +5,157 @@ using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Ways;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.PathData
 {
     [ExecuteInEditMode]
     public class PathGenerationController : MonoBehaviour
     {
-        public RoadsScriptableObject roadsSo;
-        public AllWaysContainer allWaysContainer;
-        
-        [Header("Access from SceneObjectSpawner")]
-        public List<RoadBase> createdRoadBases = new();
-        public List<RoadBase> selectedRoads = new List<RoadBase>();
+        public RoadsScriptableObject RoadsSo { get; private set; }
+        public AllWaysContainer AllWaysContainer { get; private set; }
 
-        public GameObject clickedSelectedObject; // select it by double click
-        public RoadBase selectedRoad; // Selected road  
+        [Header("Access from SceneObjectSpawner")]
+        public List<RoadBase> createdRoadBases = new List<RoadBase>();
+        public List<RoadBase> selectedRoads = new List<RoadBase>();
         
-        // draw
-        public Color gizmoColor = new Color(0, 1, 0, 0.3f); // Transparent green
-        public float offsetDistance = 2f; // Distance to offset in each direction
-        private bool isSelected = false; // Track if the object is selected
+        public Vector3 CurrentDirection  { get; private set; }
+        public bool SelectingNewRoad { get; set; }
+        public GameObject ClickedSelectedObject{ get; set; } // Selected by double-click
+        public RoadBase SelectedRoad{ get; set; } // Currently selected road
         
-        public Vector3 currentDirection = Vector3.forward;
-        public bool selectingNewRoad = false;
-        
+        public PathGenerationController(AllWaysContainer allWaysContainer)
+        {
+            AllWaysContainer = allWaysContainer;
+        }
+
+        public void OnEnable()
+        {
+            if (RoadsSo == null)
+            {
+                RoadsSo = Resources.Load<RoadsScriptableObject>("RoadsSo");
+            }
+
+            if (AllWaysContainer == null)
+            {
+                AllWaysContainer = FindObjectOfType<AllWaysContainer>();
+            }
+        }
+
         private void OnDrawGizmos()
         {
-            if (selectingNewRoad)
+            if (IsThereProblem()) // very cool name
                 return;
-            
-            if(clickedSelectedObject == null || selectedRoad == null) 
-                return;
-            
-            Gizmos.color = gizmoColor;
-            Vector3 closestPosition = Vector3.zero;
-            string closestLabel = "";
-            float closestDistance = float.MaxValue;
+
+            Gizmos.color = RoadsSo.gizmoColor;
 
             Event currentEvent = Event.current;
             Vector2 mousePosition = currentEvent.mousePosition;
 
-            foreach (var offset in roadsSo.directions)
+            Vector3 closestPosition = Vector3.zero;
+            string closestLabel = "";
+            float closestDistance = float.MaxValue;
+
+            foreach (var offset in RoadsSo.directions)
             {
-                Vector3 offsetPosition = clickedSelectedObject.transform.position + offset.Item1.normalized * offsetDistance;
-                Vector3 screenPosition = HandleUtility.WorldToGUIPoint(offsetPosition);
-                float distance = Vector2.Distance(mousePosition, new Vector2(screenPosition.x, screenPosition.y));
+                Vector3 offsetPosition = CalculateOffsetPosition(offset.Item1);
+                float distance = CalculateScreenDistance(offsetPosition, mousePosition);
+
                 if (distance < closestDistance)
                 {
                     closestDistance = distance;
                     closestPosition = offsetPosition;
-                    currentDirection = offset.Item1;
+                    CurrentDirection = offset.Item1;
                 }
-                DrawMeshWithLabel(offsetPosition, offset.Item2);
-                Gizmos.DrawMesh(selectedRoad.roadMesh, 
-                    offsetPosition, transform.rotation, transform.localScale);
+
+                DrawOffsetGizmo(offsetPosition, offset.Item2);
             }
+
+            DrawClosestGizmo(closestDistance, closestPosition);
+        }
+
+        private bool IsThereProblem()
+        {
+            return SelectingNewRoad || ClickedSelectedObject == null || SelectedRoad == null;
+        }
+
+        private Vector3 CalculateOffsetPosition(Vector3 direction)
+        {
+            return ClickedSelectedObject.transform.position + direction.normalized * RoadsSo.offsetDistance;
+        }
+
+        private float CalculateScreenDistance(Vector3 worldPosition, Vector2 mousePosition)
+        {
+            Vector2 screenPosition = HandleUtility.WorldToGUIPoint(worldPosition);
+            return Vector2.Distance(mousePosition, screenPosition);
+        }
+
+        private void DrawOffsetGizmo(Vector3 position, string label)
+        {
+            DrawMeshWithLabel(position, label);
             
-            if (closestDistance < 60f) // Set a threshold for detection
+            Gizmos.DrawMesh(
+                SelectedRoad.roadMesh,
+                position,
+                transform.rotation,
+                transform.localScale
+            );
+        }
+
+        private void DrawClosestGizmo(float closestDistance, Vector3 closestPosition)
+        {
+            const float detectionThreshold = 60f;
+
+            if (closestDistance < detectionThreshold)
             {
-                DrawMeshWithLabel(closestPosition + Vector3.up * 10, $"Spawn Me");
+                DrawMeshWithLabel(closestPosition + Vector3.up * 10, "Spawn Me");
             }
             else
             {
-                currentDirection = Vector3.zero;
+                CurrentDirection = Vector3.zero;
             }
-            
         }
 
         private void DrawMeshWithLabel(Vector3 position, string label)
         {
             Handles.Label(position, label);
         }
+
         public void SpawnNow()
         {
-            if(currentDirection == Vector3.zero)
+            if (CurrentDirection == Vector3.zero)
                 return;
-            
-            SpawnObject(selectedRoad);
-            currentDirection = Vector3.zero;
+
+            SpawnObject(SelectedRoad);
+            CurrentDirection = Vector3.zero;
         }
-        
-        private void SpawnObject(RoadBase objectName)
+
+        private void SpawnObject(RoadBase roadBase)
         {
-            GameObject prefab = (GameObject)PrefabUtility.InstantiatePrefab(objectName.gameObject, transform);
+            GameObject prefab = (GameObject)PrefabUtility.InstantiatePrefab(roadBase.gameObject, transform);
 
             prefab.SetActive(true);
-            prefab.transform.position = clickedSelectedObject.transform.position + currentDirection * roadsSo.offset;
-            prefab.transform.rotation = Quaternion.LookRotation(currentDirection);
+            prefab.transform.position = ClickedSelectedObject.transform.position + CurrentDirection * RoadsSo.offset;
+            prefab.transform.rotation = Quaternion.LookRotation(CurrentDirection);
 
-            var roadBase = prefab.GetComponent<RoadBase>();
-            clickedSelectedObject = prefab;
-
-            createdRoadBases.Add(roadBase);
-
-            Undo.RegisterCreatedObjectUndo(prefab, $"Spawn {objectName}");
-            Selection.activeGameObject = prefab; // Optionally select the new object in the editor.
+            RegisterSpawnedObject(prefab);
         }
 
-      
+        private void RegisterSpawnedObject(GameObject prefab)
+        {
+            var roadBase = prefab.GetComponent<RoadBase>();
+            ClickedSelectedObject = prefab;
+            roadBase.roadSo = RoadsSo;
+            
+            var scale = roadBase.transform.localScale;
+            scale.x = RoadsSo.roadChange;
+            roadBase.transform.localScale = scale;
+
+            createdRoadBases ??= new List<RoadBase>();
+            createdRoadBases.Add(roadBase);
+
+            Undo.RegisterCreatedObjectUndo(prefab, $"Spawn {roadBase.name}");
+            Selection.activeGameObject = prefab;
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using BaseCode.Logic.ScriptableObject;
 using UnityEditor;
 using UnityEngine;
 
@@ -7,6 +8,8 @@ namespace BaseCode.Logic.Roads
 {
     public class RoadBase : MonoBehaviour
     {
+        public RoadsScriptableObject roadSo;
+        
         public Mesh roadMesh;
         public LayerMask pointMask;
         public List<Transform> path = new List<Transform>();
@@ -194,6 +197,9 @@ namespace BaseCode.Logic.Roads
 
         public virtual void OnDrawGizmos()
         {
+            if(roadSo == null || roadSo.canDrawRoadGizmo == false)
+                return;
+            
             if (startPoint != null)
             {
                 Gizmos.color = Color.cyan;
@@ -216,21 +222,22 @@ namespace BaseCode.Logic.Roads
             {
                 Gizmos.DrawSphere(points.position, 0.5f);
             }
+            
             DrawArrowDirection();
-
         }
 
         public virtual void DrawArrowDirection()
         {
+            
             Vector3 startPosition = onLeftPathPoints[0].position;
             Vector3 startPosition2 = onRightPathPoints[0].position;
 
             Vector3 leftDirection = transform.forward; // Left direction relative to the object
             Vector3 rightDirection = -transform.forward; // Right direction relative to the object
 
-            float arrowLength = 2f;
-
-            Handles.color = Color.green;
+            float arrowLength = roadSo.arrowLength;
+            Handles.color = roadSo.arrowColor;
+            
             Handles.ArrowHandleCap(
                 0,
                 startPosition,
