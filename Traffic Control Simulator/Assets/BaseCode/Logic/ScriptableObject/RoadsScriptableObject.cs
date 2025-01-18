@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using BaseCode.Logic.Npcs.Npc;
 using BaseCode.Logic.Roads;
 using UnityEngine;
 
@@ -8,7 +10,10 @@ namespace BaseCode.Logic.ScriptableObject
     [CreateAssetMenu(fileName = "RoadsSo", menuName = "So/RoadsSo", order = 0)]
     public class RoadsScriptableObject : UnityEngine.ScriptableObject
     {
-        public List<RoadBase> prefabs = new();
+        public List<RoadBase> roadPrefabs = new();
+        public List<NpcScriptableObject> npcPrefabs = new();
+        
+        
         public bool canOpenWindow;
         public float offset = 10f;
         
@@ -32,6 +37,21 @@ namespace BaseCode.Logic.ScriptableObject
 
         [Header("Road Config")]
         public int roadChange; // if it is -1, it will change to the left, if it is 1, it will change to the right :D
+    
+        
+        public NpcScriptableObject GetNpc<T>() where T : NpcBase
+        {
+            foreach (var npcPrefab in npcPrefabs)
+            {
+                NpcBase component = npcPrefab.prefab.GetComponent<T>();
 
+                if (component.GetType() == typeof(T))
+                {
+                    return npcPrefab;
+                }
+            }
+
+            return null;
+        }
     }
 }

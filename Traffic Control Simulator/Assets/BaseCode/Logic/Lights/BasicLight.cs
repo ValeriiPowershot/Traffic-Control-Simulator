@@ -1,10 +1,8 @@
-using BaseCode.Logic.Entity.Lights.Handler.Abstracts;
 using BaseCode.Logic.Lights.Handler.Abstracts;
 using UnityEngine;
 using LightState = BaseCode.Logic.Vehicles.Vehicles.LightState;
 
-//Basic class for all lights
-namespace BaseCode.Logic.Entity.Lights
+namespace BaseCode.Logic.Lights
 {
     public enum LightPlace
     {
@@ -21,6 +19,7 @@ namespace BaseCode.Logic.Entity.Lights
         
         private int _currentIndex = 1;
         private const int MaxIndex = 2;
+        
         
         public override void ChangeLight()
         {
