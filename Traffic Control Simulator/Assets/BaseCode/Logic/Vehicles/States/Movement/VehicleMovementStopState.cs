@@ -31,7 +31,6 @@ namespace BaseCode.Logic.Vehicles.States.Movement
             else
             {
                 Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
-                // wait 1 second
                 if (_isWaiting == false)
                 {
                     _isWaiting = true;
@@ -42,7 +41,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         
         private IEnumerator WaitForSeconds()
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(1f);
             _isWaiting = false;
             VehicleController.SetState<VehicleMovementGoState>();
         }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using BaseCode.Logic.Services.Interfaces.Car;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace BaseCode.Logic.Services.Handler.Car
 {
@@ -19,6 +21,8 @@ namespace BaseCode.Logic.Services.Handler.Car
             {
                 spawnObject.Initialize(CarManager, this);
             }
+
+            SpawnRoadDetectors();
         }
 
         public void Update()
@@ -28,6 +32,14 @@ namespace BaseCode.Logic.Services.Handler.Car
                 spawnObject.Update();
             }
         }
-        
+        private void SpawnRoadDetectors()
+        {
+            foreach (var container in CarManager.allWaysContainer.allWays)
+            {
+                var firstElement = container.roadPoints[0].point.transform;
+                Object.Instantiate(CarManager.allWaysContainer.carDetectorPrefab, firstElement.position, firstElement.rotation, firstElement);
+            }
+        }
+
     }
 }

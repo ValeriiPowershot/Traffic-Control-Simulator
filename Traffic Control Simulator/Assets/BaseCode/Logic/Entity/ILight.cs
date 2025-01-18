@@ -3,7 +3,7 @@ using VehicleBase = BaseCode.Logic.Vehicles.Vehicles.VehicleBase;
 
 namespace BaseCode.Logic.Entity
 {
-    public interface ILight
+    public interface ILight : IEntity
     {
         void ChangeLight();
         void SetChangeoverState();
