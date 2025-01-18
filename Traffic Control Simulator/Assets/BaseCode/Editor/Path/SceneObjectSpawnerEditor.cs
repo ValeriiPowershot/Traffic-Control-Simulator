@@ -1,14 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
-using BaseCode.Logic;
+using BaseCode.Logic.Npcs.Npc;
 using BaseCode.Logic.PathData;
 using BaseCode.Logic.Roads;
-using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Ways;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace BaseCode.Editor.Path
 {
@@ -16,7 +13,8 @@ namespace BaseCode.Editor.Path
     {
         private Vector2 _scrollPosition;
         private static GameObject _selectedObject;
-        private static PathGenerationController _pathGenerationController;
+        private static SceneRoadGenerationController _sceneRoadGenerationController;
+        
         
         #region Window
 
@@ -29,9 +27,9 @@ namespace BaseCode.Editor.Path
                 return;
             }
             
-            _pathGenerationController = FindObjectOfType<PathGenerationController>();
+            _sceneRoadGenerationController = FindObjectOfType<SceneRoadGenerationController>();
 
-            if (_pathGenerationController == null)
+            if (_sceneRoadGenerationController == null)
             {
                 var objects = new GameObject
                 {
@@ -39,19 +37,19 @@ namespace BaseCode.Editor.Path
                 };
                 objects.transform.SetAsFirstSibling();
                 
-                _pathGenerationController = objects.AddComponent<PathGenerationController>();
+                _sceneRoadGenerationController = objects.AddComponent<SceneRoadGenerationController>();
             }
             
-            _pathGenerationController.ClickedSelectedObject = _selectedObject;           
-            RoadBase roadBase = _pathGenerationController.ClickedSelectedObject.GetComponent<RoadBase>();
+            _sceneRoadGenerationController.ClickedSelectedObject = _selectedObject;           
+            RoadBase roadBase = _sceneRoadGenerationController.ClickedSelectedObject.GetComponent<RoadBase>();
             if (roadBase == null)
             {
-                _pathGenerationController.SelectedRoad = _pathGenerationController.RoadsSo.prefabs[0];
+                _sceneRoadGenerationController.SelectedRoad = _sceneRoadGenerationController.RoadsSo.roadPrefabs[0];
             }
             
-            _pathGenerationController.RoadsSo.canDrawRoadGizmo = true;
+            _sceneRoadGenerationController.RoadsSo.canDrawRoadGizmo = true;
 
-            if(_pathGenerationController.RoadsSo.canOpenWindow == false)
+            if(_sceneRoadGenerationController.RoadsSo.canOpenWindow == false)
                 return;
 
             var window = GetWindow<SceneObjectSpawnerEditor>("Object Spawner");
@@ -80,17 +78,23 @@ namespace BaseCode.Editor.Path
 
             EditorGUILayout.Space();
 
+            GenerateNpcControls();
+            
+            EditorGUILayout.Space();
+            
             GenerateRoad();
 
             EditorGUILayout.EndScrollView();
+
         }
 
         private bool ValidatePathGenerationController()
         {
-            if (_pathGenerationController == null || _pathGenerationController.ClickedSelectedObject == null)
+            if (_sceneRoadGenerationController == null || _sceneRoadGenerationController.ClickedSelectedObject == null)
             {
                 EditorGUILayout.LabelField("Select an object in the scene.");
-                _pathGenerationController.RoadsSo.canDrawRoadGizmo = false;
+                _sceneRoadGenerationController.RoadsSo.canDrawRoadGizmo = false;
+                
                 return false;
             }
             return true;
@@ -98,43 +102,89 @@ namespace BaseCode.Editor.Path
 
         private void DisplaySelectedObjectInfo()
         {
-            EditorGUILayout.LabelField($"Selected Object: {_pathGenerationController.ClickedSelectedObject.name}");
+            EditorGUILayout.LabelField($"Selected Object: {_sceneRoadGenerationController.ClickedSelectedObject.name}");
         }
 
         private void DisplayRoadSelectionButtons()
         {
-            foreach (var roadBase in _pathGenerationController.RoadsSo.prefabs)
+            foreach (var roadBase in _sceneRoadGenerationController.RoadsSo.roadPrefabs)
             {
                 GUIStyle buttonStyle = new GUIStyle(GUI.skin.button)
                 {
                     normal = 
                         { textColor = 
-                            roadBase == _pathGenerationController.SelectedRoad ? 
+                            roadBase == _sceneRoadGenerationController.SelectedRoad ? 
                                 Color.green : GUI.skin.button.normal.textColor }
                 };
 
                 if (GUILayout.Button($"{roadBase.name} Select", buttonStyle))
                 {
-                    _pathGenerationController.SelectedRoad = roadBase;
+                    _sceneRoadGenerationController.SelectedRoad = roadBase;
                 }
             }
         }
 
+        private void GenerateNpcControls()
+        {
+            if (IsInvalidStartOrEnd(_sceneRoadGenerationController.ClickedSelectedObject) == false)
+                return;
+
+            EditorGUILayout.LabelField("NPC Generation Controls");
+            
+            if (GUILayout.Button("Create NPC"))
+            {
+                bool result = false;
+                var roadBase = GetRoadBase(_sceneRoadGenerationController.ClickedSelectedObject);
+                
+                if (roadBase.GetType() == typeof(ForthRoadIntersection))
+                {
+                    result = ((ForthRoadIntersection)roadBase).GenerateNpc<BasicNpc>(_sceneRoadGenerationController.RoadsSo);
+                }
+                else if (roadBase.GetType() == typeof(TripleRoadIntersection))
+                {
+                    result = ((TripleRoadIntersection)roadBase)
+                        .GenerateNpc<BasicNpc>(_sceneRoadGenerationController.RoadsSo);
+                }
+
+                Debug.Log(result ? "NPC Created" : "Cannot Create NPC!");
+            }
+
+            if (GUILayout.Button("Destroy NPC"))
+            {
+                bool result = false;
+
+                var roadBase = GetRoadBase(_sceneRoadGenerationController.ClickedSelectedObject);
+                
+                if (roadBase.GetType() == typeof(ForthRoadIntersection))
+                {
+                    result = ((ForthRoadIntersection)roadBase).DestroyNpc();
+                }
+                else if (roadBase.GetType() == typeof(TripleRoadIntersection))
+                {
+                    result = ((TripleRoadIntersection)roadBase).DestroyNpc();
+                }
+
+                Debug.Log(result ? "NPC Destroyed" : "Cannot Destroy NPC!");
+            }
+        }
+
+        
         private void DisplayRotationControls()
         {
             EditorGUILayout.LabelField("Change Rotation Of Selected Object");
             ChangeRotation();
         }
+        
         // change rotation of road
         private void ChangeRotation()
         {
-            if (_pathGenerationController.ClickedSelectedObject == null)
+            if (_sceneRoadGenerationController.ClickedSelectedObject == null)
             {
                 EditorGUILayout.LabelField("No object selected.");
                 return;
             }
 
-            var currentRotation = _pathGenerationController.ClickedSelectedObject.transform.rotation;
+            var currentRotation = _sceneRoadGenerationController.ClickedSelectedObject.transform.rotation;
 
             float currentY = Mathf.Round(currentRotation.eulerAngles.y / 90f) * 90f;
 
@@ -142,8 +192,8 @@ namespace BaseCode.Editor.Path
 
             if (!Mathf.Approximately(newRotationY, currentRotation.eulerAngles.y))
             {
-                _pathGenerationController.ClickedSelectedObject.transform.rotation = Quaternion.Euler(currentRotation.eulerAngles.x, newRotationY, currentRotation.eulerAngles.z);
-                EditorUtility.SetDirty(_pathGenerationController.ClickedSelectedObject);
+                _sceneRoadGenerationController.ClickedSelectedObject.transform.rotation = Quaternion.Euler(currentRotation.eulerAngles.x, newRotationY, currentRotation.eulerAngles.z);
+                EditorUtility.SetDirty(_sceneRoadGenerationController.ClickedSelectedObject);
             }
         }
         #endregion
@@ -153,9 +203,9 @@ namespace BaseCode.Editor.Path
         {
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
 
-            _pathGenerationController.selectedRoads ??= new List<RoadBase>();
+            _sceneRoadGenerationController.selectedRoads ??= new List<RoadBase>();
             
-            foreach (var road in _pathGenerationController.selectedRoads)
+            foreach (var road in _sceneRoadGenerationController.selectedRoads)
             {
                 if (road != null)
                 {
@@ -190,10 +240,10 @@ namespace BaseCode.Editor.Path
         
         private void GeneratePathRoad()
         {
-            var roads = _pathGenerationController.selectedRoads;
+            var roads = _sceneRoadGenerationController.selectedRoads;
             var size = roads.Count;
 
-            foreach (var roadBase in _pathGenerationController.selectedRoads)
+            foreach (var roadBase in _sceneRoadGenerationController.selectedRoads)
             {
                 roadBase.startPoint = null;
                 roadBase.endPoint = null;
@@ -225,7 +275,7 @@ namespace BaseCode.Editor.Path
 
                 if (AreConsecutiveIntersectionsInvalid(previousRoad, currentRoad))
                 {
-                    _pathGenerationController.selectedRoads.Clear();
+                    _sceneRoadGenerationController.selectedRoads.Clear();
                     return false;
                 }
 
@@ -247,7 +297,7 @@ namespace BaseCode.Editor.Path
                 return false;
             }
 
-            _pathGenerationController.selectedRoads.Clear();
+            _sceneRoadGenerationController.selectedRoads.Clear();
 
             if (IsInvalidStartOrEnd(selectedObjects[0]) || IsInvalidStartOrEnd(selectedObjects[^1]))
             {
@@ -272,9 +322,9 @@ namespace BaseCode.Editor.Path
 
         private void AddRoadToPath(RoadBase road)
         {
-            if (road != null && !_pathGenerationController.selectedRoads.Contains(road))
+            if (road != null && !_sceneRoadGenerationController.selectedRoads.Contains(road))
             {
-                _pathGenerationController.selectedRoads.Add(road);
+                _sceneRoadGenerationController.selectedRoads.Add(road);
             }
         }
         public void GenerateNewPath()
@@ -283,19 +333,19 @@ namespace BaseCode.Editor.Path
             {
                 transform =
                 {
-                    parent = _pathGenerationController.AllWaysContainer.transform
+                    parent = _sceneRoadGenerationController.AllWaysContainer.transform
                 },
                 name = "PathContainer"
             };
             var waypointContainer = createNewContainer.AddComponent<WaypointContainer>();
 
-            foreach (var objectsCreatedRoadBase in _pathGenerationController.createdRoadBases.ToList())
+            foreach (var objectsCreatedRoadBase in _sceneRoadGenerationController.createdRoadBases.ToList())
             {
                 if(objectsCreatedRoadBase == null)
-                    _pathGenerationController.createdRoadBases.Remove(objectsCreatedRoadBase);
+                    _sceneRoadGenerationController.createdRoadBases.Remove(objectsCreatedRoadBase);
             }
             
-            foreach (var roadBase in _pathGenerationController.selectedRoads)
+            foreach (var roadBase in _sceneRoadGenerationController.selectedRoads)
             {
                 roadBase.startPoint = null;
                 roadBase.endPoint = null;
@@ -356,32 +406,32 @@ namespace BaseCode.Editor.Path
 
         private static void UpdatePathGenerationControllerState(Event e)
         {
-            if (_pathGenerationController == null)
+            if (_sceneRoadGenerationController == null)
                 return;
 
-            _pathGenerationController.SelectingNewRoad = e.modifiers != EventModifiers.None;
+            _sceneRoadGenerationController.SelectingNewRoad = e.modifiers != EventModifiers.None;
         }
 
         private static void HandleSingleClick()
         {
-            if (_pathGenerationController == null || _pathGenerationController.CurrentDirection == Vector3.zero)
+            if (_sceneRoadGenerationController == null || _sceneRoadGenerationController.CurrentDirection == Vector3.zero)
             {
-                if (_pathGenerationController != null) _pathGenerationController.ClickedSelectedObject = null;
+                if (_sceneRoadGenerationController != null) _sceneRoadGenerationController.ClickedSelectedObject = null;
 
                 return;
             }
 
-            if (_pathGenerationController.ClickedSelectedObject != null && 
-                _pathGenerationController.SelectedRoad != null &&
-                !_pathGenerationController.SelectingNewRoad)
+            if (_sceneRoadGenerationController.ClickedSelectedObject != null && 
+                _sceneRoadGenerationController.SelectedRoad != null &&
+                !_sceneRoadGenerationController.SelectingNewRoad)
             {
-                _pathGenerationController.SpawnNow();
+                _sceneRoadGenerationController.SpawnNow();
             }
         }
         
         private void CleanVisuals()
         {
-            foreach (var roadBase in _pathGenerationController.createdRoadBases)
+            foreach (var roadBase in _sceneRoadGenerationController.createdRoadBases)
             {
                 if(roadBase == null)
                     continue;
@@ -392,7 +442,7 @@ namespace BaseCode.Editor.Path
                 roadBase.decelerationPoints.Clear();
                 roadBase.accelerationPoints.Clear();
             }
-            _pathGenerationController.SelectedRoad = null;
+            _sceneRoadGenerationController.SelectedRoad = null;
         }
         #endregion
     }

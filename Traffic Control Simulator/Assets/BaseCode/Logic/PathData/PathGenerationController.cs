@@ -9,7 +9,7 @@ using UnityEngine;
 namespace BaseCode.Logic.PathData
 {
     [ExecuteInEditMode]
-    public class PathGenerationController : MonoBehaviour
+    public class SceneRoadGenerationController : MonoBehaviour
     {
         public RoadsScriptableObject RoadsSo { get; private set; }
         public AllWaysContainer AllWaysContainer { get; private set; }
@@ -23,7 +23,7 @@ namespace BaseCode.Logic.PathData
         public GameObject ClickedSelectedObject{ get; set; } // Selected by double-click
         public RoadBase SelectedRoad{ get; set; } // Currently selected road
         
-        public PathGenerationController(AllWaysContainer allWaysContainer)
+        public SceneRoadGenerationController(AllWaysContainer allWaysContainer)
         {
             AllWaysContainer = allWaysContainer;
         }

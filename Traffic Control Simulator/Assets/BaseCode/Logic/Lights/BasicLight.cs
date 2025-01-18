@@ -1,10 +1,8 @@
-using BaseCode.Logic.Entity.Lights.Handler.Abstracts;
 using BaseCode.Logic.Lights.Handler.Abstracts;
 using UnityEngine;
 using LightState = BaseCode.Logic.Vehicles.Vehicles.LightState;
 
-//Basic class for all lights
-namespace BaseCode.Logic.Entity.Lights
+namespace BaseCode.Logic.Lights
 {
     public enum LightPlace
     {
@@ -18,10 +16,13 @@ namespace BaseCode.Logic.Entity.Lights
     {
         [SerializeField] private Material[] _lightMats;
         [SerializeField] private MeshRenderer _lightMesh;
+
+        [SerializeField] private Material[] _groundLightMats;
+        [SerializeField] private MeshRenderer _groundMesh;
         
         private int _currentIndex = 1;
         private const int MaxIndex = 2;
-        
+
         public override void ChangeLight()
         {
             UpdateLightIndex();
@@ -43,6 +44,11 @@ namespace BaseCode.Logic.Entity.Lights
             {
                 _lightMesh.material = _lightMats[^1]; // Set to the last material as a temporary changeover indicator
             }
+
+            if (_groundMesh != null)
+            {
+                _groundMesh.material = _groundLightMats[^1]; // Set to the last material for the ground as well
+            }
         }
 
         private void UpdateVisualState()
@@ -51,6 +57,20 @@ namespace BaseCode.Logic.Entity.Lights
             {
                 _lightMesh.material = _lightMats[_currentIndex - 1];
             }
+
+            if (_groundMesh != null && _groundLightMats.Length == 2)
+            {
+                // Sync ground light material to the light mesh's first and last material
+                if (_currentIndex == 1)
+                {
+                    _groundMesh.material = _groundLightMats[0]; // First ground material
+                }
+                else if (_currentIndex == MaxIndex)
+                {
+                    _groundMesh.material = _groundLightMats[1]; // Last ground material
+                }
+            }
         }
     }
+
 }

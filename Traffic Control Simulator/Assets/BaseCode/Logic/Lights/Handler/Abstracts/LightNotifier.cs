@@ -1,9 +1,9 @@
-using BaseCode.Logic.Entity.Lights.Services;
-using BaseCode.Logic.Lights.Handler.Abstracts;
+using BaseCode.Logic.Lights.Services;
+using BaseCode.Logic.Npcs.Npc;
 using LightState = BaseCode.Logic.Vehicles.Vehicles.LightState;
 using VehicleBase = BaseCode.Logic.Vehicles.Vehicles.VehicleBase;
 
-namespace BaseCode.Logic.Entity.Lights.Handler.Abstracts
+namespace BaseCode.Logic.Lights.Handler.Abstracts
 {
     public class LightNotifier : ILightNotifier
     {
@@ -14,10 +14,16 @@ namespace BaseCode.Logic.Entity.Lights.Handler.Abstracts
             _lightBase = lightBase;
         }
 
-        public void NotifyVehicle(VehicleBase vehicle, LightState state)
+        public void NotifyNpc(NpcBase npcBase, LightState state)
         {
-            vehicle.CarLightService.PassLightState(state);
+            npcBase.PassLightState(state); 
         }
+        public void NotifyNpcs(LightState state)
+        {
+            if (_lightBase.ControlledNpc == null) return;
+            NotifyNpc(_lightBase.ControlledNpc, state);
+        }
+
         public void NotifyVehicles(LightState state)
         {
             foreach (var vehicle in _lightBase.ControlledVehicles)
@@ -25,5 +31,11 @@ namespace BaseCode.Logic.Entity.Lights.Handler.Abstracts
                 NotifyVehicle(vehicle, state);
             }
         }
+        
+        public void NotifyVehicle(VehicleBase vehicle, LightState state)
+        {
+            vehicle.CarLightService.PassLightState(state);
+        }
+        
     }
 }

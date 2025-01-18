@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using BaseCode.Logic.Entity;
-using BaseCode.Logic.Entity.Lights;
-using BaseCode.Logic.Entity.Lights.Handler.Abstracts;
-using BaseCode.Logic.Entity.Lights.Services;
+using BaseCode.Logic.Lights.Services;
+using BaseCode.Logic.Npcs.Npc;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Lights.Handler.Abstracts
 {
@@ -18,7 +18,13 @@ namespace BaseCode.Logic.Lights.Handler.Abstracts
         
         private ILightNotifier _notifier;
         private readonly List<VehicleBase> _controlledVehicles = new();
+        
+        public NpcBase controlledNpcs;
+        public Transform npcGroundIndicator;
 
+        public Transform targetA; 
+        public Transform targetB; 
+        
         protected virtual void Start()
         {
             _notifier = new LightNotifier(this);
@@ -46,9 +52,11 @@ namespace BaseCode.Logic.Lights.Handler.Abstracts
         protected void NotifyStateChange()
         {
             _notifier?.NotifyVehicles(CurrentState);
+            _notifier?.NotifyNpcs(CurrentState);
         }
 
         public List<VehicleBase> ControlledVehicles => _controlledVehicles;
+        public NpcBase ControlledNpc => controlledNpcs;
 
         public LightPlace Place
         {

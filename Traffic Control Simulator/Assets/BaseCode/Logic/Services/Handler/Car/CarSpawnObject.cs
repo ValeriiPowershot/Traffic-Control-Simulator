@@ -2,6 +2,7 @@ using System;
 using BaseCode.Core;
 using BaseCode.Core.ObjectPool.CarPool;
 using BaseCode.Interfaces;
+using BaseCode.Logic.Roads.RoadTool;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
@@ -15,38 +16,59 @@ namespace BaseCode.Logic.Services.Handler.Car
         public CarPool Pool { get; private set; }
         public CarManager CarManager { get; set; }
         public float Timer { get; set; }
-        
+
         [SerializeField] private int poolSize;
         [SerializeField] private float timeToSpawn;
-        
+
         [SerializeField] private VehicleScriptableObject carSoObjects;
-        
-        public void Initialize(CarManager carManagerInScene,CarSpawnServiceHandler carSpawnServiceHandler)
+
+        private VehicleBase _newCar;
+        private CarDetector _carDetector;
+        public void Initialize(CarManager carManagerInScene, CarSpawnServiceHandler carSpawnServiceHandler)
         {
             CarManager = carManagerInScene;
-            Pool = new CarPool(carSpawnServiceHandler,carSoObjects.VehiclePrefab, poolSize, carSoObjects, carManagerInScene.ScoringManager);
+            Pool = new CarPool(carSpawnServiceHandler, carSoObjects.VehiclePrefab, poolSize, carSoObjects,
+                carManagerInScene.ScoringManager);
         }
-        
+
         public void Update()
         {
-            if(Pool.IsThereCar && IsTimerUp())
+            if (_carDetector != null && _carDetector.isCarWaiting)
             {
-                SpawnNewCar();
+                if (_carDetector.IsThereCarInSpawnPoint() == false)
+                {
+                    _newCar.gameObject.SetActive(true);
+                    _carDetector.isCarWaiting = false;
+                }
             }
+            else
+            {
+                if (Pool.IsThereCar && IsTimerUp())
+                {
+                    SpawnNewCar();
+                }
+            }
+            
         }
         
         public void SpawnNewCar()
         {
             AddDelay(timeToSpawn);
-            
-            VehicleBase newCar = (VehicleBase)Pool.InstantiateObject();
-            newCar.AssignNewPathContainer();
+
+            _newCar = (VehicleBase)Pool.InstantiateObject();
+            _newCar.AssignNewPathContainer();
+
+            _newCar.gameObject.SetActive(false);
+
+            _carDetector = _newCar.PathContainerService.GetIndexWaypoint(0).point.GetChild(0).GetComponent<CarDetector>();
+            _carDetector.isCarWaiting = true;
         }
-        
+   
         public void AddDelay(float delay)
         {
-            Timer = Time.time + timeToSpawn;
+            Timer = Time.time + delay;
         }
+
         public bool IsTimerUp()
         {
             return Time.time >= Timer;
