@@ -208,9 +208,7 @@ namespace BaseCode.Editor.CarCreation
 
         private void CheckVehicleCollider(GameObject vehicleObject)
         {
-            if (!_needToCopyColliderSize || ObjectFinder.FindObjectInParent(_vehicleModelPrefab, "Body").GetComponent<BoxCollider>() == null) return;
-
-            BoxCollider vehicleCollider = ObjectFinder.FindObjectInParent(_vehicleModelPrefab, "Body").GetComponent<BoxCollider>();
+            vehicleObject.TryGetComponent(out BoxCollider vehicleCollider);
 
             BoxCollider objectCollider = vehicleObject.GetComponent<BoxCollider>();
             objectCollider.size = vehicleCollider.size;
