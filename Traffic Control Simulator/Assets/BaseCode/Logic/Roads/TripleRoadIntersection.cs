@@ -1,7 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using BaseCode.Logic.Entity.Lights;
+using BaseCode.Logic.Lights;
+using BaseCode.Logic.Lights.Handler.Abstracts;
+using BaseCode.Logic.Npcs.Npc;
+using BaseCode.Logic.PathData;
+using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Vehicles;
+using UnityEditor;
 using UnityEngine;
 
 namespace BaseCode.Logic.Roads
@@ -21,6 +26,7 @@ namespace BaseCode.Logic.Roads
 
         // lights
         public List<BasicLight> basicLights;
+        
         public override void ConnectPath(RoadBase nextBase)
         {
             path.Clear();
@@ -108,8 +114,57 @@ namespace BaseCode.Logic.Roads
             {
                 vehicle.CarLightService.ExitIntersection();
             }
-            
         }
 
+        public virtual bool GenerateNpc<T>(RoadsScriptableObject roadSoBase) where T : NpcBase
+        {
+            LightBase lightBase = GetALight();
+
+            if (lightBase == null)
+                return false;
+
+            var npcBase = roadSoBase.GetNpc<T>();
+            if (npcBase == null)
+                return false;
+
+            
+            GameObject createdNpc = (GameObject)PrefabUtility.InstantiatePrefab(npcBase.prefab.gameObject);
+            createdNpc.transform.position = lightBase.targetA.transform.position;
+
+            var sceneRoadGenerationController = FindObjectOfType<SceneRoadGenerationController>();
+            if (sceneRoadGenerationController != null)
+                createdNpc.transform.SetParent(sceneRoadGenerationController.transform);
+
+                
+            NpcBase npcBaseComponent  = createdNpc.GetComponent<T>();
+            lightBase.controlledNpcs = npcBaseComponent;
+
+            npcBaseComponent.npcController.a = lightBase.targetA;
+            npcBaseComponent.npcController.b = lightBase.targetB;
+            npcBaseComponent.npcController.target = lightBase.targetA;
+
+            npcBaseComponent.npcController.npcScriptableObject = npcBase;
+            
+            return true;
+        }
+        
+        public virtual bool DestroyNpc() 
+        {
+            LightBase lightBase = GetALight(false);
+            if (lightBase == null)
+                return false;
+            if (lightBase.controlledNpcs == null)
+                return false;
+            
+            DestroyImmediate(lightBase.controlledNpcs.gameObject);
+            return true;
+        }
+
+        public virtual LightBase GetALight(bool findNull = true)
+        {
+            return findNull ? 
+                basicLights.FirstOrDefault(basicLight => basicLight.ControlledNpc == null) : 
+                basicLights.FirstOrDefault(basicLight => basicLight.ControlledNpc != null);
+        }
     }
 }
