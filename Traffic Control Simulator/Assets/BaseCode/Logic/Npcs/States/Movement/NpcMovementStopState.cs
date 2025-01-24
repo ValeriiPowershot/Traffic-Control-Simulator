@@ -1,6 +1,5 @@
 using System.Collections;
 using BaseCode.Logic.Npcs.Controllers;
-using BaseCode.Logic.Npcs.Controllers;
 using BaseCode.Logic.Npcs.Npc;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Vehicles;
@@ -12,6 +11,7 @@ namespace BaseCode.Logic.Npcs.States.Movement
     {
         private readonly NpcMovementStateController _stateController;
         private bool _isWaiting;
+        
         public NpcMovementStopState(NpcMovementStateController npcController)
         {
             _stateController = npcController;
@@ -41,15 +41,11 @@ namespace BaseCode.Logic.Npcs.States.Movement
         {
             if (_isWaiting == false && IsCloseEnough() && IsItRed())
                 NpcBase.StartCoroutine(WaitForSecondsAndChange());
-            
+
             if (IsCloseEnough() == false)
-            {
                 MoveTowardsTarget();
-            }
             else
-            {
                 _stateController.Controller.SetToIdle();
-            }
         }
 
         private IEnumerator WaitForSecondsAndChange()
@@ -66,11 +62,11 @@ namespace BaseCode.Logic.Npcs.States.Movement
         {
             return NpcBase.npcController.currentLight == LightState.Red;
         }
+        
         private bool IsItGreen()
         {
             return NpcBase.npcController.currentLight == LightState.Green;
         }
-
 
         private bool IsCloseEnough()
         {

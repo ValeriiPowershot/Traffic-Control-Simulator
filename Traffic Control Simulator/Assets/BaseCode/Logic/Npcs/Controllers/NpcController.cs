@@ -1,17 +1,17 @@
-
 using System;
 using BaseCode.Logic.Npcs.Npc;
 using BaseCode.Logic.Npcs.States.Movement;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Npcs.Controllers
 {
     [Serializable]
     public class NpcController
     {
+        private static readonly int Movement = Animator.StringToHash("Movement");
+        
         public LightState currentLight;
         private NpcBase _npcBase;
         public NpcMovementStateController StateController { get; private set; }
@@ -47,15 +47,15 @@ namespace BaseCode.Logic.Npcs.Controllers
 
         public void SetToIdle()
         {
-            animator.SetFloat("Movement",0);
+            animator.SetFloat(Movement,0);
         }
         public void SetToWalk()
         {
-            animator.SetFloat("Movement",0.5f);
+            animator.SetFloat(Movement,0.5f);
         }
         public void SetToRun()
         {
-            animator.SetFloat("Movement",1);
+            animator.SetFloat(Movement,1);
         }
     }
 }

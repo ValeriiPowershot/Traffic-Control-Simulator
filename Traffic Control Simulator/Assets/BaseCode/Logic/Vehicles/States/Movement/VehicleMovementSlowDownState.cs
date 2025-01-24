@@ -1,4 +1,3 @@
-using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Controllers;
 
 namespace BaseCode.Logic.Vehicles.States.Movement
@@ -23,6 +22,5 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         public void MovementExit()
         {
         }
-        private VehicleScriptableObject VehicleScriptableObject => VehicleController.BasicCar.VehicleScriptableObject;
     }
 }

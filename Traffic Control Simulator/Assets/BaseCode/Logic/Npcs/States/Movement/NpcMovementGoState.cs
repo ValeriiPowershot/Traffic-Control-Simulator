@@ -3,7 +3,6 @@ using BaseCode.Logic.Npcs.Controllers;
 using BaseCode.Logic.Npcs.Npc;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Vehicles;
-using UnityEditor.Animations;
 using UnityEngine;
 
 namespace BaseCode.Logic.Npcs.States.Movement
@@ -11,7 +10,7 @@ namespace BaseCode.Logic.Npcs.States.Movement
     public class NpcMovementGoState : INpcMovementState
     {
         private readonly NpcMovementStateController _stateController; // Reference to the state controller
-        private bool _selectingATarget = false;
+        private bool _selectingATarget;
         
         public NpcMovementGoState(NpcMovementStateController stateController)
         {

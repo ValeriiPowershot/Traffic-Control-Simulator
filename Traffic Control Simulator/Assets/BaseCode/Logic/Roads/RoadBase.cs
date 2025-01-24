@@ -35,24 +35,16 @@ namespace BaseCode.Logic.Roads
                 if (IsStartPointIsSame(onLeftPathPoints))
                 {
                     if (startPoint == onLeftPathPoints[0])
-                    {
                         AddPathPoint(onLeftPathPoints);
-                    }
                     else
-                    {
                         AddReversedPathPoints(onLeftPathPoints);
-                    }
                 }
                 else
                 {
                     if (startPoint == onRightPathPoints[0])
-                    {
                         AddPathPoint(onRightPathPoints);
-                    }
                     else
-                    {
                         AddReversedPathPoints(onRightPathPoints);
-                    }
                 }
                 
                 endPoint = path[^1];
@@ -61,62 +53,50 @@ namespace BaseCode.Logic.Roads
             {
                 if (startPoint == null) // start path
                 {
-                    var direction = (nextBase.transform.position - transform.position).normalized;
+                    Vector3 direction = (nextBase.transform.position - transform.position).normalized;
 
                     if (direction == transform.forward)
                     {
-                        var useLa = FindCloserStartPoint(onLeftPathPoints,nextBase.transform.position);
-                        
+                        bool useLa = FindCloserStartPoint(onLeftPathPoints,nextBase.transform.position);
+
                         if (useLa)
-                        {
                             UseNewStartEndPoints(onLeftPathPoints);
-                        }
                         else
-                        {
                             UseNewReversedStartEndPoints(onLeftPathPoints);
-                        }
 
                         FindNextPointByRay(endPoint, nextBase);
                     }
                     else
                     {
-                        var useLa = FindCloserStartPoint(onRightPathPoints,nextBase.transform.position);;
+                        bool useLa = FindCloserStartPoint(onRightPathPoints,nextBase.transform.position);;
 
                         if (useLa)
-                        {
                             UseNewStartEndPoints(onRightPathPoints);
-                        }
                         else
-                        {
                             UseNewReversedStartEndPoints(onRightPathPoints);
-                        }
+
                         FindNextPointByRay(endPoint, nextBase);
                     }
                 }
+                
                 else // middle path
                 {
                     if (IsStartPointIsSame(onLeftPathPoints))
                     {
                         if (startPoint == onLeftPathPoints[0])
-                        {
                             UseNewStartEndPoints(onLeftPathPoints);
-                        }
                         else
-                        {
                             UseNewReversedStartEndPoints(onLeftPathPoints);
-                        }
+
                         FindNextPointByRay(endPoint, nextBase);
                     }
                     else
                     {
                         if (startPoint == onRightPathPoints[0])
-                        {
                             UseNewStartEndPoints(onRightPathPoints);
-                        }
                         else
-                        {
                             UseNewReversedStartEndPoints(onRightPathPoints);
-                        }
+
                         FindNextPointByRay(endPoint, nextBase);
                     }
                 }
@@ -130,67 +110,60 @@ namespace BaseCode.Logic.Roads
             if (path.Count <= 3) // normal road has 3 points 
                 return;
             int halfPathLength = path.Count / 2;
-            decelerationPoints.AddRange(path.Take(halfPathLength)); // hurt me plenty
+            decelerationPoints.AddRange(path.Take(halfPathLength));
             accelerationPoints.AddRange(path.Skip(halfPathLength));
         }
 
         private bool FindCloserStartPoint(List<Transform> transforms, Vector3 transformPosition)
         {
-            var distanceLa = Vector3.Distance(transforms[0].position, transformPosition);
-            var distanceLb = Vector3.Distance(transforms[^1].position, transformPosition);
+            float distanceLa = Vector3.Distance(transforms[0].position, transformPosition);
+            float distanceLb = Vector3.Distance(transforms[^1].position, transformPosition);
             return distanceLa > distanceLb;
         }
 
-        public void UseNewStartEndPoints(List<Transform> points)
+        private void UseNewStartEndPoints(List<Transform> points)
         {
             startPoint = points[0];
             endPoint = points[^1];
             
             path.AddRange(points);
         }
-        public void UseNewReversedStartEndPoints(List<Transform> points)
+        
+        private void UseNewReversedStartEndPoints(List<Transform> points)
         {
-            var reversedPoints = new List<Transform>(points);
+            List<Transform> reversedPoints = new List<Transform>(points);
             reversedPoints.Reverse();
             UseNewStartEndPoints(reversedPoints);
         }
 
-        private bool IsPathEnd(RoadBase nextBase)
-        {
-            return nextBase == null && startPoint != null;
-        }
+        private bool IsPathEnd(RoadBase nextBase) =>
+            nextBase == null && startPoint != null;
 
-        public bool IsStartPointIsSame(List<Transform> points)
-        {
-            return startPoint == points[0] || startPoint == points[^1];
-        }
-        
-        public void AddPathPoint(List<Transform> point)
-        {
+        private bool IsStartPointIsSame(List<Transform> points) =>
+            startPoint == points[0] || startPoint == points[^1];
+
+        private void AddPathPoint(List<Transform> point) =>
             path.AddRange(point);
-        }
-        public void AddReversedPathPoints(List<Transform> points)
+
+        private void AddReversedPathPoints(List<Transform> points)
         {
-            var reversedPoints = new List<Transform>(points);
+            List<Transform> reversedPoints = new List<Transform>(points);
             reversedPoints.Reverse();
             path.AddRange(reversedPoints);
         }
 
-        public virtual void FindNextPointByRay(Transform onLeftPathPoint, RoadBase nextBase)
+        private void FindNextPointByRay(Transform onLeftPathPoint, RoadBase nextBase)
         {
-            var boxCollider = onLeftPathPoint.GetComponent<BoxCollider>();
+            BoxCollider boxCollider = onLeftPathPoint.GetComponent<BoxCollider>();
             boxCollider.enabled = false;
 
-            var ray = new Ray(onLeftPathPoint.position, onLeftPathPoint.forward);
-            if (Physics.Raycast(ray, out var hit, pointDistance, pointMask))
-            {
+            Ray ray = new Ray(onLeftPathPoint.position, onLeftPathPoint.forward);
+            
+            if (Physics.Raycast(ray, out var hit, pointDistance, pointMask)) 
                 nextBase.startPoint = hit.transform;
-            }
 
             if (nextBase is TripleRoadIntersection) // when entering 
-            {
                 decelerationPoints.Add(path[^1]);
-            }
 
             boxCollider.enabled = true;
         }
@@ -213,20 +186,19 @@ namespace BaseCode.Logic.Roads
             }
 
             Gizmos.color = Color.yellow;
-            foreach (var points in accelerationPoints)
-            {
+            
+            foreach (Transform points in accelerationPoints) 
                 Gizmos.DrawSphere(points.position, 0.5f);
-            }
+            
             Gizmos.color = Color.red;
-            foreach (var points in decelerationPoints)
-            {
+            
+            foreach (Transform points in decelerationPoints) 
                 Gizmos.DrawSphere(points.position, 0.5f);
-            }
             
             DrawArrowDirection();
         }
 
-        public virtual void DrawArrowDirection()
+        protected virtual void DrawArrowDirection()
         {
             
             Vector3 startPosition = onLeftPathPoints[0].position;

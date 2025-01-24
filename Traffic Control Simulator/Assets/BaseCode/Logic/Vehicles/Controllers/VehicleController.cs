@@ -1,4 +1,3 @@
-using System;
 using BaseCode.Logic.Vehicles.States.Movement;
 
 namespace BaseCode.Logic.Vehicles.Controllers
@@ -15,7 +14,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
             StartEngine();
         }
 
-        public void StartEngine()
+        private void StartEngine()
         {
             SetState<VehicleMovementGoState>(); // Start in the stopped state
         }

@@ -326,7 +326,7 @@ namespace BaseCode.Editor.Path
                 _sceneRoadGenerationController.selectedRoads.Add(road);
             }
         }
-        public void GenerateNewPath()
+        private void GenerateNewPath()
         {
             var createNewContainer = new GameObject
             {

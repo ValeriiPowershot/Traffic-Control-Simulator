@@ -1,4 +1,3 @@
-using BaseCode.Logic.Vehicles;
 using VehicleBase = BaseCode.Logic.Vehicles.Vehicles.VehicleBase;
 
 namespace BaseCode.Logic.Entity

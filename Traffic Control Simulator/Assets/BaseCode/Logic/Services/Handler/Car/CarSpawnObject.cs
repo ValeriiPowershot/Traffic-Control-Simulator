@@ -1,11 +1,9 @@
 using System;
-using BaseCode.Core;
 using BaseCode.Core.ObjectPool.CarPool;
 using BaseCode.Interfaces;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace BaseCode.Logic.Services.Handler.Car
 {

@@ -101,9 +101,9 @@ namespace BaseCode.Logic.Roads
                 }
             }
         }
-        
-        
-        public override void DrawArrowDirection()
+
+
+        protected override void DrawArrowDirection()
         {
             
         }
@@ -160,7 +160,7 @@ namespace BaseCode.Logic.Roads
             return true;
         }
 
-        public virtual LightBase GetALight(bool findNull = true)
+        private LightBase GetALight(bool findNull = true)
         {
             return findNull ? 
                 basicLights.FirstOrDefault(basicLight => basicLight.ControlledNpc == null) : 

@@ -1,9 +1,7 @@
-
 using System.Collections.Generic;
 using BaseCode.Logic.Services.Interfaces.Car;
 using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Ways;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles.Controllers
@@ -67,7 +65,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
         
         private void CheckForTurn()
         {
-            int i = 0;
+            int i;
             if (_currentWaypointIndex + CHECK_COUNT < _waypoints.Count)
                 i = _currentWaypointIndex + CHECK_COUNT;
             else

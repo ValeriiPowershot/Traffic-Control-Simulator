@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace BaseCode.Interfaces
 {
     public interface ITimeUsable

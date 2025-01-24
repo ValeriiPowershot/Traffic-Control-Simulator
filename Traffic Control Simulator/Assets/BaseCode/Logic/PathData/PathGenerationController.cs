@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using BaseCode.Logic.Roads;
 using BaseCode.Logic.ScriptableObject;
@@ -52,7 +51,6 @@ namespace BaseCode.Logic.PathData
             Vector2 mousePosition = currentEvent.mousePosition;
 
             Vector3 closestPosition = Vector3.zero;
-            string closestLabel = "";
             float closestDistance = float.MaxValue;
 
             foreach (var offset in RoadsSo.directions)

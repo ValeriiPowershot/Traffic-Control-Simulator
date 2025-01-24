@@ -5,7 +5,6 @@ using BaseCode.Logic.Npcs.Npc;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Lights.Handler.Abstracts
 {

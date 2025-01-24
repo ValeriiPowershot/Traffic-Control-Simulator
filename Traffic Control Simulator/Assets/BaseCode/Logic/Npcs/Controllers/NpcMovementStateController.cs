@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using BaseCode.Logic.Npcs.Npc;
 using BaseCode.Logic.Npcs.States.Movement;
-using BaseCode.Logic.ScriptableObject;
 using UnityEngine;
 
 namespace BaseCode.Logic.Npcs.Controllers
