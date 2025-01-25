@@ -14,10 +14,12 @@ namespace BaseCode.Logic.Vehicles.Vehicles
 
         public ICarLightService CarLightService { get; set; } = new CarLightServiceHandler();
         public IPathFindingService PathContainerService { get; set; } = new PathContainerService();
-        
+
+        private CarManager _carManager;
         public virtual void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             VehicleScriptableObject = currentCar;
+            _carManager = manager;
             
             ((CarLightServiceHandler)CarLightService).Starter(VehicleController);  // we can use it in initializer but i forgot why i did like this.
             ((PathContainerService)PathContainerService).Starter(manager);
@@ -33,6 +35,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
             Debug.Log("Reached");
             Pool.DestroyObject(this);
         }
+        public CarManager CarManager => _carManager;
     }
 
     public enum LightState
