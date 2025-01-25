@@ -398,7 +398,7 @@ namespace BaseCode.Editor.Path
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 _selectedObject = hit.collider.gameObject;
-                //ShowWindow();
+                ShowWindow();
                 e.Use();
             }
         }
