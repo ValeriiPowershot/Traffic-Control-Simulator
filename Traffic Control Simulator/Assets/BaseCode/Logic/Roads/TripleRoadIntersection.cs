@@ -103,10 +103,10 @@ namespace BaseCode.Logic.Roads
         }
         
         
-        public override void DrawArrowDirection()
+        /*public override void DrawArrowDirection()
         {
             
-        }
+        }*/
 
         public void OnTriggerExit(Collider other)
         {

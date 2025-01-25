@@ -1,5 +1,6 @@
 using BaseCode.Logic.Lights.Handler.Abstracts;
 using UnityEngine;
+using UnityEngine.UI;
 using LightState = BaseCode.Logic.Vehicles.Vehicles.LightState;
 
 namespace BaseCode.Logic.Lights
@@ -14,9 +15,9 @@ namespace BaseCode.Logic.Lights
     }
     public class BasicLight : LightBase
     {
-        [SerializeField] private Material[] _lightMats;
-        [SerializeField] private MeshRenderer _lightMesh;
-
+        [SerializeField] private Sprite[] _lightMats;
+        [SerializeField] private Image _lightImage;
+    
         [SerializeField] private Material[] _groundLightMats;
         [SerializeField] private MeshRenderer _groundMesh;
         
@@ -36,13 +37,14 @@ namespace BaseCode.Logic.Lights
             if (_currentIndex > MaxIndex) _currentIndex = 1;
 
             CurrentState = (LightState)_currentIndex;
+            Debug.Log(CurrentState);
         }
 
         public override void SetChangeoverState()
         {
-            if (_lightMesh != null)
+            if (_lightImage != null)
             {
-                _lightMesh.material = _lightMats[^1]; // Set to the last material as a temporary changeover indicator
+                _lightImage.sprite = _lightMats[^1]; // Set to the last material as a temporary changeover indicator
             }
 
             if (_groundMesh != null)
@@ -53,9 +55,9 @@ namespace BaseCode.Logic.Lights
 
         private void UpdateVisualState()
         {
-            if (_lightMesh != null && _lightMats.Length > 0)
+            if (_lightImage != null && _lightMats.Length > 0)
             {
-                _lightMesh.material = _lightMats[_currentIndex - 1];
+                _lightImage.sprite = _lightMats[_currentIndex - 1];
             }
 
             if (_groundMesh != null && _groundLightMats.Length == 2)
