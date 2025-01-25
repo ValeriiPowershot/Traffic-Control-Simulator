@@ -19,16 +19,6 @@ namespace BaseCode.Logic.ScoringSystem
 
         public float PlayerScore { get { return _playerScore; } }
 
-        private void Awake()
-        {
-            /*_scoringObjects.AddRange(_carsHandler.GetComponentsInChildren<IScoringObject>());
-
-            foreach (var ScoringObj in _scoringObjects)
-                ScoringObj.Initialize(this);
-
-            ChangeScore(10);*/
-        }
-
         public void AddCar(IScoringObject ScoringObj)
         {
             ScoringObj.Initialize(this);

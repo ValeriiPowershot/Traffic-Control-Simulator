@@ -1,8 +1,6 @@
 using BaseCode.Interfaces;
-using BaseCode.Logic.Vehicles;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.ScoringSystem
 {
