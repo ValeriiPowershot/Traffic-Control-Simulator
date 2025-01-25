@@ -5,6 +5,7 @@ using BaseCode.Logic.Npcs.Npc;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Lights.Handler.Abstracts
 {
@@ -19,6 +20,7 @@ namespace BaseCode.Logic.Lights.Handler.Abstracts
         private readonly List<VehicleBase> _controlledVehicles = new();
         
         public NpcBase controlledNpcs;
+        public Transform npcGroundIndicator;
 
         public Transform targetA; 
         public Transform targetB; 

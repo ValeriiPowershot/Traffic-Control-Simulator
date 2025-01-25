@@ -9,7 +9,7 @@ namespace BaseCode.Logic
         [SerializeField] private InputAction _tapAction, _tapPosition;
         [SerializeField] private LayerMask _interactableMask;
 
-        private const float RAYCAST_LENGTH = 50f;
+        private const float RAYCAST_LENGTH = 500f;
 
         private bool _tapPerformed;
         private Camera _cam;

@@ -101,12 +101,12 @@ namespace BaseCode.Logic.Roads
                 }
             }
         }
-
-
-        protected override void DrawArrowDirection()
+        
+        
+        /*public override void DrawArrowDirection()
         {
             
-        }
+        }*/
 
         public void OnTriggerExit(Collider other)
         {
@@ -127,22 +127,27 @@ namespace BaseCode.Logic.Roads
             if (npcBase == null)
                 return false;
 
-            
             GameObject createdNpc = (GameObject)PrefabUtility.InstantiatePrefab(npcBase.prefab.gameObject);
             createdNpc.transform.position = lightBase.targetA.transform.position;
+            
 
             var sceneRoadGenerationController = FindObjectOfType<SceneRoadGenerationController>();
             if (sceneRoadGenerationController != null)
                 createdNpc.transform.SetParent(sceneRoadGenerationController.transform);
-
-                
-            NpcBase npcBaseComponent  = createdNpc.GetComponent<T>();
+            
+            NpcBase npcBaseComponent  = createdNpc.GetComponent<T>();   
             lightBase.controlledNpcs = npcBaseComponent;
+            
+            
+            PrefabUtility.RecordPrefabInstancePropertyModifications(createdNpc);
+            PrefabUtility.RecordPrefabInstancePropertyModifications(lightBase);
 
             npcBaseComponent.npcController.a = lightBase.targetA;
             npcBaseComponent.npcController.b = lightBase.targetB;
             npcBaseComponent.npcController.target = lightBase.targetA;
 
+            lightBase.npcGroundIndicator.gameObject.SetActive(true);
+            
             npcBaseComponent.npcController.npcScriptableObject = npcBase;
             
             return true;
@@ -155,12 +160,13 @@ namespace BaseCode.Logic.Roads
                 return false;
             if (lightBase.controlledNpcs == null)
                 return false;
-            
+
+            lightBase.npcGroundIndicator.gameObject.SetActive(false);
             DestroyImmediate(lightBase.controlledNpcs.gameObject);
             return true;
         }
 
-        private LightBase GetALight(bool findNull = true)
+        public virtual LightBase GetALight(bool findNull = true)
         {
             return findNull ? 
                 basicLights.FirstOrDefault(basicLight => basicLight.ControlledNpc == null) : 

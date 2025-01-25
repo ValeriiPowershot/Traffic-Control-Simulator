@@ -3,6 +3,7 @@ using BaseCode.Logic.Services.Interfaces.Car;
 using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Ways;
 using UnityEngine;
+using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 namespace BaseCode.Logic.Services.Handler.Car
@@ -12,7 +13,6 @@ namespace BaseCode.Logic.Services.Handler.Car
     {
         private AllWaysContainer _allWaysContainer;
         private WaypointContainer _waypointContainer;
-
         public void Starter(CarManager carManager)
         {
            _allWaysContainer = carManager.allWaysContainer;

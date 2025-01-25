@@ -3,6 +3,7 @@ using BaseCode.Logic.Npcs.Controllers;
 using BaseCode.Logic.Npcs.Npc;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Vehicles;
+using UnityEditor.Animations;
 using UnityEngine;
 
 namespace BaseCode.Logic.Npcs.States.Movement
@@ -10,7 +11,7 @@ namespace BaseCode.Logic.Npcs.States.Movement
     public class NpcMovementGoState : INpcMovementState
     {
         private readonly NpcMovementStateController _stateController; // Reference to the state controller
-        private bool _selectingATarget;
+        private bool _selectingATarget = false;
         
         public NpcMovementGoState(NpcMovementStateController stateController)
         {
@@ -19,7 +20,7 @@ namespace BaseCode.Logic.Npcs.States.Movement
 
         public void MovementEnter()
         {
-            Debug.Log("Go");
+            Debug.Log("Enter Go");
             SelectTarget();
         }
 
@@ -31,7 +32,8 @@ namespace BaseCode.Logic.Npcs.States.Movement
             NpcController.target = distanceOfA > distanceOfB ? NpcController.a : NpcController.b;
             
             Vector3 directionToTarget = (NpcController.target.position - NpcBase.transform.position).normalized;
-            NpcBase.transform.rotation = Quaternion.LookRotation(directionToTarget);
+            if(directionToTarget != Vector3.zero)
+                NpcBase.transform.rotation = Quaternion.LookRotation(directionToTarget);
             _stateController.Controller.SetToWalk();
         }
         private IEnumerator SelectTargetWithTime()
@@ -55,6 +57,7 @@ namespace BaseCode.Logic.Npcs.States.Movement
                 if(_selectingATarget == false)
                     NpcBase.StartCoroutine(SelectTargetWithTime());
         }
+        
 
         private bool IsItGreen()
         {

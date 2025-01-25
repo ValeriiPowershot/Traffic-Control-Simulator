@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BaseCode.Logic.Npcs.Npc;
 using BaseCode.Logic.Roads;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace BaseCode.Logic.ScriptableObject
         public bool canOpenWindow;
         public float offset = 10f;
         
-        public readonly List<Tuple<Vector3, string>> directions =
+        public List<Tuple<Vector3, string>> directions =
             new() 
             {
                 new Tuple<Vector3, string>(Vector3.forward, "Forward"),

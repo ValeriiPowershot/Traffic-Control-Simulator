@@ -94,6 +94,7 @@ namespace BaseCode.Editor.Path
             {
                 EditorGUILayout.LabelField("Select an object in the scene.");
                 _sceneRoadGenerationController.RoadsSo.canDrawRoadGizmo = false;
+                
                 return false;
             }
             return true;
@@ -326,7 +327,7 @@ namespace BaseCode.Editor.Path
                 _sceneRoadGenerationController.selectedRoads.Add(road);
             }
         }
-        private void GenerateNewPath()
+        public void GenerateNewPath()
         {
             var createNewContainer = new GameObject
             {
@@ -398,7 +399,7 @@ namespace BaseCode.Editor.Path
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 _selectedObject = hit.collider.gameObject;
-                //ShowWindow();
+                ShowWindow();
                 e.Use();
             }
         }

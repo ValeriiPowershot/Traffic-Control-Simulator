@@ -24,17 +24,19 @@ namespace BaseCode.Editor.CarCreation
         private int _speed;
         private int _acceleration;
         private int _slowdown;
-        private float _rayLenght;
-        private int _indexPath;
+        private float _rayLenght = 2f;
 
         private bool _needToCopyColliderSize;
 
-        private string _prefabSavePath = "Assets/Prefabs/Vehicles";
+        private string _prefabSavePath = "Assets/SoObjects/Vehicles";
         private string _prefabSaveName;
 
         [MenuItem("Window/Vehicle Prefab Creator")]
-        public static void ShowWindow() =>
-            GetWindow<VehiclePrefabCreator>("Vehicle Prefab Creator");
+        public static void ShowWindow()
+        {
+            var window = GetWindow<VehiclePrefabCreator>("Vehicle Prefab Creator");
+            window.minSize = new Vector2(600, 800); // Minimum width and height
+        }
 
         private void OnGUI()
         {
@@ -109,7 +111,6 @@ namespace BaseCode.Editor.CarCreation
             _acceleration = EditorGUILayout.IntField("Vehicle Acceleration", _acceleration);
             _slowdown = EditorGUILayout.IntField("Slowdown", _slowdown);
             _rayLenght = EditorGUILayout.FloatField("Ray Length", _rayLenght);
-            _indexPath = EditorGUILayout.IntField("Index Path", _indexPath);
 
             GUILayout.Label("Enter four integer values to customize your vehicle.", EditorStyles.wordWrappedLabel);
             EditorGUILayout.EndVertical();
@@ -271,6 +272,27 @@ namespace BaseCode.Editor.CarCreation
                     Debug.LogError("Failed to add BoxCollider.");
                     return;
                 }
+                
+                Transform bodyTransform = vehicleObject.transform.Find("Body");
+
+                if (bodyTransform != null)
+                {
+                    MeshRenderer meshRenderer = bodyTransform.GetComponent<MeshRenderer>();
+                    if (meshRenderer != null)
+                    {
+                        boxCollider.size = meshRenderer.bounds.size;
+                        boxCollider.center = meshRenderer.bounds.center - vehicleObject.transform.position;
+                    }
+                    else
+                    {
+                        Debug.LogError("No MeshRenderer found on the 'Body' GameObject.");
+                    }
+                }
+                else
+                {
+                    Debug.LogError("No child called 'Body' found in the vehicle object.");
+                }
+
             }
 
             if (vehicleObject.GetComponent<BasicCar>() == null)
@@ -329,7 +351,6 @@ namespace BaseCode.Editor.CarCreation
             vehicleScriptableObject.AccelerationSpeed = _acceleration;
             vehicleScriptableObject.SlowdownSpeed = _slowdown;
             vehicleScriptableObject.RayLenght = _rayLenght;
-            vehicleScriptableObject.IndexPath = _indexPath;
 
             AssetDatabase.CreateAsset(vehicleScriptableObject, soFilePath);
             AssetDatabase.SaveAssets();

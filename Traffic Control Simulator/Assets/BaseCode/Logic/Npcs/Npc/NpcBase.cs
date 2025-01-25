@@ -1,6 +1,9 @@
+using System;
 using BaseCode.Logic.Npcs.Controllers;
 using BaseCode.Logic.Npcs.States.Movement;
+using BaseCode.Logic.ScriptableObject;
 using UnityEngine;
+using UnityEngine.Serialization;
 using LightState = BaseCode.Logic.Vehicles.Vehicles.LightState;
 
 namespace BaseCode.Logic.Npcs.Npc

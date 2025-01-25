@@ -12,7 +12,6 @@ namespace BaseCode.Logic.ScriptableObject
         [SerializeField] private float _accelerationSpeed = 6;
         
         public float RayLenght = 5f;
-        public int IndexPath;
 
         public float DefaultSpeed
         {
