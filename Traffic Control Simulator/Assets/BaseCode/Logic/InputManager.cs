@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace BaseCode.Logic
 {
-    public class InputManager : MonoBehaviour
+    public class InputManager : ManagerBase
     {
         [SerializeField] private InputAction _tapAction, _tapPosition;
         [SerializeField] private LayerMask _interactableMask;

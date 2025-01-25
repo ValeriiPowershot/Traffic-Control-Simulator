@@ -5,10 +5,8 @@ using UnityEngine;
 
 namespace BaseCode.Logic.ScoringSystem
 {
-    public class ScoringManager : MonoBehaviour
+    public class ScoringManager : ManagerBase
     {
-        //temporary implemetation, should be replaced with cars manager or smthn
-        [SerializeField] private Transform _carsHandler;
         [SerializeField] private TMP_Text _scoreText;
 
         private List<IScoringObject> _scoringObjects = new();
@@ -24,21 +22,40 @@ namespace BaseCode.Logic.ScoringSystem
             ScoringObj.Initialize(this);
             _scoringObjects.Add(ScoringObj);
         }
-
         private void Update()
         {
-            _deltaTime += Time.deltaTime;
+            AccumulateDeltaTime();
 
-            //executing once per 2 frames / may be replaced by async method for better perfomance
-            if(Time.frameCount % 2 == 0)
+            if (ShouldUpdateScoringObjects())
             {
-                foreach(var ScoringObj in _scoringObjects)
-                {
-                    ScoringObj.Calculate(_deltaTime);
-                }
-                _deltaTime = 0f;
+                UpdateScoringObjects();
+                ResetDeltaTime();
             }
         }
+
+        private void AccumulateDeltaTime()
+        {
+            _deltaTime += Time.deltaTime;
+        }
+
+        private bool ShouldUpdateScoringObjects()
+        {
+            return Time.frameCount % 2 == 0;
+        }
+
+        private void UpdateScoringObjects()
+        {
+            foreach (var scoringObj in _scoringObjects)
+            {
+                scoringObj.Calculate(_deltaTime);
+            }
+        }
+
+        private void ResetDeltaTime()
+        {
+            _deltaTime = 0f;
+        }
+
 
         public void ChangeScore(float Change)
         {

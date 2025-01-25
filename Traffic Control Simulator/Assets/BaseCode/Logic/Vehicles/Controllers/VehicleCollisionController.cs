@@ -1,4 +1,5 @@
 using BaseCode.Logic.Lights;
+using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.States.Movement;
 using UnityEngine;
 
@@ -45,6 +46,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
                 if (AreTheyInIntersection(hitVehicle) && AreTheyUsingDifferentPath(hitVehicle))
                 {
                     Debug.Log("Game Is Over");
+                    PlayFx(FxTypes.Angry);  
                 }
 
                 _vehicleGoState.VehicleController.SetState<VehicleMovementStopState>();
@@ -75,6 +77,10 @@ namespace BaseCode.Logic.Vehicles.Controllers
         {
             return hitVehicle.CarLightService.LightPlaceSave != LightPlace.None &&
                    BasicCar.CarLightService.LightPlaceSave != LightPlace.None;
+        }
+        private void PlayFx(FxTypes fxTypes)
+        {
+            BasicCar.CarManager.gameManager.fxManager.PlayFx(fxTypes, BasicCar.emojiFxSpawnPoint);
         }
 
         private Vehicles.BasicCar BasicCar => _vehicleGoState.VehicleController.BasicCar;
