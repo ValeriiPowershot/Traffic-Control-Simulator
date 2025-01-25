@@ -1,27 +1,28 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace BaseCode.Logic.ScoringSystem
 {
     public class ScoringMaterials : MonoBehaviour
     {
-        public MeshRenderer indicatorOfScore;
+        public Image indicatorOfScore;
 
-        public Material good;
-        public Material neutral;
-        public Material bad;
+        public Color good;
+        public Color neutral;
+        public Color bad;
         
         public void SetNewMaterial(ScoreType scoreType)
         {
             switch (scoreType)
             {
                 case ScoreType.Good:
-                    indicatorOfScore.material = good;
+                    indicatorOfScore.color = good;
                     break;
                 case ScoreType.Neuteral:
-                    indicatorOfScore.material = neutral;
+                    indicatorOfScore.color = neutral;
                     break;
                 case ScoreType.Bad:
-                    indicatorOfScore.material = bad;
+                    indicatorOfScore.color = bad;
                     break;
             }
         }

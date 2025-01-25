@@ -34,62 +34,85 @@ namespace BaseCode.Logic.ScoringSystem
         private void OnDisable() =>
             _car.CarLightService.LightExited -= ExitLight;
 
-        /*public void Initialize(ScoringManager Manager) =>
-            _manager = Manager;*/
-
         public void Initialize(ScoringManager Manager)
         {
             _manager = Manager;
             Debug.Log("Initialized");
         }
-
         public void Calculate(float DeltaTime)
         {
             if (_car.CarLightService.CarLightState == LightState.Red)
             {
-                if ((_prevPosition - transform.position).sqrMagnitude <= MIN_MOVING_RANGE * MIN_MOVING_RANGE)
-                {
-                    _waitingTime += DeltaTime;
-
-                    if (_scoreType == ScoreType.Good && 
-                        _waitingTime >= AcceptableWaitingTime)
-                    {
-                        _scoreType = ScoreType.Neuteral;
-                        ScoreMaterialsComponent.SetNewMaterial(ScoreType.Neuteral);
-                    }
-
-                    else if (_scoreType == ScoreType.Neuteral && 
-                             _waitingTime - AcceptableWaitingTime >= TimeToWorstScore)
-                    {
-                        ScoreMaterialsComponent.SetNewMaterial(ScoreType.Bad);
-                        _scoreType = ScoreType.Bad;
-                    }
-                }
+                ProcessWaitingAtRedLight(DeltaTime);
             }
             _prevPosition = transform.position;
         }
-
-        private void ExitLight()
+        public void ExitLight()
         {
-            float ResultPoints = SuccessPoints;
-
-            //Cars waited more than acceptable
-            //player losses points
-            if(_waitingTime > AcceptableWaitingTime)
-            {
-                float UnAcceptWaitTime = _waitingTime - AcceptableWaitingTime;
-                //even if cars waited more than acceptable player can gain points
-                //if was fast enough
-                float Ratio = (UnAcceptWaitTime / TimeToWorstScore) < 1 ? (UnAcceptWaitTime / TimeToWorstScore) : 1;
-                //reaching TIME_TO_WORST_SCORE leads to losing FAIL_POINTS amount of points
-                ResultPoints += (FailPoints - SuccessPoints) * Ratio;
-            }
-            _waitingTime = 0f;
-            ScoreMaterialsComponent.SetNewMaterial(ScoreType.Good);
-            _scoreType = ScoreType.Good;
-
-            _manager.ChangeScore(ResultPoints);
+            float resultPoints = CalculateResultPoints();
+            ResetLightState();
+            _manager.ChangeScore(resultPoints);
         }
+
+        private void ProcessWaitingAtRedLight(float DeltaTime)
+        {
+            if (IsCarMoving())
+            {
+                _waitingTime += DeltaTime;
+
+                if (ShouldChangeToNeutral())
+                {
+                    UpdateScoreType(ScoreType.Neuteral);
+                }
+                else if (ShouldChangeToBad())
+                {
+                    UpdateScoreType(ScoreType.Bad);
+                }
+            }
+        }
+
+        private bool IsCarMoving()
+        {
+            return (_prevPosition - transform.position).sqrMagnitude <= MIN_MOVING_RANGE * MIN_MOVING_RANGE;
+        }
+
+        private bool ShouldChangeToNeutral()
+        {
+            return _scoreType == ScoreType.Good && _waitingTime >= AcceptableWaitingTime;
+        }
+
+        private bool ShouldChangeToBad()
+        {
+            return _scoreType == ScoreType.Neuteral && 
+                   _waitingTime - AcceptableWaitingTime >= TimeToWorstScore;
+        }
+
+        private void UpdateScoreType(ScoreType newScoreType)
+        {
+            _scoreType = newScoreType;
+            ScoreMaterialsComponent.SetNewMaterial(newScoreType);
+        }
+        
+        private float CalculateResultPoints()
+        {
+            float resultPoints = SuccessPoints;
+
+            if (_waitingTime > AcceptableWaitingTime)
+            {
+                float unAcceptWaitTime = _waitingTime - AcceptableWaitingTime;
+                float ratio = Mathf.Min(unAcceptWaitTime / TimeToWorstScore, 1);
+                resultPoints += (FailPoints - SuccessPoints) * ratio;
+            }
+
+            return resultPoints;
+        }
+
+        private void ResetLightState()
+        {
+            _waitingTime = 0f;
+            UpdateScoreType(ScoreType.Good);
+        }
+
     }
 
     public enum ScoreType

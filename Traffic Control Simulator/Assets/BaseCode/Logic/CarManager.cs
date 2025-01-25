@@ -5,11 +5,10 @@ using UnityEngine;
 
 namespace BaseCode.Logic
 {
-    public class CarManager : MonoBehaviour
+    public class CarManager : ManagerBase
     {
         public AllWaysContainer allWaysContainer;
         
-        [SerializeField] private ScoringManager scoreManager;
         [SerializeField] private CarSpawnServiceHandler carSpawnServiceHandler;
 
         private void Awake()
@@ -21,6 +20,7 @@ namespace BaseCode.Logic
         {
             carSpawnServiceHandler.Update();
         }
-        public ScoringManager ScoringManager => scoreManager;
+
+        public ScoringManager ScoringManager => gameManager.scoringManager;
     }
 }

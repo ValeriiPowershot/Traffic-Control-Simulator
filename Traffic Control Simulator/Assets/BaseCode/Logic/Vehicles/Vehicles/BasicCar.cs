@@ -5,6 +5,8 @@ namespace BaseCode.Logic.Vehicles.Vehicles
 {
     public class BasicCar : VehicleBase
     {
+        public Transform emojiFxSpawnPoint;
+        
         public GameObject TurnLight;
         public Transform RightTurn;
         public Transform LeftTurn;
