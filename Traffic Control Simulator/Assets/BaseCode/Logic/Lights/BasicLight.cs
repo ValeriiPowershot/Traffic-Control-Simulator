@@ -34,7 +34,8 @@ namespace BaseCode.Logic.Lights
         private void UpdateLightIndex()
         {
             _currentIndex++;
-            if (_currentIndex > MaxIndex) _currentIndex = 1;
+            if (_currentIndex > MaxIndex) 
+                _currentIndex = 1;
 
             CurrentState = (LightState)_currentIndex;
             Debug.Log(CurrentState);
