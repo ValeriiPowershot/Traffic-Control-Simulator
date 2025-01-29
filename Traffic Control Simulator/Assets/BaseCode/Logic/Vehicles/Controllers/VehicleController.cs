@@ -1,14 +1,17 @@
 using BaseCode.Logic.Vehicles.States.Movement;
+using BaseCode.Logic.Vehicles.Vehicles;
+using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles.Controllers
 {
     public class VehicleController 
     {
+        public Transform CarTransform => VehicleBase.transform;
         public VehicleMovementStateController StateController { get; private set; }
 
         public void Starter(Vehicles.BasicCar basicCar)
         {
-            BasicCar = basicCar;
+            VehicleBase = basicCar;
             StateController = new VehicleMovementStateController(this);
             
             StartEngine();
@@ -28,7 +31,10 @@ namespace BaseCode.Logic.Vehicles.Controllers
         {
             StateController.SetState<T>(); // Start in the stopped state
         }
-        
-        public Vehicles.BasicCar BasicCar { get; private set; }
+        public IVehicleMovementState GetStateCurrentState()
+        {
+            return StateController.GetStateCurrentState();
+        }
+        public BasicCar VehicleBase { get; private set; }
     }
 }

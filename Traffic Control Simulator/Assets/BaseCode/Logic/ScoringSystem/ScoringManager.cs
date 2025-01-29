@@ -5,9 +5,6 @@ using UnityEngine;
 
 namespace BaseCode.Logic.ScoringSystem
 {
-    // egzoz efekti
-    // genisleme gerileme efekti
-    
     public class ScoringManager : ManagerBase
     {
         [SerializeField] private TMP_Text _scoreText;

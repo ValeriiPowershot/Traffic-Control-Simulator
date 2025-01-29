@@ -39,6 +39,10 @@ namespace BaseCode.Logic.Vehicles.Controllers
         }
 
         // Used to test the states
-        
+
+        public IVehicleMovementState GetStateCurrentState()
+        {
+            return _currentMovementMovementState;
+        }
     }
 }
