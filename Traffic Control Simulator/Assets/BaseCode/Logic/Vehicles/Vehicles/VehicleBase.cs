@@ -9,20 +9,29 @@ namespace BaseCode.Logic.Vehicles.Vehicles
 {
     public class VehicleBase : PoolObjectBase
     {
-        protected readonly VehicleController VehicleController = new VehicleController();
+        public readonly VehicleController VehicleController = new VehicleController();
         public VehicleScriptableObject VehicleScriptableObject { get; private set; }
 
         public ICarLightService CarLightService { get; set; } = new CarLightServiceHandler();
         public IPathFindingService PathContainerService { get; set; } = new PathContainerService();
-
+        public VehicleCollisionControllerBase VehicleCollisionController; 
+        
         private CarManager _carManager;
+
         public virtual void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             VehicleScriptableObject = currentCar;
             _carManager = manager;
+            AssignCollisionController();
             
             ((CarLightServiceHandler)CarLightService).Starter(VehicleController);  // we can use it in initializer but i forgot why i did like this.
             ((PathContainerService)PathContainerService).Starter(manager);
+        }
+
+        public virtual void AssignCollisionController()
+        {
+            VehicleCollisionController = new VehicleCollisionControllerBase();
+            VehicleCollisionController.Starter(this);
         }
 
         public virtual void AssignNewPathContainer()

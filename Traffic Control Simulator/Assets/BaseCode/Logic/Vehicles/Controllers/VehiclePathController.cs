@@ -57,7 +57,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
 
             if (_currentWaypointIndex >= _waypoints.Count)
             {
-                VehicleController.BasicCar.DestinationReached(); 
+                VehicleController.VehicleBase.DestinationReached(); 
                 _currentWaypointIndex = 0;
                 CarTransform.position = GetCurrentWaypoint().point.position;
             }
@@ -71,19 +71,19 @@ namespace BaseCode.Logic.Vehicles.Controllers
             else
                 i = _waypoints.Count - 1;
 
-            Vector3 pointing = _waypoints[i].point.position - VehicleController.BasicCar.transform.position;
+            Vector3 pointing = _waypoints[i].point.position - VehicleController.VehicleBase.transform.position;
             pointing.Normalize();
-            pointing -= VehicleController.BasicCar.transform.forward * 0.9f;
+            pointing -= VehicleController.VehicleBase.transform.forward * 0.9f;
             pointing.Normalize();
 
-            float dot = Vector3.Dot(pointing, VehicleController.BasicCar.transform.right);
+            float dot = Vector3.Dot(pointing, VehicleController.VehicleBase.transform.right);
 
             if (dot > TURN_ANGLE)
-                VehicleController.BasicCar.ShowTurn(Vehicles.TurnType.Right);
+                VehicleController.VehicleBase.ShowTurn(Vehicles.TurnType.Right);
             else if (dot < -TURN_ANGLE)
-                VehicleController.BasicCar.ShowTurn(Vehicles.TurnType.Left);
+                VehicleController.VehicleBase.ShowTurn(Vehicles.TurnType.Left);
             else
-                VehicleController.BasicCar.ShowTurn(Vehicles.TurnType.None);
+                VehicleController.VehicleBase.ShowTurn(Vehicles.TurnType.None);
         }
         
         public bool IsCloseToWaypoint()
@@ -95,7 +95,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
         private Transform CarTransform => _vehicleGoState.CarTransform;
 
         private IPathFindingService PathFindingService => 
-            VehicleController.BasicCar.PathContainerService;
+            VehicleController.VehicleBase.PathContainerService;
         
         private VehicleController VehicleController => _vehicleGoState.VehicleController;
     }

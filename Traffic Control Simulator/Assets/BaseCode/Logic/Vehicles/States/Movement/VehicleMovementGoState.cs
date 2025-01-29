@@ -1,6 +1,7 @@
 using System;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Controllers;
+using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles.States.Movement
@@ -9,23 +10,19 @@ namespace BaseCode.Logic.Vehicles.States.Movement
     {
         public VehicleScriptableObject CarData { get; }
         
-        // controllers
-        public Transform CarTransform => VehicleController.BasicCar.transform;
         public VehicleController VehicleController { get; set; }
         
         private readonly VehiclePathController _vehiclePathController;
-        private readonly VehicleCollisionController _vehicleCollisionController;
         
         private float _speed;
 
         public VehicleMovementGoState(VehicleController vehicleController)
         {
             VehicleController = vehicleController;
-            CarData = VehicleController.BasicCar.VehicleScriptableObject;
+            CarData = VehicleController.VehicleBase.VehicleScriptableObject;
             _speed = CarData.DefaultSpeed;
             
             _vehiclePathController = new VehiclePathController(this);
-            _vehicleCollisionController = new VehicleCollisionController(this);
         }
         public void InitializePath()
         {
@@ -40,7 +37,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         {
             if (!_vehiclePathController.HasWaypoints()) return;
             if (_vehiclePathController.IsAtFinalWaypoint()) return;
-            if (_vehicleCollisionController.CheckForCollision()) return;
+            if (VehicleController.VehicleBase.VehicleCollisionController.CheckForCollision()) return;
 
             AdjustSpeed();
 
@@ -92,14 +89,16 @@ namespace BaseCode.Logic.Vehicles.States.Movement
                     CarData.RotationSpeed * Time.fixedDeltaTime
                 );
 
-                Vector3 arrowForward = (_vehiclePathController.GetEndPoint().position - VehicleController.BasicCar.ArrowIndicatorEndPoint.position).normalized;
+                Vector3 arrowForward = (_vehiclePathController.GetEndPoint().position - VehicleController.VehicleBase.ArrowIndicatorEndPoint.position).normalized;
                 Quaternion arrowRotation = Quaternion.LookRotation(arrowForward);
         
                 arrowRotation = Quaternion.Euler(arrowRotation.eulerAngles.x, arrowRotation.eulerAngles.y, 0);
 
-                VehicleController.BasicCar.ArrowIndicatorEndPoint.rotation = arrowRotation;
+                VehicleController.VehicleBase.ArrowIndicatorEndPoint.rotation = arrowRotation;
             }
         }
+        public Transform CarTransform => VehicleController.VehicleBase.transform;
+
     }
     
     [Serializable]
