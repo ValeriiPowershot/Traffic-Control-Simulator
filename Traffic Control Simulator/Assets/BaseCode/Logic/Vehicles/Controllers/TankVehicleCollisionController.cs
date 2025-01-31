@@ -20,7 +20,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
             return false;
         }
   
-        private void PressCar(VehicleBase hitVehicle)
+        protected virtual void PressCar(VehicleBase hitVehicle)
         {
             hitVehicle.GetComponent<BoxCollider>().enabled = false;
             hitVehicle.enabled = false;

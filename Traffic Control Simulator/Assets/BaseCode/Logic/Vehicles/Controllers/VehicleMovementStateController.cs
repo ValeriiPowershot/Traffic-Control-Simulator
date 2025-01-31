@@ -42,12 +42,15 @@ namespace BaseCode.Logic.Vehicles.Controllers
         {
             ((VehicleMovementGoState)_states[typeof(VehicleMovementGoState)]).InitializePath();
         }
-
-        // Used to test the states
-
         public IVehicleMovementState GetStateCurrentState()
         {
             return _currentMovementMovementState;
         }
+
+        public Dictionary<Type, IVehicleMovementState> GetStatesDict()
+        {
+            return _states;
+        }
+
     }
 }

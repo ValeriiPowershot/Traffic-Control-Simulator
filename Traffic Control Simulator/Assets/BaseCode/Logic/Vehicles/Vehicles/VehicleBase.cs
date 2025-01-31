@@ -20,7 +20,6 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         public VehicleCollisionControllerBase VehicleCollisionController; 
         
         private CarManager _carManager;
-
         public virtual void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             VehicleScriptableObject = currentCar;
