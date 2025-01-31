@@ -92,12 +92,13 @@ namespace BaseCode.Logic.Vehicles.Controllers
         {
             PlayFx(fxTypes, BasicCar.emojiFxSpawnPoint);
         }
-        protected void PlayFx(FxTypes fxTypes, Transform spawnPoint)
+        public void PlayFx(FxTypes fxTypes, Transform spawnPoint)
         {
             BasicCar.CarManager.gameManager.fxManager.PlayFx(fxTypes, spawnPoint);
         }
 
         protected BasicCar BasicCar => VehicleController.VehicleBase;
 
+        
     }
 }
