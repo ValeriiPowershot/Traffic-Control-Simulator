@@ -9,8 +9,10 @@ namespace BaseCode.Logic.ScriptableObject
     {
         Bubble,
         Happy,
+        DiabolicalLaugh,
         Angry,
-        Neutral
+        Neutral,
+        StarCarCrash
     }
     
     [CreateAssetMenu(fileName = "FxSo", menuName = "So/FxSo", order = 0)]

@@ -1,8 +1,11 @@
+using System.Collections;
 using BaseCode.Core.ObjectPool.Base;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.Handler.Car;
 using BaseCode.Logic.Services.Interfaces.Car;
 using BaseCode.Logic.Vehicles.Controllers;
+using BaseCode.Logic.Vehicles.States.Movement;
+using DG.Tweening;
 using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles.Vehicles
@@ -38,13 +41,15 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         {
             
         }
-        
+
         public virtual void DestinationReached()
         {
             Debug.Log("Reached");
             Pool.DestroyObject(this);
         }
+        
         public CarManager CarManager => _carManager;
+        
     }
 
     public enum LightState

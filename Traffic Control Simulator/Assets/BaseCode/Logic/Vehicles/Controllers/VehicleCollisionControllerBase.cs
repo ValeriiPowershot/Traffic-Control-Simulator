@@ -87,12 +87,17 @@ namespace BaseCode.Logic.Vehicles.Controllers
             return hitVehicle.CarLightService.LightPlaceSave != LightPlace.None &&
                    BasicCar.CarLightService.LightPlaceSave != LightPlace.None;
         }
-        public void PlayFx(FxTypes fxTypes)
+
+        protected void PlayFx(FxTypes fxTypes)
         {
-            BasicCar.CarManager.gameManager.fxManager.PlayFx(fxTypes, BasicCar.emojiFxSpawnPoint);
+            PlayFx(fxTypes, BasicCar.emojiFxSpawnPoint);
+        }
+        protected void PlayFx(FxTypes fxTypes, Transform spawnPoint)
+        {
+            BasicCar.CarManager.gameManager.fxManager.PlayFx(fxTypes, spawnPoint);
         }
 
-        private BasicCar BasicCar => VehicleController.VehicleBase;
+        protected BasicCar BasicCar => VehicleController.VehicleBase;
 
     }
 }

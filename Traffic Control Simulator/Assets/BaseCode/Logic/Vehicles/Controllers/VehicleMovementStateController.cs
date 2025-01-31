@@ -32,6 +32,11 @@ namespace BaseCode.Logic.Vehicles.Controllers
                 Debug.LogWarning($"State {typeof(T)} not found in the dictionary.");
             }
         }
+
+        public T GetState<T>() where T : IVehicleMovementState
+        {
+            return (T)_states[typeof(T)];
+        }
         
         public void InitializePath()
         {

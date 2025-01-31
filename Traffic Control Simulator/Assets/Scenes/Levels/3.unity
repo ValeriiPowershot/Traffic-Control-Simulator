@@ -20297,7 +20297,13 @@ MonoBehaviour:
   allWaysContainer: {fileID: 1246676595}
   carSpawnServiceHandler:
     spawnObjects:
-    - poolSize: 2
+    - poolSize: 5
+      timeToSpawn: 1
+      carSoObjects: {fileID: 11400000, guid: 2ff5dd313f3990c41b7b1397fc9cc177, type: 2}
+    - poolSize: 5
+      timeToSpawn: 1
+      carSoObjects: {fileID: 11400000, guid: d0c0e38340b7f482b9bfa2e75c9428ea, type: 2}
+    - poolSize: 1
       timeToSpawn: 1
       carSoObjects: {fileID: 11400000, guid: 70c13e46d3d44f77f9db07b4be26a956, type: 2}
 --- !u!1001 &625768624
@@ -27342,7 +27348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &832575518
 MonoBehaviour:
   m_ObjectHideFlags: 0

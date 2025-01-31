@@ -1,5 +1,6 @@
 using System.Collections;
 using BaseCode.Logic.ScriptableObject;
+using BaseCode.Logic.Utilities;
 using UnityEngine;
 
 namespace BaseCode.Logic
@@ -20,6 +21,7 @@ namespace BaseCode.Logic
 
             var createdFx = Instantiate(fxPrefab, parent);
 
+            createdFx.AddComponent<LookAtCamera>();
             var particleEffectComponent = createdFx.GetComponent<ParticleSystem>();
             StartCoroutine(DestroyAfterParticleEffect(particleEffectComponent, createdFx));
             return createdFx;
