@@ -77,17 +77,16 @@ namespace BaseCode.Core.ObjectPool.Base {
 
       public virtual void DestroyObject(IPoolObject poolObj)
       {
-         poolObj.OnObjectDestroy();
          Queue.Enqueue(poolObj);
          _onObjectDestroyed?.Invoke(poolObj);
+         poolObj.OnObjectDestroy();
       }
 
       public virtual void DestroyObject(IPoolObject poolObj, float delay) => poolObj.InvokeDestroy(delay);
       
       public int GetDeActiveAmount() => Queue.Count;
       public int GetActiveAmount() => Capacity - GetDeActiveAmount();
-
-
+      public GameObject GetPoolObjectPrefab() => _poolObjectPrefab;
    }
 
 

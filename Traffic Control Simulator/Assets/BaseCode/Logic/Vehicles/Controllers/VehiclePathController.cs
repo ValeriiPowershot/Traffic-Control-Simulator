@@ -44,7 +44,6 @@ namespace BaseCode.Logic.Vehicles.Controllers
         {
             return _waypoints[_currentWaypointIndex];
         }
-        
     
         public Transform GetEndPoint()
         {
@@ -62,7 +61,14 @@ namespace BaseCode.Logic.Vehicles.Controllers
                 CarTransform.position = GetCurrentWaypoint().point.position;
             }
         }
-        
+  
+        public void SetPathToEndPosition(Vector3 originalY)
+        {
+            _currentWaypointIndex = _waypoints.Count-1;
+            CarTransform.position = GetCurrentWaypoint().point.position;
+            CarTransform.localScale= originalY;
+        }
+
         private void CheckForTurn()
         {
             int i;
@@ -98,5 +104,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
             VehicleController.VehicleBase.PathContainerService;
         
         private VehicleController VehicleController => _vehicleGoState.VehicleController;
+
+
     }
 }

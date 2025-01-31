@@ -13,7 +13,6 @@ namespace BaseCode.Logic.Vehicles.Controllers
             {
                 if (AreTheyInIntersection(hitVehicle) && AreTheyUsingDifferentPath(hitVehicle))
                 {
-                    Debug.Log("Game Is Over");
                     PlayFx(FxTypes.Angry);  
 
                     if (IsOtherCarAggressive(hitVehicle))
@@ -21,6 +20,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
                         StopAndLetAggressiveCar(hitVehicle);
                         return false;
                     }
+                    Debug.Log("Game Is Over");
                 }
 
                 VehicleController.SetState<VehicleMovementStopState>();

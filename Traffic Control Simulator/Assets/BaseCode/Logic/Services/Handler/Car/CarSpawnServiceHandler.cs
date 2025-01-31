@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using BaseCode.Logic.Services.Interfaces.Car;
 using UnityEngine;
@@ -9,10 +10,11 @@ namespace BaseCode.Logic.Services.Handler.Car
     [Serializable]
     public class CarSpawnServiceHandler : ICarSpawnService
     {
-        public List<CarSpawnObject> spawnObjects = new List<CarSpawnObject>();
+        public List<CarSpawnObject> spawnObjects = new();
         
         public CarManager CarManager { get; set; }
 
+        private Coroutine _updateCoroutine;
         public void Initialize(CarManager carManagerInScene)
         {
             CarManager = carManagerInScene;
@@ -27,11 +29,22 @@ namespace BaseCode.Logic.Services.Handler.Car
 
         public void Update()
         {
-            foreach (var spawnObject in spawnObjects)
+            if (_updateCoroutine == null)
             {
-                spawnObject.Update();
+                _updateCoroutine = CarManager.StartCoroutine(UpdateWithDelay());
             }
         }
+
+        private IEnumerator UpdateWithDelay()
+        {
+            foreach (var spawnObject in spawnObjects)
+            {
+                yield return null;
+                spawnObject.Update();
+            }
+            _updateCoroutine = null;
+        }
+        
         private void SpawnRoadDetectors()
         {
             foreach (var container in CarManager.allWaysContainer.allWays)

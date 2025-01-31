@@ -1,4 +1,5 @@
 using System;
+using BaseCode.Logic.Roads.RoadTool;
 using BaseCode.Logic.Services.Interfaces.Car;
 using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Ways;
@@ -52,6 +53,11 @@ namespace BaseCode.Logic.Services.Handler.Car
         public RoadPoint GetIndexWaypoint(int i)
         {
             return GetPathContainer().roadPoints[i];
+        }
+
+        public CarDetector GetCarDetector()
+        {
+            return GetIndexWaypoint(0).point.GetChild(0).GetComponent<CarDetector>();
         }
     }
 }

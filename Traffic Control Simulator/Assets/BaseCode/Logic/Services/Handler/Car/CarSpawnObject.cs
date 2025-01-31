@@ -22,6 +22,8 @@ namespace BaseCode.Logic.Services.Handler.Car
 
         private VehicleBase _newCar;
         private CarDetector _carDetector;
+        private bool _isCarWaiting;
+
         public void Initialize(CarManager carManagerInScene, CarSpawnServiceHandler carSpawnServiceHandler)
         {
             CarManager = carManagerInScene;
@@ -31,12 +33,13 @@ namespace BaseCode.Logic.Services.Handler.Car
 
         public void Update()
         {
-            if (_carDetector != null && _carDetector.isCarWaiting)
+            if (IsThereACarWaitingToBeActive())
             {
-                if (_carDetector.IsThereCarInSpawnPoint() == false)
+                if (IsSpawnPointClear())
                 {
                     _newCar.gameObject.SetActive(true);
-                    _carDetector.isCarWaiting = false;
+                    _newCar = null;
+                    _isCarWaiting = false;
                 }
             }
             else
@@ -46,20 +49,28 @@ namespace BaseCode.Logic.Services.Handler.Car
                     SpawnNewCar();
                 }
             }
-            
         }
-        
+
+        private bool IsThereACarWaitingToBeActive()
+        {
+            return _isCarWaiting;
+        }
+
+        private bool IsSpawnPointClear()
+        {
+            return _carDetector.IsThereCarInSpawnPoint() == false;
+        }
+
         public void SpawnNewCar()
         {
             AddDelay(timeToSpawn);
 
             _newCar = (VehicleBase)Pool.InstantiateObject();
             _newCar.AssignNewPathContainer();
-
             _newCar.gameObject.SetActive(false);
 
-            _carDetector = _newCar.PathContainerService.GetIndexWaypoint(0).point.GetChild(0).GetComponent<CarDetector>();
-            _carDetector.isCarWaiting = true;
+            _carDetector = _newCar.PathContainerService.GetCarDetector();
+            _isCarWaiting = true;
         }
    
         public void AddDelay(float delay)

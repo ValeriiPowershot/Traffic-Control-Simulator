@@ -1,3 +1,4 @@
+using BaseCode.Logic.Roads.RoadTool;
 using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Ways;
 using UnityEngine;
@@ -12,5 +13,6 @@ namespace BaseCode.Logic.Services.Interfaces.Car
         public Vector3 GetFirstPosition();
         public WaypointContainer GetPathRandom();
         public RoadPoint GetIndexWaypoint(int i);
+        public CarDetector GetCarDetector();
     }
 }

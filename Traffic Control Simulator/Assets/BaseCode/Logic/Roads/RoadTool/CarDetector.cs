@@ -9,9 +9,8 @@ namespace BaseCode.Logic.Roads.RoadTool
     [RequireComponent(typeof(Rigidbody))]
     public class CarDetector : MonoBehaviour
     {
-        public List<BasicCar> _cars = new List<BasicCar>();
+        public List<BasicCar> cars = new List<BasicCar>();
         private LayerMask _carLayer;
-        public bool isCarWaiting = false;
 
         public void Start()
         {
@@ -19,7 +18,7 @@ namespace BaseCode.Logic.Roads.RoadTool
         }
         public bool IsThereCarInSpawnPoint()
         {
-            return _cars.Count > 0;
+            return cars.Count > 0;
         }
         
         private void OnTriggerEnter(Collider other)
@@ -28,7 +27,7 @@ namespace BaseCode.Logic.Roads.RoadTool
             
             if (result && other.TryGetComponent(out BasicCar car))
             {
-                _cars.Add(car); 
+                cars.Add(car); 
             }
         }
 
@@ -36,7 +35,7 @@ namespace BaseCode.Logic.Roads.RoadTool
         {
             if (IsCarInLayer(other) && other.TryGetComponent(out BasicCar car))
             {
-                _cars.Remove(car);
+                cars.Remove(car);
             }
         }
         
