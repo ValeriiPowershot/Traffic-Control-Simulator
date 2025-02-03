@@ -43,8 +43,8 @@ namespace BaseCode.Logic.Vehicles.Vehicles
 
         public virtual void DestinationReached()
         {
-            Debug.Log("Reached");
             Pool.DestroyObject(this);
+            CarManager.CarSpawnServiceHandler.CheckAllCarPoolMaxed();
         }
         
         public CarManager CarManager => _carManager;

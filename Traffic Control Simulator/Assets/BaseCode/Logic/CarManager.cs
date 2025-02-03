@@ -22,5 +22,6 @@ namespace BaseCode.Logic
         }
 
         public ScoringManager ScoringManager => gameManager.scoringManager;
+        public CarSpawnServiceHandler CarSpawnServiceHandler => carSpawnServiceHandler;
     }
 }

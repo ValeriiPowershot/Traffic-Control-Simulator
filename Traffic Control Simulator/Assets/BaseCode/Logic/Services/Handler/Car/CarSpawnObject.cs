@@ -1,6 +1,5 @@
 using System;
 using BaseCode.Core.ObjectPool.CarPool;
-using BaseCode.Interfaces;
 using BaseCode.Logic.Roads.RoadTool;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Vehicles;
@@ -9,26 +8,26 @@ using UnityEngine;
 namespace BaseCode.Logic.Services.Handler.Car
 {
     [Serializable]
-    public class CarSpawnObject : ITimeUsable
+    public class CarSpawnObject : TimerBase
     {
-        public CarPool Pool { get; private set; }
         public CarManager CarManager { get; set; }
-        public float Timer { get; set; }
 
-        [SerializeField] private int poolSize;
+        [SerializeField] public int size;
         [SerializeField] private float timeToSpawn;
-
-        [SerializeField] private VehicleScriptableObject carSoObjects;
 
         private VehicleBase _newCar;
         private CarDetector _carDetector;
+        
         private bool _isCarWaiting;
-
-        public void Initialize(CarManager carManagerInScene, CarSpawnServiceHandler carSpawnServiceHandler)
+        private int _currentIndex;
+        
+        public VehicleScriptableObject carSoObjects;
+        private CarPool _carPool;
+        public void Initialize(CarManager carManagerInScene, CarPool carPool)
         {
             CarManager = carManagerInScene;
-            Pool = new CarPool(carSpawnServiceHandler, carSoObjects.VehiclePrefab, poolSize, carSoObjects,
-                carManagerInScene.ScoringManager);
+            _carPool = carPool;
+            _currentIndex = 0;
         }
 
         public void Update()
@@ -44,11 +43,19 @@ namespace BaseCode.Logic.Services.Handler.Car
             }
             else
             {
-                if (Pool.IsThereCar && IsTimerUp())
+                if(IsAllCarsSpawned())
+                    return;
+                
+                if (_carPool.IsThereCar && IsTimerUp())
                 {
                     SpawnNewCar();
                 }
             }
+        }
+
+        private bool IsAllCarsSpawned()
+        {
+            return _currentIndex >= size;
         }
 
         private bool IsThereACarWaitingToBeActive()
@@ -63,24 +70,15 @@ namespace BaseCode.Logic.Services.Handler.Car
 
         public void SpawnNewCar()
         {
+            _currentIndex++;
             AddDelay(timeToSpawn);
 
-            _newCar = (VehicleBase)Pool.InstantiateObject();
+            _newCar = (VehicleBase)_carPool.InstantiateObject();
             _newCar.AssignNewPathContainer();
             _newCar.gameObject.SetActive(false);
 
             _carDetector = _newCar.PathContainerService.GetCarDetector();
             _isCarWaiting = true;
-        }
-   
-        public void AddDelay(float delay)
-        {
-            Timer = Time.time + delay;
-        }
-
-        public bool IsTimerUp()
-        {
-            return Time.time >= Timer;
         }
     }
 }
