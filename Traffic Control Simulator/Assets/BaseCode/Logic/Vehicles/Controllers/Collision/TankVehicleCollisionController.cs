@@ -5,7 +5,7 @@ using BaseCode.Logic.Vehicles.Vehicles;
 using DG.Tweening;
 using UnityEngine;
 
-namespace BaseCode.Logic.Vehicles.Controllers
+namespace BaseCode.Logic.Vehicles.Controllers.Collision
 {
     public class TankVehicleCollisionController : AggressiveVehicleCollisionController
     {

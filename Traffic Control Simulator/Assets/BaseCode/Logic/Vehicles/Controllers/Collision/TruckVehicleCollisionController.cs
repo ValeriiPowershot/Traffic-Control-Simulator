@@ -6,7 +6,7 @@ using BaseCode.Logic.Vehicles.Vehicles;
 using BaseCode.Logic.Vehicles.Vehicles.Boss;
 using UnityEngine;
 
-namespace BaseCode.Logic.Vehicles.Controllers
+namespace BaseCode.Logic.Vehicles.Controllers.Collision
 {
     public class TruckVehicleCollisionController : TankVehicleCollisionController
     {

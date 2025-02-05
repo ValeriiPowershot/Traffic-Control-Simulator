@@ -1,4 +1,8 @@
+using BaseCode.Interfaces;
 using BaseCode.Logic.ScriptableObject;
+using BaseCode.Logic.Services.Handler;
+using BaseCode.Logic.Vehicles.Controllers;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles.Vehicles
@@ -12,16 +16,18 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         public Transform LeftTurn;
         public Transform RayStartPoint;
         public Transform ArrowIndicatorEndPoint;
-
+        public VehicleBlinker blinker;
         public override void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             base.Starter(manager, currentCar);
             VehicleController.Starter(this);
         }
-        
+
         public virtual void Update()
-            => VehicleController.Update();
-        
+        {
+            VehicleController.Update();
+        }
+
         public override void AssignNewPathContainer()
         {
             PathContainerService.SetNewPathContainerRandomly();
@@ -37,6 +43,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
             {
                 case TurnType.None:
                     TurnLight.SetActive(false);
+                    blinker.isNone = true;
                     break;
                 case TurnType.Right:
                     SetTurnLight(RightTurn.position);
@@ -49,7 +56,8 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         private void SetTurnLight(Vector3 pos)
         {
             TurnLight.transform.position = pos;
-            TurnLight.SetActive(true);
+            Debug.Log("Hel");
+            blinker.isNone = false;
         }
     }
 

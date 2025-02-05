@@ -4,7 +4,7 @@ using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
 
-namespace BaseCode.Logic.Vehicles.Controllers
+namespace BaseCode.Logic.Vehicles.Controllers.Collision
 {
     public class VehicleCollisionControllerBase
     {
@@ -62,8 +62,9 @@ namespace BaseCode.Logic.Vehicles.Controllers
                 {
                     Debug.Log("Game Is Over");
                     PlayFx(FxTypes.Angry);  
+                    PlayFx(FxTypes.Smoke, VehicleController.VehicleBase.transform);  
                 }
-
+            
                 VehicleController.SetState<VehicleMovementStopState>();
                 return true;
             }
@@ -76,13 +77,13 @@ namespace BaseCode.Logic.Vehicles.Controllers
             return BasicCar.CarLightService.CarLightState == LightState.Red;
         }
 
-        protected bool AreTheyUsingDifferentPath(Vehicles.VehicleBase hitVehicle)
+        protected bool AreTheyUsingDifferentPath(VehicleBase hitVehicle)
         {
             return hitVehicle.CarLightService.LightPlaceSave !=
                    BasicCar.CarLightService.LightPlaceSave;
         }
 
-        protected bool AreTheyInIntersection(Vehicles.VehicleBase hitVehicle)
+        protected bool AreTheyInIntersection(VehicleBase hitVehicle)
         {
             return hitVehicle.CarLightService.LightPlaceSave != LightPlace.None &&
                    BasicCar.CarLightService.LightPlaceSave != LightPlace.None;

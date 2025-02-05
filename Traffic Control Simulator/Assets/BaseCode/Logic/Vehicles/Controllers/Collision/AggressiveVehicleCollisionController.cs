@@ -3,7 +3,7 @@ using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
 
-namespace BaseCode.Logic.Vehicles.Controllers
+namespace BaseCode.Logic.Vehicles.Controllers.Collision
 {
     public class AggressiveVehicleCollisionController : VehicleCollisionControllerBase
     {

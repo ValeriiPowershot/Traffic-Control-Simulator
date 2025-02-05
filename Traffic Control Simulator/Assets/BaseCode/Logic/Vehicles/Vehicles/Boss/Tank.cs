@@ -1,4 +1,5 @@
 using BaseCode.Logic.Vehicles.Controllers;
+using BaseCode.Logic.Vehicles.Controllers.Collision;
 using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles.Vehicles.Boss
