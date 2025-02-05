@@ -4,6 +4,7 @@ using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.Handler.Car;
 using BaseCode.Logic.Services.Interfaces.Car;
 using BaseCode.Logic.Vehicles.Controllers;
+using BaseCode.Logic.Vehicles.Controllers.Collision;
 using BaseCode.Logic.Vehicles.States.Movement;
 using DG.Tweening;
 using UnityEngine;
@@ -12,14 +13,15 @@ namespace BaseCode.Logic.Vehicles.Vehicles
 {
     public class VehicleBase : PoolObjectBase
     {
-        public readonly VehicleController VehicleController = new VehicleController();
-        public VehicleScriptableObject VehicleScriptableObject { get; private set; }
-
-        public ICarLightService CarLightService { get; set; } = new CarLightServiceHandler();
-        public IPathFindingService PathContainerService { get; set; } = new PathContainerService();
-        public VehicleCollisionControllerBase VehicleCollisionController; 
-        
         private CarManager _carManager;
+        public VehicleScriptableObject VehicleScriptableObject { get; private set; }
+        
+        public readonly VehicleController VehicleController = new();
+        public VehicleCollisionControllerBase VehicleCollisionController;
+        
+        public ICarLightService CarLightService { get; } = new CarLightServiceHandler();
+        public IPathFindingService PathContainerService { get; } = new PathContainerService();
+        
         public virtual void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             VehicleScriptableObject = currentCar;

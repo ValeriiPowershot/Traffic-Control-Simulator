@@ -12,7 +12,8 @@ namespace BaseCode.Logic.ScriptableObject
         DiabolicalLaugh,
         Angry,
         Neutral,
-        StarCarCrash
+        StarCarCrash,
+        Smoke
     }
     
     [CreateAssetMenu(fileName = "FxSo", menuName = "So/FxSo", order = 0)]

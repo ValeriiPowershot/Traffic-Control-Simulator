@@ -2,6 +2,7 @@ using System;
 using BaseCode.Logic.Lights;
 using BaseCode.Logic.Services.Interfaces.Car;
 using BaseCode.Logic.Vehicles.Controllers;
+using BaseCode.Logic.Vehicles.Controllers.Collision;
 using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Vehicles.Vehicles;
 

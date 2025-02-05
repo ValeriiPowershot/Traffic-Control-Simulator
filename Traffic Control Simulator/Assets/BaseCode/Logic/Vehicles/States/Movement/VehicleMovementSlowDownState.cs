@@ -1,4 +1,5 @@
 using BaseCode.Logic.Vehicles.Controllers;
+using BaseCode.Logic.Vehicles.Controllers.Collision;
 
 namespace BaseCode.Logic.Vehicles.States.Movement
 {

@@ -1,6 +1,7 @@
 using System;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Controllers;
+using BaseCode.Logic.Vehicles.Controllers.Collision;
 using BaseCode.Logic.Vehicles.States.Movement;
 using UnityEngine;
 
