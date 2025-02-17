@@ -415,7 +415,6 @@ namespace BaseCode.Editor.CarCreation
                 Debug.Log("Path has no game object!");
         }
 
-
         private GameObject ParentObjectCreating()
         {
             GameObject vehicleObject = Instantiate(_vehicleModelPrefab);
