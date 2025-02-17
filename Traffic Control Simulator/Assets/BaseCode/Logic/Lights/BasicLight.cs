@@ -20,6 +20,7 @@ namespace BaseCode.Logic.Lights
     
         [SerializeField] private Material[] _groundLightMats;
         [SerializeField] private MeshRenderer _groundMesh;
+        [SerializeField] public GameObject light;
         
         private int _currentIndex = 1;
         private const int MaxIndex = 2;
@@ -73,6 +74,13 @@ namespace BaseCode.Logic.Lights
                     _groundMesh.material = _groundLightMats[1]; // Last ground material
                 }
             }
+        }
+        public void SetLightInvisibleStatus()
+        {
+            _groundMesh.enabled = !_groundMesh.isVisible;
+            light.SetActive(!light.activeSelf);
+
+            Debug.Log("Light is set to" + light.activeSelf);
         }
     }
 

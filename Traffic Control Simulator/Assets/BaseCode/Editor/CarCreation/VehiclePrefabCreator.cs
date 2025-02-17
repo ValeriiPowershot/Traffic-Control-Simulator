@@ -28,23 +28,45 @@ namespace BaseCode.Editor.CarCreation
 
         private bool _needToCopyColliderSize;
 
-        private string _prefabSavePath = "Assets/SoObjects/Vehicles";
+        private string _prefabSavePath = "Assets/Prefabs/Vehicles";
+        private readonly string _soSavePath = "Assets/SoObjects/Vehicles"; 
         private string _prefabSaveName;
 
+        private PreviewRenderUtility _previewRenderUtility;
+        private float _distance = 30f; // Camera distance from origin
+        private Vector2 _orbitAngles = new Vector2(90, 8); // (Yaw, Pitch)
+        private Vector2 _previousMousePos;
+        private bool _isDragging = false;
+        private Bounds _combinedBounds = default;
+        
         [MenuItem("Window/Vehicle Prefab Creator")]
         public static void ShowWindow()
         {
             var window = GetWindow<VehiclePrefabCreator>("Vehicle Prefab Creator");
-            window.minSize = new Vector2(600, 800); // Minimum width and height
+            window.minSize = new Vector2(600, 1000); // Minimum width and height
+        }
+        private void OnEnable()
+        {
+            _previewRenderUtility = new PreviewRenderUtility(true)
+            {
+                cameraFieldOfView = 30f
+            };
+            LoadAllResources();
         }
 
+        private void OnDisable()
+        {
+            _previewRenderUtility.Cleanup();
+        }
         private void OnGUI()
         {
+
             GUILayout.Space(10);
+            
             GUILayout.Label("Vehicle Prefab Creator", EditorStyles.boldLabel);
             GUILayout.Space(10);
 
-            RenderBaseVehicleModelSection();
+            RenderCreateButton();
             GUILayout.Space(10);
 
             RenderScoreValuesSection();
@@ -59,10 +81,10 @@ namespace BaseCode.Editor.CarCreation
             RenderNameSettingsSection();
             GUILayout.Space(20);
 
-            RenderCreateButton();
+            RenderBaseVehicleModelSection();
         }
 
-        
+       
         //Section 1
         private void RenderBaseVehicleModelSection()
         {
@@ -80,10 +102,173 @@ namespace BaseCode.Editor.CarCreation
                 "The main prefab that will serve as the base for your vehicle (it is desirable to use a prefab that already stores a collider in it).",
                 EditorStyles.wordWrappedLabel
             );
-
+            
+            if (_vehicleModelPrefab != null)
+            {
+                _distance = EditorGUILayout.Slider("Distance", _distance, 1, 40);
+                Draw3DPreview();
+            }
+            
             EditorGUILayout.EndVertical();
         }
 
+        private void Draw3DPreview()
+        {
+            Rect previewRect = GUILayoutUtility.GetRect(256, 256, GUILayout.ExpandWidth(true));
+
+            HandleMouseInput(previewRect);
+
+            Vector3 cameraPosition = Quaternion.Euler(_orbitAngles.y, _orbitAngles.x, 0) * new Vector3(0, 0, -_distance);
+
+            _previewRenderUtility.BeginPreview(previewRect, GUIStyle.none);
+            _previewRenderUtility.camera.transform.position = cameraPosition;
+            _previewRenderUtility.camera.transform.LookAt(Vector3.zero);
+            _previewRenderUtility.camera.nearClipPlane = 0.1f;
+            _previewRenderUtility.camera.farClipPlane = 1000f;
+            _previewRenderUtility.lights[0].transform.rotation = Quaternion.Euler(50, 50, 0);
+            _vehicleModelPrefab.transform.position = Vector3.zero;
+            
+            RenderPrefab(_vehicleModelPrefab.transform);
+            
+            Vector3 frontPosition = GetFrontPosition(_vehicleModelPrefab.transform);
+            _frontRayStartPoint.transform.position = frontPosition; 
+            RenderPrefab(_frontRayStartPoint.transform);
+            DrawDebugRayMesh(frontPosition, frontPosition + _frontRayStartPoint.transform.forward * _rayLenght, Color.red);
+            
+            _previewRenderUtility.Render();
+            
+            Texture previewTexture = _previewRenderUtility.EndPreview();
+            GUI.DrawTexture(previewRect, previewTexture, ScaleMode.StretchToFill, false);
+        }
+ 
+        private Vector3 GetFrontPosition(Transform vehicleObject)
+        {
+            if(_combinedBounds == default)
+                _combinedBounds = GetBound(vehicleObject);
+            
+            Vector3 frontOffset = new Vector3(0, 0, _combinedBounds.extents.z);
+            return _combinedBounds.center + vehicleObject.transform.rotation * frontOffset;
+        }
+        private Vector3 GetBackPosition(Transform vehicleObject)
+        {
+            if(_combinedBounds == default)
+                _combinedBounds = GetBound(vehicleObject);
+            
+            Vector3 frontOffset = new Vector3(0, 0, _combinedBounds.extents.z);
+            return _combinedBounds.center - vehicleObject.transform.rotation * frontOffset;
+        }
+        private Vector3 GetUpperMidPosition(Transform vehicleObject)
+        {
+            if (_combinedBounds == default)
+                _combinedBounds = GetBound(vehicleObject);
+
+            Vector3 upperMidOffset = new Vector3(0, _combinedBounds.extents.y, 0);
+            return _combinedBounds.center + vehicleObject.transform.rotation * upperMidOffset;
+        }
+
+
+        private Bounds GetBound(Transform vehicleObject)
+        {
+            MeshRenderer[] meshRenderers = vehicleObject.GetComponentsInChildren<MeshRenderer>();
+
+            if (meshRenderers.Length > 0)
+            {
+                _combinedBounds = meshRenderers[0].bounds;
+
+                foreach (MeshRenderer renderer in meshRenderers)
+                {
+                    _combinedBounds.Encapsulate(renderer.bounds);
+                }
+
+                return _combinedBounds;
+            }
+            Debug.LogError("No MeshRenderers found on the 'vehicleObject' or its children.");
+
+            return default;
+        }
+
+        private void DrawDebugRayMesh(Vector3 start, Vector3 end, Color color)
+        {
+            Mesh lineMesh = new Mesh();
+
+            float lineWidth = 0.05f;
+
+            Vector3 direction = (end - start).normalized;
+            Vector3 perpendicular = Vector3.Cross(direction, Vector3.up) * lineWidth;
+
+            Vector3[] vertices = new Vector3[4];
+            vertices[0] = start - perpendicular;
+            vertices[1] = start + perpendicular;
+            vertices[2] = end + perpendicular;
+            vertices[3] = end - perpendicular;
+
+            int[] triangles = { 0, 1, 2, 2, 3, 0 }; // Two triangles forming a quad
+            lineMesh.vertices = vertices;
+            lineMesh.triangles = triangles;
+
+            Material lineMaterial = new Material(Shader.Find("Unlit/Color"))
+            {
+                color = color
+            };
+            _previewRenderUtility.DrawMesh(lineMesh, Vector3.zero, Quaternion.identity, lineMaterial, 0);
+        }
+
+        private void HandleMouseInput(Rect previewRect)
+        {
+            Event e = Event.current;
+
+            if (e.type == EventType.MouseDown && previewRect.Contains(e.mousePosition) && e.button == 0)
+            {
+                _isDragging = true;
+                _previousMousePos = e.mousePosition;
+                e.Use();
+            }
+            else if (e.type == EventType.MouseUp && e.button == 0)
+            {
+                _isDragging = false;
+                e.Use();
+            }
+            else if (e.type == EventType.MouseDrag && _isDragging)
+            {
+                Vector2 delta = e.mousePosition - _previousMousePos;
+                _orbitAngles.x += delta.x * 0.3f;  
+                _orbitAngles.y += delta.y * 0.3f; 
+
+                _orbitAngles.y = Mathf.Clamp(_orbitAngles.y, -90f, 90f);
+
+                _previousMousePos = e.mousePosition;
+                e.Use();
+            }
+        }
+        
+        private void RenderPrefab(Transform prefabTransform, Vector3 offset = default)
+        {
+            foreach (MeshFilter meshFilter in prefabTransform.GetComponentsInChildren<MeshFilter>())
+            {
+                MeshRenderer meshRenderer = meshFilter.GetComponent<MeshRenderer>();
+                if (meshRenderer != null && meshFilter.sharedMesh != null)
+                {
+                    Mesh mesh = meshFilter.sharedMesh;
+                    Material[] materials = meshRenderer.sharedMaterials;
+
+                    // Apply the offset to move the object
+                    Vector3 position = meshFilter.transform.position + offset;
+
+                    for (int i = 0; i < mesh.subMeshCount; i++)
+                    {
+                        Material material = (i < materials.Length) ? materials[i] : null;
+
+                        _previewRenderUtility.DrawMesh(
+                            mesh,
+                            position,
+                            meshFilter.transform.rotation,
+                            material,
+                            i
+                        );
+                    }
+                }
+            }
+        }
         //Section 2
         private void RenderScoreValuesSection()
         {
@@ -175,7 +360,6 @@ namespace BaseCode.Editor.CarCreation
             }
 
             GameObject vehicleObject = ParentObjectCreating();
-            LoadAllResources();
             AddComponentsToVehicle(vehicleObject);
             AdditionalObjectCreating(vehicleObject);
             CheckVehicleCollider(vehicleObject);
@@ -192,8 +376,7 @@ namespace BaseCode.Editor.CarCreation
             );
         }
 
-        private void ChangeVehicleLayer(GameObject vehicleObject) =>
-            vehicleObject.layer = LayerMask.NameToLayer("Car");
+        private void ChangeVehicleLayer(GameObject vehicleObject) => vehicleObject.layer = LayerMask.NameToLayer("Car");
 
         private void DeleteWheelsColliders()
         {
@@ -219,13 +402,19 @@ namespace BaseCode.Editor.CarCreation
             vehicleCollider.isTrigger = true;
         }
 
+
+
         private void LoadAllResources()
         {
             _arrow = Resources.Load<GameObject>($"ForVehicleCreator/Arrow");
             _frontRayStartPoint = Resources.Load<GameObject>($"ForVehicleCreator/FrontRayStartPoint");
-            _scoringMaterials = Resources.Load<GameObject>($"ForVehicleCreator/ScoringMaterials");
+            _scoringMaterials = Resources.Load<GameObject>($"ForVehicleCreator/ReactionIndicator");
             _turnIndicators = Resources.Load<GameObject>($"ForVehicleCreator/TurnIndicators");
+             
+            if (_arrow == null || _frontRayStartPoint == null || _scoringMaterials == null || _turnIndicators == null)
+                Debug.Log("Path has no game object!");
         }
+
 
         private GameObject ParentObjectCreating()
         {
@@ -237,21 +426,27 @@ namespace BaseCode.Editor.CarCreation
 
         private void AdditionalObjectCreating(GameObject vehicleObject)
         {
-            CreateAndAttachChild(_arrow, vehicleObject, "Arrow", Quaternion.identity);
-            CreateAndAttachChild(_frontRayStartPoint, vehicleObject, "FrontRayStartPoint");
-            CreateAndAttachChild(_turnIndicators, vehicleObject, "TurnIndicators");
-            CreateAndAttachChild(_scoringMaterials, vehicleObject, "ScoringMaterials");
+            var frontPos = GetFrontPosition(vehicleObject.transform);
+            var backPos = GetBackPosition(vehicleObject.transform);
+            var upperMid = GetUpperMidPosition(vehicleObject.transform);
+            
+            CreateAndAttachChild(_arrow, vehicleObject, "Arrow", Quaternion.identity, upperMid + Vector3.up*2);
+            CreateAndAttachChild(_frontRayStartPoint, vehicleObject, "FrontRayStartPoint", position:frontPos);
+            CreateAndAttachChild(_turnIndicators, vehicleObject, "TurnIndicators", position: backPos);
+            CreateAndAttachChild(_scoringMaterials, vehicleObject, "ScoringMaterials", position: upperMid + Vector3.up*2);
         }
 
-        private static void CreateAndAttachChild(GameObject prefab, GameObject parent, string name, Quaternion? rotation = null)
+        private static void CreateAndAttachChild(GameObject prefab, GameObject parent, string name, Quaternion? rotation = null, Vector3? position = null)
         {
             if (prefab != null)
             {
-                GameObject instance = Instantiate(prefab, parent.transform);
+                GameObject instance = (GameObject)PrefabUtility.InstantiatePrefab(prefab,parent.transform);
                 instance.name = name;
 
                 if (rotation.HasValue) 
                     instance.transform.rotation = rotation.Value;
+                if (position.HasValue)
+                    instance.transform.position = position.Value;
             }
         }
 
@@ -273,34 +468,18 @@ namespace BaseCode.Editor.CarCreation
                     return;
                 }
                 
-                Transform bodyTransform = vehicleObject.transform.Find("Body");
-
-                if (bodyTransform != null)
-                {
-                    MeshRenderer meshRenderer = bodyTransform.GetComponent<MeshRenderer>();
-                    if (meshRenderer != null)
-                    {
-                        boxCollider.size = meshRenderer.bounds.size;
-                        boxCollider.center = meshRenderer.bounds.center - vehicleObject.transform.position;
-                    }
-                    else
-                    {
-                        Debug.LogError("No MeshRenderer found on the 'Body' GameObject.");
-                    }
-                }
-                else
-                {
-                    Debug.LogError("No child called 'Body' found in the vehicle object.");
-                }
-
+                boxCollider.size = _combinedBounds.size;
+                boxCollider.center = _combinedBounds.center - vehicleObject.transform.position;
             }
 
             if (vehicleObject.GetComponent<BasicCar>() == null)
             {
                 BasicCar basicCar = vehicleObject.AddComponent<BasicCar>();
+                
                 basicCar.TurnLight = _turnIndicators;
                 basicCar.LeftTurn = ObjectFinder.FindObjectInParent(_turnIndicators, "LeftTurn").transform;
                 basicCar.RightTurn = ObjectFinder.FindObjectInParent(_turnIndicators, "RightTurn").transform;
+                
                 basicCar.RayStartPoint = _frontRayStartPoint.transform;
                 basicCar.ArrowIndicatorEndPoint = _arrow.transform;
             }
@@ -318,7 +497,7 @@ namespace BaseCode.Editor.CarCreation
             }
         }
 
-        private void SaveAsPrefab(GameObject vehicleObject)
+        private void SaveAsPrefab(GameObject vehicleObject) 
         {
             if (!Directory.Exists(_prefabSavePath)) 
                 Directory.CreateDirectory(_prefabSavePath);
@@ -333,7 +512,7 @@ namespace BaseCode.Editor.CarCreation
 
         private void CreateVehicleScriptableObject(GameObject vehiclePrefab)
         {
-            const string path = "Assets/ScriptableObjects/Vehicles";
+            string path = _soSavePath;
 
             if (!Directory.Exists(path)) 
                 Directory.CreateDirectory(path);
@@ -358,5 +537,7 @@ namespace BaseCode.Editor.CarCreation
 
             Debug.Log($"ScriptableObject created and saved at {soFilePath}");
         }
+        
+        
     }
 }

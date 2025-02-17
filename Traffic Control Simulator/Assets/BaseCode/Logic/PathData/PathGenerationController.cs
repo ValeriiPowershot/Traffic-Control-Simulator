@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using BaseCode.Logic.Lights;
 using BaseCode.Logic.Roads;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Ways;
@@ -16,7 +17,8 @@ namespace BaseCode.Logic.PathData
         [Header("Access from SceneObjectSpawner")]
         public List<RoadBase> createdRoadBases = new List<RoadBase>();
         public List<RoadBase> selectedRoads = new List<RoadBase>();
-        
+
+        public BasicLight currentLight;
         public Vector3 CurrentDirection  { get; private set; }
         public bool SelectingNewRoad { get; set; }
         public GameObject ClickedSelectedObject{ get; set; } // Selected by double-click
@@ -67,15 +69,38 @@ namespace BaseCode.Logic.PathData
 
                 DrawOffsetGizmo(offsetPosition, offset.Item2);
             }
-
             DrawClosestGizmo(closestDistance, closestPosition);
+
+            var found =  ClickedSelectedObject.GetComponent<TripleRoadIntersection>();
+            if (found != null)
+            {
+                closestPosition = Vector3.zero;
+                closestDistance = float.MaxValue;
+                var lights = found.basicLights;
+                foreach (var basicLight in lights)
+                {
+                    var offsetPosition = basicLight.light.transform.position;
+                    float distance = CalculateScreenDistance(offsetPosition, mousePosition);
+
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestPosition = offsetPosition;
+                        currentLight = basicLight;
+                    }
+                }
+                DrawClosestGizmoLight(closestDistance,closestPosition);
+            }
+            else
+            {
+                currentLight = null;
+            }
         }
 
         private bool IsThereProblem()
         {
             return SelectingNewRoad || ClickedSelectedObject == null || SelectedRoad == null;
         }
-
         private Vector3 CalculateOffsetPosition(Vector3 direction)
         {
             return ClickedSelectedObject.transform.position + direction.normalized * RoadsSo.offsetDistance;
@@ -112,7 +137,20 @@ namespace BaseCode.Logic.PathData
                 CurrentDirection = Vector3.zero;
             }
         }
+        
+        private void DrawClosestGizmoLight(float closestDistance, Vector3 closestPosition)
+        {
+            const float detectionThreshold = 60f;
 
+            if (closestDistance < detectionThreshold)
+            {
+                DrawMeshWithLabel(closestPosition + Vector3.up * 10, "Set Me");
+            }
+            else
+            {
+                currentLight = null;
+            }
+        }
         private void DrawMeshWithLabel(Vector3 position, string label)
         {
             Handles.Label(position, label);
@@ -122,9 +160,16 @@ namespace BaseCode.Logic.PathData
         {
             if (CurrentDirection == Vector3.zero)
                 return;
-
             SpawnObject(SelectedRoad);
             CurrentDirection = Vector3.zero;
+        }
+
+        public void SetRoad()
+        {
+            if (currentLight != null)
+            {
+                currentLight.SetLightInvisibleStatus();
+            }
         }
 
         private void SpawnObject(RoadBase roadBase)
@@ -137,7 +182,7 @@ namespace BaseCode.Logic.PathData
 
             RegisterSpawnedObject(prefab);
         }
-
+    
         private void RegisterSpawnedObject(GameObject prefab)
         {
             var roadBase = prefab.GetComponent<RoadBase>();

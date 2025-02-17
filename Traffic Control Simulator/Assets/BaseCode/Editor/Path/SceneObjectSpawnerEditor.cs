@@ -93,8 +93,6 @@ namespace BaseCode.Editor.Path
             if (_sceneRoadGenerationController == null || _sceneRoadGenerationController.ClickedSelectedObject == null)
             {
                 EditorGUILayout.LabelField("Select an object in the scene.");
-                _sceneRoadGenerationController.RoadsSo.canDrawRoadGizmo = false;
-                
                 return false;
             }
             return true;
@@ -414,9 +412,19 @@ namespace BaseCode.Editor.Path
 
         private static void HandleSingleClick()
         {
+
+            if (_sceneRoadGenerationController != null && _sceneRoadGenerationController.ClickedSelectedObject != null)
+            {
+                _sceneRoadGenerationController.SetRoad();
+            }
+                
             if (_sceneRoadGenerationController == null || _sceneRoadGenerationController.CurrentDirection == Vector3.zero)
             {
-                if (_sceneRoadGenerationController != null) _sceneRoadGenerationController.ClickedSelectedObject = null;
+                if (_sceneRoadGenerationController != null)
+                {
+                    _sceneRoadGenerationController.ClickedSelectedObject = null;
+                    _sceneRoadGenerationController.currentLight = null;
+                }
 
                 return;
             }
