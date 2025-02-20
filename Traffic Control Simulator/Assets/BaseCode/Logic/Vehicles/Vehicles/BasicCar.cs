@@ -17,6 +17,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         public Transform RayStartPoint;
         public Transform ArrowIndicatorEndPoint;
         public VehicleBlinker blinker;
+        
         public override void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             base.Starter(manager, currentCar);
