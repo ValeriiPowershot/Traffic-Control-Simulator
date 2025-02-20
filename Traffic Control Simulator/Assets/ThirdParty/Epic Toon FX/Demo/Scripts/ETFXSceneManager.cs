@@ -108,9 +108,9 @@ public class ETFXSceneManager : MonoBehaviour
 		SceneManager.LoadScene ("etfx_fruit");
 	}
 	
-	void Update ()
+	/*void Update ()
 	 {
- 
+		 
      if(Input.GetKeyDown(KeyCode.L))
 	 {
          GUIHide = !GUIHide;
@@ -162,7 +162,6 @@ public class ETFXSceneManager : MonoBehaviour
 		 {
              GameObject.Find("CanvasTips").GetComponent<Canvas> ().enabled = true;
          }
-     }
+     }*/
 	}	
-}
 }

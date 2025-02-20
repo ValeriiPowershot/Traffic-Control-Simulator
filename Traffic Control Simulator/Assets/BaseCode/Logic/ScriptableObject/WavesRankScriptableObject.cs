@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace BaseCode.Logic.ScriptableObject
@@ -34,7 +33,6 @@ namespace BaseCode.Logic.ScriptableObject
             }
             return "";
         }
-        
     }
     
     [Serializable]

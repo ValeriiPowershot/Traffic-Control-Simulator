@@ -20,8 +20,8 @@ public class Player_controller : MonoBehaviour
     void Update()
     {
 
-        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        rb.velocity = new Vector3(move.x * velocity, 0, move.z * velocity);
+        //Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+       // rb.velocity = new Vector3(move.x * velocity, 0, move.z * velocity);
         Quaternion torotation = Quaternion.LookRotation(new Vector3(rb.velocity.x, 0, rb.velocity.z), Vector3.up);
 
         if (rb.velocity.x == 0 && rb.velocity.z == 0)

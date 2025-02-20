@@ -16,7 +16,7 @@ namespace BaseCode.Logic.Services.Handler.Car
         {
             _carObjectPools = carObjectPools;
             
-            foreach (var wave in carSpawnObjects)
+            foreach (CarSpawnObject wave in carSpawnObjects)
             {
                 wave.Initialize(carManagerInScene, (CarPool)_carObjectPools.GetPool(wave.carSoObjects));
             }

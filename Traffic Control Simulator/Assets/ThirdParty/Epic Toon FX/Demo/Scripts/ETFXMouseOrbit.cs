@@ -41,7 +41,7 @@ namespace EpicToonFX
 
         private void Update()
         {
-            if(target)
+          /*  if(target)
             {
                 if (Input.GetMouseButton(1))
                 {
@@ -55,7 +55,7 @@ namespace EpicToonFX
                 }
 
                 distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel") * 15, distanceMin, distanceMax);
-            }
+            }*/
         }
 
 		private void FixedUpdate()

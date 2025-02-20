@@ -81,13 +81,13 @@ public class Demo : MonoBehaviour {
 		Bounds b = animal[0].transform.GetChild(0).GetChild(0).GetComponent<Renderer>().bounds;
 	}
 
-	void Update() {
+	/*void Update() {
 
 		if(Input.GetKeyDown("up")) { PrevAnimal(); }
 		else if(Input.GetKeyDown("down")) { NextAnimal(); }
 		else if(Input.GetKeyDown("right")) { NextAnimation(); }
 		else if(Input.GetKeyDown("left")) { PrevAnimation(); }
-	}
+	}*/
 
 
 	public void NextAnimal() {
