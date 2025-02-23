@@ -15,11 +15,14 @@ namespace BaseCode.Logic.Lights
     }
     public class BasicLight : LightBase
     {
+        [SerializeField] private Light[] _lights;
         [SerializeField] private Sprite[] _lightMats;
+        
         [SerializeField] private Image _lightImage;
     
         [SerializeField] private Material[] _groundLightMats;
         [SerializeField] private MeshRenderer _groundMesh;
+        [SerializeField] public GameObject light;
         
         private int _currentIndex = 1;
         private const int MaxIndex = 2;
@@ -46,6 +49,7 @@ namespace BaseCode.Logic.Lights
             if (_lightImage != null)
             {
                 _lightImage.sprite = _lightMats[^1]; // Set to the last material as a temporary changeover indicator
+                SetActiveLight(_lights.Length - 1);
             }
 
             if (_groundMesh != null)
@@ -53,7 +57,6 @@ namespace BaseCode.Logic.Lights
                 _groundMesh.material = _groundLightMats[^1]; // Set to the last material for the ground as well
             }
         }
-
         private void UpdateVisualState()
         {
             if (_lightImage != null && _lightMats.Length > 0)
@@ -61,18 +64,28 @@ namespace BaseCode.Logic.Lights
                 _lightImage.sprite = _lightMats[_currentIndex - 1];
             }
 
+            SetActiveLight(_currentIndex - 1);
+
             if (_groundMesh != null && _groundLightMats.Length == 2)
             {
-                // Sync ground light material to the light mesh's first and last material
-                if (_currentIndex == 1)
-                {
-                    _groundMesh.material = _groundLightMats[0]; // First ground material
-                }
-                else if (_currentIndex == MaxIndex)
-                {
-                    _groundMesh.material = _groundLightMats[1]; // Last ground material
-                }
+                _groundMesh.material = (_currentIndex == 1) ? _groundLightMats[0] : _groundLightMats[1];
             }
+        }
+        public void SetLightInvisibleStatus()
+        {
+            _groundMesh.enabled = !_groundMesh.isVisible;
+            light.SetActive(!light.activeSelf);
+
+            Debug.Log("Light is set to" + light.activeSelf);
+        }
+
+        public void SetActiveLight(int i)
+        {
+            foreach (var l in _lights)
+            {
+                l.gameObject.SetActive(false);
+            }
+            _lights[i].gameObject.SetActive(true);
         }
     }
 

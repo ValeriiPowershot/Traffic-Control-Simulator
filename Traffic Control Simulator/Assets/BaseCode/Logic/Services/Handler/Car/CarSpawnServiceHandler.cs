@@ -71,6 +71,7 @@ namespace BaseCode.Logic.Services.Handler.Car
         {
             foreach (var container in CarManager.allWaysContainer.allWays)
             {
+                Debug.Log("yes");
                 var firstElement = container.roadPoints[0].point.transform;
                 Object.Instantiate(CarManager.allWaysContainer.carDetectorPrefab, firstElement.position, firstElement.rotation, firstElement);
             }

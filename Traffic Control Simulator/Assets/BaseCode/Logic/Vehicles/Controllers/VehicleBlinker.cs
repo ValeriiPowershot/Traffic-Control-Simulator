@@ -7,7 +7,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
     public class VehicleBlinker : MonoBehaviour
     {
         private float _blinkTime;
-        public float time = 0.5f;
+        public float time = 0.25f;
         public GameObject blinker;
 
         public bool isNone;
