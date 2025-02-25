@@ -190,7 +190,7 @@ namespace BaseCode.Logic.PathData
             roadBase.roadSo = RoadsSo;
             
             var scale = roadBase.transform.localScale;
-            scale.x = RoadsSo.roadChange;
+            scale.x = RoadsSo.createRoadFlowingOnRight ? -Mathf.Abs(scale.x) : Mathf.Abs(scale.x);
             roadBase.transform.localScale = scale;
 
             createdRoadBases ??= new List<RoadBase>();

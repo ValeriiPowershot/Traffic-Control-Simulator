@@ -230,6 +230,22 @@ namespace BaseCode.Editor.Path
             {
                 CleanVisuals();
             }
+            if (GUILayout.Button("Reverse Roads"))
+            {
+                var roads = FindObjectsByType<RoadBase>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+                var currentRoadSet = _sceneRoadGenerationController.RoadsSo.createRoadFlowingOnRight;
+
+                currentRoadSet = !currentRoadSet;
+                
+                foreach (var roadBase in roads)
+                {
+                    var scale = roadBase.transform.localScale;
+                    scale.x = currentRoadSet ? -Mathf.Abs(scale.x) : Mathf.Abs(scale.x);
+                    roadBase.transform.localScale = scale;
+                }
+
+                _sceneRoadGenerationController.RoadsSo.createRoadFlowingOnRight = currentRoadSet;
+            }
         }
         
         #endregion

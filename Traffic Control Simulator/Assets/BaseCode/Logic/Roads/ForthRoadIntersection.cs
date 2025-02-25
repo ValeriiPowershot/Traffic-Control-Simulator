@@ -149,5 +149,35 @@ namespace BaseCode.Logic.Roads
                 }
             }
         }
+        public override void OnDrawGizmos()
+        {
+            if(roadSo == null || roadSo.canDrawRoadGizmo == false)
+                return;
+            
+            base.OnDrawGizmos();
+
+            var circleSize = roadSo.circleSize;
+            Gizmos.color = Color.red;
+            foreach (Transform points in onForwardPathC) 
+                Gizmos.DrawSphere(points.position, circleSize);
+            
+            Gizmos.color = Color.yellow;
+            foreach (Transform points in onRightPathC) 
+                Gizmos.DrawSphere(points.position, circleSize);
+            
+            Gizmos.color = Color.blue;
+            foreach (Transform points in onLeftPathC) 
+                Gizmos.DrawSphere(points.position, circleSize);
+            
+            Gizmos.color = Color.green;
+            foreach (Transform points in onBackwardPathA) 
+                Gizmos.DrawSphere(points.position, circleSize);
+            foreach (Transform points in onBackwardPathB) 
+                Gizmos.DrawSphere(points.position, circleSize);
+            foreach (Transform points in onBackwardPathC) 
+                Gizmos.DrawSphere(points.position, circleSize);
+            
+            
+        }
     }
 }

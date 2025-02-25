@@ -36,9 +36,11 @@ namespace BaseCode.Logic.ScriptableObject
         public float arrowLength;
 
         [Header("Road Config")]
-        public int roadChange; // if it is -1, it will change to the left, if it is 1, it will change to the right :D
-    
-        
+        public bool createRoadFlowingOnRight; // 
+
+        public float circleSize = 0.5f;
+
+
         public NpcScriptableObject GetNpc<T>() where T : NpcBase
         {
             foreach (var npcPrefab in npcPrefabs)

@@ -12,17 +12,19 @@ namespace BaseCode.Logic.Roads
         
         public Mesh roadMesh;
         public LayerMask pointMask;
+        [Header("Temporary Values")]
         public List<Transform> path = new List<Transform>();
         public List<Transform> decelerationPoints = new List<Transform>();
         public List<Transform> accelerationPoints = new List<Transform>();
-
-        public List<Transform> onLeftPathPoints; // Example for path points on the left
-        public List<Transform> onRightPathPoints;
-
-        public float pointDistance = 2f; // Adjust based on how far roads can be
-
+        [Header("If you dont see these, you have problem")]
         public Transform startPoint;
         public Transform endPoint;
+
+        [Header("Constant Values")]
+        public List<Transform> onLeftPathPoints; // Example for path points on the left
+        public List<Transform> onRightPathPoints;
+        public float pointDistance = 2f; // Adjust based on how far roads can be
+
 
         public virtual void ConnectPath(RoadBase nextBase)
         {
@@ -200,7 +202,6 @@ namespace BaseCode.Logic.Roads
 
         protected virtual void DrawArrowDirection()
         {
-            
             Vector3 startPosition = onLeftPathPoints[0].position;
             Vector3 startPosition2 = onRightPathPoints[0].position;
 

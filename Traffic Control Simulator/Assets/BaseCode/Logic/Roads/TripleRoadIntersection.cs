@@ -172,5 +172,37 @@ namespace BaseCode.Logic.Roads
                 basicLights.FirstOrDefault(basicLight => basicLight.ControlledNpc == null) : 
                 basicLights.FirstOrDefault(basicLight => basicLight.ControlledNpc != null);
         }
+
+        public override void OnDrawGizmos()
+        {
+            if(roadSo == null || roadSo.canDrawRoadGizmo == false)
+                return;
+            
+            base.OnDrawGizmos();
+
+            var circleSize = roadSo.circleSize;
+            Gizmos.color = Color.red;
+            foreach (Transform points in onForwardPathA) 
+                Gizmos.DrawSphere(points.position, circleSize);
+            foreach (Transform points in onForwardPathB) 
+                Gizmos.DrawSphere(points.position, circleSize);
+            
+            Gizmos.color = Color.yellow;
+            foreach (Transform points in onRightPathA) 
+                Gizmos.DrawSphere(points.position, circleSize);
+            foreach (Transform points in onRightPathB) 
+                Gizmos.DrawSphere(points.position, circleSize);
+            
+            Gizmos.color = Color.blue;
+            foreach (Transform points in onLeftPathA) 
+                Gizmos.DrawSphere(points.position, circleSize);
+            foreach (Transform points in onLeftPathB) 
+                Gizmos.DrawSphere(points.position, circleSize);
+        }
+        
+        protected override void DrawArrowDirection()
+        {
+            
+        }
     }
 }
