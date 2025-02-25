@@ -1,3 +1,5 @@
+using System;
+using BaseCode.Logic.PopUps;
 using BaseCode.Logic.ScoringSystem;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -10,5 +12,11 @@ namespace BaseCode.Logic
         public FxManager fxManager;
         public InputManager inputManager;
         public ScoringManager scoringManager;
+        public PopUpController popUpController;
+
+        private void Start()
+        {
+            popUpController.ShowPopUp<PopUpMainMenu>();
+        }
     }
 }
