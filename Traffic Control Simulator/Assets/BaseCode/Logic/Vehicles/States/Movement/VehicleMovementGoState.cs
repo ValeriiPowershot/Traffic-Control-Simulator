@@ -72,7 +72,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
             CarTransform.position = Vector3.MoveTowards(
                 CarTransform.position, 
                 targetWaypoint.position, 
-                _speed * Time.fixedDeltaTime
+                _speed * Time.deltaTime
             );
         }
         private void RotateTowardsWaypoint()
@@ -87,7 +87,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
                 CarTransform.rotation = Quaternion.RotateTowards(
                     CarTransform.rotation, 
                     targetRotation, 
-                    CarData.RotationSpeed * Time.fixedDeltaTime
+                    CarData.RotationSpeed * Time.deltaTime
                 );
 
                 Vector3 arrowForward = (VehiclePathController.GetEndPoint().position - VehicleController.VehicleBase.ArrowIndicatorEndPoint.position).normalized;
