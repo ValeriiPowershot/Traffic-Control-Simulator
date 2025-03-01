@@ -11,13 +11,14 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
         {
             if (hit.collider.TryGetComponent(out VehicleBase hitVehicle))
             {
+                Debug.Log("hitVehicle: " + hitVehicle);
                 if (AreTheyInIntersection(hitVehicle) && AreTheyUsingDifferentPath(hitVehicle))
                 {
                     PlayFx(FxTypes.Angry);  
 
-                    if (IsOtherCarAggressive(hitVehicle))
+                    if (IsOtherCarSameWithThisVehicle(hitVehicle))
                     {
-                        StopAndLetAggressiveCar(hitVehicle);
+                        StopAndLetSameTypeCar(hitVehicle);
                         return false;
                     }
                     Debug.Log("Game Is Over");
@@ -30,7 +31,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             return false;
         }
 
-        private void StopAndLetAggressiveCar(VehicleBase hitVehicle)
+        private void StopAndLetSameTypeCar(VehicleBase hitVehicle)
         {
             if (hitVehicle.VehicleController.GetStateCurrentState().GetType() != typeof(VehicleMovementStopState))
             {
@@ -38,15 +39,14 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             }
         }
 
-        private bool IsOtherCarAggressive(VehicleBase hitVehicle)
+        private bool IsOtherCarSameWithThisVehicle(VehicleBase hitVehicle)
         {
-            return hitVehicle.GetType() == typeof(AggressiveCar);
+            return hitVehicle.GetType() == BasicCar.GetType();
         }
 
         protected override bool IsItRedLight()
         {
             return false;
         }
-        
     }
 }

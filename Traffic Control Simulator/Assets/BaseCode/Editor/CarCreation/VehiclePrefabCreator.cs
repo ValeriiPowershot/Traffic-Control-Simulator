@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using BaseCode.Infrastructure;
 using BaseCode.Logic.ScoringSystem;
 using BaseCode.Logic.ScriptableObject;
@@ -38,6 +42,10 @@ namespace BaseCode.Editor.CarCreation
         private Vector2 _previousMousePos;
         private bool _isDragging = false;
         private Bounds _combinedBounds = default;
+
+        private List<Type> _carTypes = new List<Type>();
+        private int _selectedTypeIndex = 0;
+        private string[] _carTypeNames;
         
         [MenuItem("Window/Vehicle Prefab Creator")]
         public static void ShowWindow()
@@ -47,6 +55,16 @@ namespace BaseCode.Editor.CarCreation
         }
         private void OnEnable()
         {
+            _carTypes = Assembly.GetAssembly(typeof(BasicCar)).GetTypes()
+                .Where(t => t.IsSubclassOf(typeof(BasicCar)) && !t.IsAbstract).ToList();
+            _carTypes.Add(typeof(BasicCar));
+            _carTypeNames = _carTypes.Select(t => t.Name).ToArray();
+            
+            foreach (var typeName in _carTypeNames)
+            {
+                Debug.Log(typeName);
+            }
+
             _previewRenderUtility = new PreviewRenderUtility(true)
             {
                 cameraFieldOfView = 30f
@@ -82,9 +100,19 @@ namespace BaseCode.Editor.CarCreation
             GUILayout.Space(20);
 
             RenderBaseVehicleModelSection();
+            
+            EditorGUILayout.Space();
+
+            SelectCarType();
+
         }
 
-       
+        private void SelectCarType()
+        {
+            EditorGUILayout.LabelField("Select Car Type", EditorStyles.boldLabel);
+            _selectedTypeIndex = EditorGUILayout.Popup("Car Type", _selectedTypeIndex, _carTypeNames);
+        }
+
         //Section 1
         private void RenderBaseVehicleModelSection()
         {
@@ -470,10 +498,11 @@ namespace BaseCode.Editor.CarCreation
                 boxCollider.size = _combinedBounds.size;
                 boxCollider.center = _combinedBounds.center - vehicleObject.transform.position;
             }
-
+            
             if (vehicleObject.GetComponent<BasicCar>() == null)
             {
-                BasicCar basicCar = vehicleObject.AddComponent<BasicCar>();
+                Type selectedCarType = _carTypes[_selectedTypeIndex];
+                BasicCar basicCar = (BasicCar)vehicleObject.AddComponent(selectedCarType);
                 
                 basicCar.TurnLight = _turnIndicators;
                 basicCar.LeftTurn = ObjectFinder.FindObjectInParent(_turnIndicators, "LeftTurn").transform;

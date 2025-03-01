@@ -28,7 +28,7 @@ namespace BaseCode.Logic.Services.Handler.Car
         {
             if (pathIndex < 0 || pathIndex >= _allWaysContainer.allWays.Length)
             {
-                Debug.LogError("Invalid path index!");
+                Debug.Log("No Path Found!");
                 return null;
             }
 
