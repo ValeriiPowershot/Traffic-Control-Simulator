@@ -32,10 +32,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
 
                 return CollisionHappened(hit);
             }
-            else
-            {
-                Debug.DrawRay(ray.origin, ray.direction * _rayDistance, Color.green);
-            }
+            Debug.DrawRay(ray.origin, ray.direction * _rayDistance, Color.green);
 
             return false;
         }
@@ -72,10 +69,8 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             return false;
         }
 
-        protected virtual bool IsItRedLight()
-        {
-            return BasicCar.CarLightService.CarLightState == LightState.Red;
-        }
+        protected virtual bool IsItRedLight() =>
+            BasicCar.CarLightService.CarLightState == LightState.Red;
 
         protected bool AreTheyUsingDifferentPath(VehicleBase hitVehicle)
         {
@@ -89,17 +84,12 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
                    BasicCar.CarLightService.LightPlaceSave != LightPlace.None;
         }
 
-        protected void PlayFx(FxTypes fxTypes)
-        {
+        protected void PlayFx(FxTypes fxTypes) =>
             PlayFx(fxTypes, BasicCar.emojiFxSpawnPoint);
-        }
-        public void PlayFx(FxTypes fxTypes, Transform spawnPoint)
-        {
+
+        public void PlayFx(FxTypes fxTypes, Transform spawnPoint) =>
             BasicCar.CarManager.gameManager.fxManager.PlayFx(fxTypes, spawnPoint);
-        }
 
         protected BasicCar BasicCar => VehicleController.VehicleBase;
-
-        
     }
 }

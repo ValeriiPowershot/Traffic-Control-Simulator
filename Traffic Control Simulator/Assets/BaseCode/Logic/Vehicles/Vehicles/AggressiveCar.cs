@@ -6,7 +6,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
 {
     public class AggressiveCar : BasicCar
     {
-        public override void AssignCollisionController()
+        protected override void AssignCollisionController()
         {
             VehicleCollisionController = new AggressiveVehicleCollisionController();
             VehicleCollisionController.Starter(this);

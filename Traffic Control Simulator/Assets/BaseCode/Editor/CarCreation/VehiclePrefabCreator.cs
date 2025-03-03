@@ -504,10 +504,6 @@ namespace BaseCode.Editor.CarCreation
                 Type selectedCarType = _carTypes[_selectedTypeIndex];
                 BasicCar basicCar = (BasicCar)vehicleObject.AddComponent(selectedCarType);
                 
-                basicCar.TurnLight = _turnIndicators;
-                basicCar.LeftTurn = ObjectFinder.FindObjectInParent(_turnIndicators, "LeftTurn").transform;
-                basicCar.RightTurn = ObjectFinder.FindObjectInParent(_turnIndicators, "RightTurn").transform;
-                
                 basicCar.RayStartPoint = _frontRayStartPoint.transform;
                 basicCar.ArrowIndicatorEndPoint = _arrow.transform;
             }

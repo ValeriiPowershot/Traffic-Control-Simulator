@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using BaseCode.Logic.Vehicles.Controllers.Collision;
 using BaseCode.Logic.Vehicles.States.Movement;
 using UnityEngine;
 
@@ -34,24 +33,18 @@ namespace BaseCode.Logic.Vehicles.Controllers
             }
         }
 
-        public T GetState<T>() where T : IVehicleMovementState
-        {
-            return (T)_states[typeof(T)];
-        }
-        
+        public T GetState<T>() where T : IVehicleMovementState =>
+            (T)_states[typeof(T)];
+
         public void InitializePath()
         {
             ((VehicleMovementGoState)_states[typeof(VehicleMovementGoState)]).InitializePath();
         }
-        public IVehicleMovementState GetStateCurrentState()
-        {
-            return _currentMovementMovementState;
-        }
+        public IVehicleMovementState GetStateCurrentState() =>
+            _currentMovementMovementState;
 
-        public Dictionary<Type, IVehicleMovementState> GetStatesDict()
-        {
-            return _states;
-        }
+        public Dictionary<Type, IVehicleMovementState> GetStatesDict() =>
+            _states;
 
     }
 }

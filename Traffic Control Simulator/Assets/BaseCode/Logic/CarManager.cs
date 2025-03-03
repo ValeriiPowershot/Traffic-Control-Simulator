@@ -11,15 +11,11 @@ namespace BaseCode.Logic
         
         [SerializeField] private CarSpawnServiceHandler carSpawnServiceHandler;
 
-        private void Awake()
-        {
+        private void Awake() =>
             carSpawnServiceHandler.Initialize(this);
-        }
 
-        private void Update()
-        {
+        private void Update() =>
             carSpawnServiceHandler.Update();
-        }
 
         public ScoringManager ScoringManager => gameManager.scoringManager;
         public CarSpawnServiceHandler CarSpawnServiceHandler => carSpawnServiceHandler;

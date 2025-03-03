@@ -19,6 +19,7 @@ namespace BaseCode.Logic.PopUps
 
             return (T)_lastActivePopUpBase;
         }
+        
         public void HidePopUp<T>() where T : PopUpBase
         {
             var currentPopUp = GetPopUp<T>();
@@ -33,6 +34,7 @@ namespace BaseCode.Logic.PopUps
             popUpBase.gameObject.SetActive(false);
             popUpBase.OnStartHidden();
         }
+        
         public void ShowPopUp(PopUpBase popUpBase)
         {
             if (popUpBase == null)

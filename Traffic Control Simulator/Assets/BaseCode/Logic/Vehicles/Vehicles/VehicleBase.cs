@@ -1,13 +1,9 @@
-using System.Collections;
 using BaseCode.Core.ObjectPool.Base;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.Handler.Car;
 using BaseCode.Logic.Services.Interfaces.Car;
 using BaseCode.Logic.Vehicles.Controllers;
 using BaseCode.Logic.Vehicles.Controllers.Collision;
-using BaseCode.Logic.Vehicles.States.Movement;
-using DG.Tweening;
-using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles.Vehicles
 {
@@ -32,7 +28,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
             ((PathContainerService)PathContainerService).Starter(manager);
         }
 
-        public virtual void AssignCollisionController()
+        protected virtual void AssignCollisionController()
         {
             VehicleCollisionController = new VehicleCollisionControllerBase();
             VehicleCollisionController.Starter(this);

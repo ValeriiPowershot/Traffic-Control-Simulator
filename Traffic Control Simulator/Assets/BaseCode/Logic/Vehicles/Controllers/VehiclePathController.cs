@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using BaseCode.Logic.Services.Interfaces.Car;
-using BaseCode.Logic.Vehicles.Controllers.Collision;
 using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Vehicles.Vehicles;
 using BaseCode.Logic.Ways;
@@ -35,23 +33,18 @@ namespace BaseCode.Logic.Vehicles.Controllers
             _endPoint = _waypoints[^1].point;
         }
         
-        public bool HasWaypoints()
-        {
-            return _waypoints.Count > 0;
-        }
-        public bool IsAtFinalWaypoint()
-        {
-            return _currentWaypointIndex == _waypoints.Count;
-        }
-        public RoadPoint GetCurrentWaypoint()
-        {
-            return _waypoints[_currentWaypointIndex];
-        }
-    
-        public Transform GetEndPoint()
-        {
-            return _endPoint;
-        }
+        public bool HasWaypoints() =>
+            _waypoints.Count > 0;
+
+        public bool IsAtFinalWaypoint() =>
+            _currentWaypointIndex == _waypoints.Count;
+        
+        public RoadPoint GetCurrentWaypoint() =>
+            _waypoints[_currentWaypointIndex];
+
+        public Transform GetEndPoint() =>
+            _endPoint;
+        
         public void ProceedToNextWaypoint()
         {
             _currentWaypointIndex++;
@@ -80,13 +73,13 @@ namespace BaseCode.Logic.Vehicles.Controllers
             switch (dot)
             {
                 case > TURN_ANGLE:
-                    VehicleController.VehicleBase.ShowTurn(TurnType.Right);
+                    VehicleController.VehicleBase.VechicleTurnLights.ShowTurnLight(Indicator.Right);
                     break;
                 case < -TURN_ANGLE:
-                    VehicleController.VehicleBase.ShowTurn(TurnType.Left);
+                    VehicleController.VehicleBase.VechicleTurnLights.ShowTurnLight(Indicator.Left);
                     break;
                 default:
-                    VehicleController.VehicleBase.ShowTurn(TurnType.None);
+                    VehicleController.VehicleBase.VechicleTurnLights.StopTurnSignals();
                     return;
             }
         }

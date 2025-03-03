@@ -19,7 +19,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Boss
             var dict = VehicleController.StateController.GetStatesDict();
             dict[typeof(VehicleMovementTruckStopState)] = new VehicleMovementTruckStopState(VehicleController);
         }
-        public override void AssignCollisionController()
+        protected override void AssignCollisionController()
         {
             VehicleCollisionController = new TruckVehicleCollisionController();
             VehicleCollisionController.Starter(this);

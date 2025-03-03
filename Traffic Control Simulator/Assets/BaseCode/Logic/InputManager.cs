@@ -30,7 +30,7 @@ namespace BaseCode.Logic
             _cam = Camera.main;
         }
 
-        void Update()
+        private void Update()
         {
             float PlayerPress = _tapAction.ReadValue<float>();
      

@@ -5,6 +5,7 @@ using System.Linq;
 using BaseCode.Core.ObjectPool.CarPool;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.Interfaces.Car;
+using BaseCode.Logic.Ways;
 using TMPro;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -34,10 +35,8 @@ namespace BaseCode.Logic.Services.Handler.Car
         }
         public void Update()
         {
-            if (_updateCoroutine == null)
-            {
+            if (_updateCoroutine == null) 
                 _updateCoroutine = CarManager.StartCoroutine(UpdateWithDelay());
-            }
         }
         private IEnumerator UpdateWithDelay()
         {
@@ -51,17 +50,18 @@ namespace BaseCode.Logic.Services.Handler.Car
 
         private void InitializeWave()
         {
-            foreach (var wave in waves)
+            foreach (CarWave wave in waves)
             {
                 wave.Initialize(CarManager, CarObjectPools);
             }
+            
             currentWaveIndex = 0;
         }
 
         private void InitializePools()
         {
-            var setOfCurrentWaveSo = GetCurrentSetsWithCounts();
-            foreach (var uniqueVehicleSo in setOfCurrentWaveSo)
+            Dictionary<VehicleScriptableObject, int> setOfCurrentWaveSo = GetCurrentSetsWithCounts();
+            foreach (KeyValuePair<VehicleScriptableObject, int> uniqueVehicleSo in setOfCurrentWaveSo)
             {
                 CarObjectPools.AddCarToCarPool(this, uniqueVehicleSo.Key, uniqueVehicleSo.Value);
             }
@@ -69,10 +69,10 @@ namespace BaseCode.Logic.Services.Handler.Car
         
         private void SpawnRoadDetectors()
         {
-            foreach (var container in CarManager.allWaysContainer.allWays)
+            foreach (WaypointContainer container in CarManager.allWaysContainer.allWays)
             {
                 Debug.Log("yes");
-                var firstElement = container.roadPoints[0].point.transform;
+                Transform firstElement = container.roadPoints[0].point.transform;
                 Object.Instantiate(CarManager.allWaysContainer.carDetectorPrefab, firstElement.position, firstElement.rotation, firstElement);
             }
         }
@@ -81,9 +81,9 @@ namespace BaseCode.Logic.Services.Handler.Car
         {
             Dictionary<VehicleScriptableObject, int> vehicleCounts = new ();
 
-            foreach (var wave in waves)
+            foreach (CarWave wave in waves)
             {
-                foreach (var carSpawnObject in wave.carSpawnObjects)
+                foreach (CarSpawnObject carSpawnObject in wave.carSpawnObjects)
                 {
                     VehicleScriptableObject carSo = carSpawnObject.carSoObjects;
 
@@ -110,13 +110,9 @@ namespace BaseCode.Logic.Services.Handler.Car
         private void CheckForEndGame()
         {
             if (currentWaveIndex == waves.Count - 1)
-            {
                 CarManager.StartCoroutine(EndShower());
-            }
             else
-            {
                 CarManager.StartCoroutine(WaveShower());
-            }
         }
 
         private IEnumerator EndShower()

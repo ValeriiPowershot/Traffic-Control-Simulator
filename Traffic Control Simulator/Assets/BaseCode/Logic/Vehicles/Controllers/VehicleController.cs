@@ -9,7 +9,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
         public Transform CarTransform => VehicleBase.transform;
         public VehicleMovementStateController StateController { get; private set; }
 
-        public void Starter(Vehicles.BasicCar basicCar)
+        public void Starter(BasicCar basicCar)
         {
             VehicleBase = basicCar;
             StateController = new VehicleMovementStateController(this);
@@ -17,24 +17,18 @@ namespace BaseCode.Logic.Vehicles.Controllers
             StartEngine();
         }
 
-        private void StartEngine()
-        {
+        private void StartEngine() =>
             SetState<VehicleMovementGoState>(); // Start in the stopped state
-        }
 
-        public void Update()
-        {
+        public void Update() =>
             StateController.Update();
-        }
- 
-        public void SetState<T>() where T : IVehicleMovementState
-        {
+
+        public void SetState<T>() where T : IVehicleMovementState =>
             StateController.SetState<T>(); // Start in the stopped state
-        }
-        public IVehicleMovementState GetStateCurrentState()
-        {
-            return StateController.GetStateCurrentState();
-        }
+        
+        public IVehicleMovementState GetStateCurrentState() =>
+            StateController.GetStateCurrentState();
+        
         public BasicCar VehicleBase { get; private set; }
     }
 }

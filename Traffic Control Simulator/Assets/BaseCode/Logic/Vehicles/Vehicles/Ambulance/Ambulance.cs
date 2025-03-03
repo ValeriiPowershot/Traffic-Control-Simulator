@@ -11,7 +11,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
         private readonly List<GameObject> _arrows = new();
 
         private const float MinDistanceToSpawnArrow = 4; // this is tested value, looks nice :) (not like u)
-        public override void AssignCollisionController()
+        protected override void AssignCollisionController()
         {
             VehicleCollisionController = new AmbulanceVehicleCollisionController();
             VehicleCollisionController.Starter(this);

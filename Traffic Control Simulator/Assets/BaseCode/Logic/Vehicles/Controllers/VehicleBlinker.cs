@@ -1,5 +1,3 @@
-using System;
-using BaseCode.Logic.Services.Handler;
 using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles.Controllers
@@ -15,7 +13,9 @@ namespace BaseCode.Logic.Vehicles.Controllers
         {
             if (isNone)
                 return;
+            
             _blinkTime -= Time.deltaTime;
+            
             if (_blinkTime < 0)
             {
                 _blinkTime = time;

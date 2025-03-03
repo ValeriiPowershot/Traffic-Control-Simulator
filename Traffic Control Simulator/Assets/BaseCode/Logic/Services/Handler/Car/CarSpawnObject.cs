@@ -53,20 +53,14 @@ namespace BaseCode.Logic.Services.Handler.Car
             }
         }
 
-        private bool IsAllCarsSpawned()
-        {
-            return _currentIndex >= size;
-        }
+        private bool IsAllCarsSpawned() =>
+            _currentIndex >= size;
 
-        private bool IsThereACarWaitingToBeActive()
-        {
-            return _isCarWaiting;
-        }
+        private bool IsThereACarWaitingToBeActive() =>
+            _isCarWaiting;
 
-        private bool IsSpawnPointClear()
-        {
-            return _carDetector.IsThereCarInSpawnPoint() == false;
-        }
+        private bool IsSpawnPointClear() =>
+            _carDetector.IsThereCarInSpawnPoint() == false;
 
         public void SpawnNewCar()
         {

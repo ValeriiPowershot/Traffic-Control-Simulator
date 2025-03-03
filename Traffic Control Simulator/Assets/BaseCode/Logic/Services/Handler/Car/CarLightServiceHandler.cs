@@ -43,10 +43,8 @@ namespace BaseCode.Logic.Services.Handler.Car
             }
             
         }
-        public void PassLightPlaceState(LightPlace lightPlace)
-        {
+        public void PassLightPlaceState(LightPlace lightPlace) =>
             _lightPlaceSave = lightPlace;
-        }
 
         public void ExitLightControl()
         {
@@ -54,10 +52,8 @@ namespace BaseCode.Logic.Services.Handler.Car
             LightExited?.Invoke(); //necessary for scoring system - (looked by tolga, its ok :D)
         }
 
-        public void ExitIntersection()
-        {
+        public void ExitIntersection() =>
             _lightPlaceSave = LightPlace.None;
-        }
 
         public LightState CarLightState => _carLightState;
 

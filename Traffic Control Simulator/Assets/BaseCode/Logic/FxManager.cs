@@ -9,22 +9,21 @@ namespace BaseCode.Logic
     {
         public FxEffectsScriptableObject fxEffectsSo;
 
-        public GameObject PlayFx(FxTypes fxType, Transform parent)
+        public void PlayFx(FxTypes fxType, Transform parent)
         {
-            var fxPrefab = fxEffectsSo.GetFxPrefab(fxType);
+            GameObject fxPrefab = fxEffectsSo.GetFxPrefab(fxType);
 
             if (fxPrefab == null)
             {
                 Debug.Log("Effect Prefab not found.");
-                return null;
+                return;
             }
 
-            var createdFx = Instantiate(fxPrefab, parent);
+            GameObject createdFx = Instantiate(fxPrefab, parent);
 
             createdFx.AddComponent<LookAtCamera>();
-            var particleEffectComponent = createdFx.GetComponent<ParticleSystem>();
+            ParticleSystem particleEffectComponent = createdFx.GetComponent<ParticleSystem>();
             StartCoroutine(DestroyAfterParticleEffect(particleEffectComponent, createdFx));
-            return createdFx;
         }
 
         private IEnumerator DestroyAfterParticleEffect(ParticleSystem particleEffect, GameObject createdFx)

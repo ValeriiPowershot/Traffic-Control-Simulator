@@ -3,7 +3,7 @@ using UnityEditor;
 
 public class RandomRotator : MonoBehaviour
 {
-    void RotateObjects()
+    private void RotateObjects()
     {
         foreach (Transform obj in transform)
         {
