@@ -17,6 +17,9 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         
         public ICarLightService CarLightService { get; } = new CarLightServiceHandler();
         public IPathFindingService PathContainerService { get; } = new PathContainerService();
+
+        public bool NeedToTurn;
+        
         
         public virtual void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {

@@ -36,9 +36,9 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
 
         public void ReleaseLoad()
         {
-            foreach (var loadedVehicleBase in LoadedVehicleBases)
+            foreach (Tuple<Vector3, VehicleBase> loadedVehicleBase in LoadedVehicleBases)
             {
-                var hitVehicle = loadedVehicleBase.Item2;
+                VehicleBase hitVehicle = loadedVehicleBase.Item2;
 
                 hitVehicle.transform.parent = null;
                 hitVehicle.enabled = true;

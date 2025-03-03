@@ -48,7 +48,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
         public void ProceedToNextWaypoint()
         {
             _currentWaypointIndex++;
-            CheckForTurnLightActiveness();
+            //CheckForTurnLightActiveness();
 
             if (IsEndPoint())
             {
@@ -66,7 +66,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
             CarTransform.localScale= originalY;
         }
  
-        private void CheckForTurnLightActiveness()
+        /*public void CheckForTurnLightActiveness()
         {
             float dot = GetAngle();
             
@@ -82,7 +82,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
                     VehicleController.VehicleBase.VechicleTurnLights.StopTurnSignals();
                     return;
             }
-        }
+        }*/
   
         private float GetAngle()
         {

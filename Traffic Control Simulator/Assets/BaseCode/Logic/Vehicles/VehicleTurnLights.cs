@@ -11,19 +11,22 @@ public class VechicleTurnLights : MonoBehaviour
     public Material _turnMaterial;
     public Material _defaultMaterial;
 
-    private bool _isTurning;
     private Coroutine _leftTurnCoroutine;
     private Coroutine _rightTurnCoroutine;
+    private bool _isLeftTurning = false;
+    private bool _isRightTurning = false;
 
     public void ShowTurnLight(Indicator indicator)
     {
         switch (indicator)
         {
             case Indicator.Left:
-                LeftTurn();
+                if (!_isLeftTurning)
+                    LeftTurn();
                 break;
             case Indicator.Right:
-                RightTurn();
+                if (!_isRightTurning)
+                    RightTurn();
                 break;
             default:
                 Debug.LogWarning("Unknown indicator: " + indicator);
@@ -31,48 +34,66 @@ public class VechicleTurnLights : MonoBehaviour
         }
     }
 
-    public void StopTurnSignals()
-    {
-        _isTurning = false;
-
-        if (_leftTurnCoroutine != null) StopCoroutine(_leftTurnCoroutine);
-        if (_rightTurnCoroutine != null) StopCoroutine(_rightTurnCoroutine);
-
-        _leftTurnCoroutine = null;
-        _rightTurnCoroutine = null;
-
-        _leftFrontTurnLight.material = _defaultMaterial;
-        _rightFrontTurnLight.material = _defaultMaterial;
-        _leftRearTurnLight.material = _defaultMaterial;
-        _rightRearTurnLight.material = _defaultMaterial;
-    }
-
     private void LeftTurn()
     {
-        StopTurnSignals();
-        _isTurning = true;
-        _leftTurnCoroutine = StartCoroutine(TurnLightLoop(_leftFrontTurnLight, _leftRearTurnLight));
+        StopRightTurn();
+        _isLeftTurning = true;
+        if (_leftTurnCoroutine != null)
+            StopCoroutine(_leftTurnCoroutine);
+        _leftTurnCoroutine = StartCoroutine(TurnMeshLoop(_leftFrontTurnLight, _leftRearTurnLight));
     }
 
     private void RightTurn()
     {
-        StopTurnSignals();
-        _isTurning = true;
-        _rightTurnCoroutine = StartCoroutine(TurnLightLoop(_rightFrontTurnLight, _rightRearTurnLight));
+        StopLeftTurn();
+        _isRightTurning = true;
+        if (_rightTurnCoroutine != null)
+            StopCoroutine(_rightTurnCoroutine);
+        _rightTurnCoroutine = StartCoroutine(TurnMeshLoop(_rightFrontTurnLight, _rightRearTurnLight));
     }
 
-    private IEnumerator TurnLightLoop(MeshRenderer frontLight, MeshRenderer rearLight)
+    private IEnumerator TurnMeshLoop(MeshRenderer frontMesh, MeshRenderer rearMesh)
     {
-        while (_isTurning)
+        while (true)
         {
-            frontLight.material = _turnMaterial;
-            rearLight.material = _turnMaterial;
+            frontMesh.material = _turnMaterial;
+            rearMesh.material = _turnMaterial;
             yield return new WaitForSeconds(0.2f);
 
-            frontLight.material = _defaultMaterial;
-            rearLight.material = _defaultMaterial;
+            frontMesh.material = _defaultMaterial;
+            rearMesh.material = _defaultMaterial;
             yield return new WaitForSeconds(0.2f);
         }
+    }
+
+    public void StopTurnSignals()
+    {
+        StopLeftTurn();
+        StopRightTurn();
+    }
+
+    private void StopLeftTurn()
+    {
+        if (_leftTurnCoroutine != null)
+        {
+            StopCoroutine(_leftTurnCoroutine);
+            _leftTurnCoroutine = null;
+        }
+        _isLeftTurning = false;
+        _leftFrontTurnLight.material = _defaultMaterial;
+        _leftRearTurnLight.material = _defaultMaterial;
+    }
+
+    private void StopRightTurn()
+    {
+        if (_rightTurnCoroutine != null)
+        {
+            StopCoroutine(_rightTurnCoroutine);
+            _rightTurnCoroutine = null;
+        }
+        _isRightTurning = false;
+        _rightFrontTurnLight.material = _defaultMaterial;
+        _rightRearTurnLight.material = _defaultMaterial;
     }
 }
 

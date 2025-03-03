@@ -110,7 +110,7 @@ MeshRenderer:
   - {fileID: -8569140190892233447, guid: eafbd131256689a49a5942adacf8e81a, type: 3}
   - {fileID: 7039595129018381877, guid: eafbd131256689a49a5942adacf8e81a, type: 3}
   - {fileID: -6324965628615627315, guid: eafbd131256689a49a5942adacf8e81a, type: 3}
-  - {fileID: -6629797300637803691, guid: eafbd131256689a49a5942adacf8e81a, type: 3}
+  - {fileID: 2100000, guid: d3ba0f15e3dbfab468ce9da930c01211, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -192,6 +192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 419b4aa06fd24df99d3812154567bcd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NeedToTurn: 0
   emojiFxSpawnPoint: {fileID: 8967399502524544095}
   RayStartPoint: {fileID: 1682194258610805866}
   ArrowIndicatorEndPoint: {fileID: 4062854521441217464}
@@ -599,7 +600,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &9140601205786621140
 Transform:
   m_ObjectHideFlags: 0
@@ -787,7 +788,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8489143983812963249
 Transform:
   m_ObjectHideFlags: 0
@@ -1090,7 +1091,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4834755727774930889
 Transform:
   m_ObjectHideFlags: 0
@@ -1442,6 +1443,10 @@ PrefabInstance:
     - target: {fileID: 141978, guid: 7213b2b8b4b6d764cba0f39ffdc66ba5, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 141978, guid: 7213b2b8b4b6d764cba0f39ffdc66ba5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 181476, guid: 7213b2b8b4b6d764cba0f39ffdc66ba5, type: 3}
       propertyPath: m_Layer

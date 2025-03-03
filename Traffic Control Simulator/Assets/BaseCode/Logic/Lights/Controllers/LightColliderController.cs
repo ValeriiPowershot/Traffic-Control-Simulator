@@ -35,6 +35,7 @@ namespace BaseCode.Logic.Lights.Controllers
             if (other.TryGetComponent(out VehicleBase vehicle))
             {
                 _controlPoint?.OnVehicleEnter(vehicle);
+                vehicle.NeedToTurn = true;
             }
         }
 
