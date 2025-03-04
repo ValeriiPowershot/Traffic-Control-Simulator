@@ -26,7 +26,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
         {
             Ray ray = new Ray(BasicCar.RayStartPoint.position, VehicleController.CarTransform.forward);
 
-            if (Physics.Raycast(ray, out var hit, _rayDistance, _stopLayer)) // hit to stop or car
+            if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _stopLayer)) // hit to stop or car
             {
                 Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.red);
 
@@ -42,35 +42,34 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             if (IsGameOver(hit))
                 return true;
 
-            if (IsItRedLight())
-            {
-                VehicleController.SetState<VehicleMovementStopState>();
-                return true;
-            }
-
-            return false;
+            if (!IsItRedLight()) 
+                return false;
+            
+            VehicleController.SetState<VehicleMovementStopState>();
+            return true;
         }
 
         protected virtual bool IsGameOver(RaycastHit hit)
         {
-            if (hit.collider.TryGetComponent(out VehicleBase hitVehicle))
-            {
-                if (AreTheyInIntersection(hitVehicle) && AreTheyUsingDifferentPath(hitVehicle))
-                {
-                    Debug.Log("Game Is Over");
-                    PlayFx(FxTypes.Angry);  
-                    PlayFx(FxTypes.Smoke, VehicleController.VehicleBase.transform);  
-                }
+            if (!hit.collider.TryGetComponent(out VehicleBase hitVehicle)) 
+                return false;
             
-                VehicleController.SetState<VehicleMovementStopState>();
-                return true;
+            if (AreTheyFromAnotherSpawner(hitVehicle))
+            {
+                Debug.Log("Game Is Over");
+                PlayFx(FxTypes.Angry);  
+                PlayFx(FxTypes.Smoke, VehicleController.VehicleBase.transform);  
             }
-
-            return false;
+            
+            VehicleController.SetState<VehicleMovementStopState>();
+            return true;
         }
 
         protected virtual bool IsItRedLight() =>
             BasicCar.CarLightService.CarLightState == LightState.Red;
+
+        protected bool AreTheyFromAnotherSpawner(VehicleBase hitVehicle) =>
+            hitVehicle.SpawnIndex != BasicCar.SpawnIndex;
 
         protected bool AreTheyUsingDifferentPath(VehicleBase hitVehicle)
         {
@@ -90,6 +89,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
         public void PlayFx(FxTypes fxTypes, Transform spawnPoint) =>
             BasicCar.CarManager.gameManager.fxManager.PlayFx(fxTypes, spawnPoint);
 
-        protected BasicCar BasicCar => VehicleController.VehicleBase;
+        protected BasicCar BasicCar => 
+            VehicleController.VehicleBase;
     }
 }

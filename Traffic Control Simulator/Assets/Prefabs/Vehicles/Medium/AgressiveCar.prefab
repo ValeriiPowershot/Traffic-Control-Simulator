@@ -49,9 +49,9 @@ GameObject:
   - component: {fileID: 9032819420728217216}
   - component: {fileID: 6743352091285126650}
   - component: {fileID: 7818362556444605836}
-  - component: {fileID: 7095591492009151777}
+  - component: {fileID: 4595636266880608381}
   m_Layer: 7
-  m_Name: CarBlue
+  m_Name: AgressiveCar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,9 +72,9 @@ Transform:
   m_Children:
   - {fileID: 1573193632383872918}
   - {fileID: 4062854521441217464}
-  - {fileID: 8967399502524544095}
   - {fileID: 1682194258610805866}
   - {fileID: 6926992641672081786}
+  - {fileID: 4574942394084127913}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5413014887956678460
@@ -110,7 +110,7 @@ MeshRenderer:
   - {fileID: -8569140190892233447, guid: eafbd131256689a49a5942adacf8e81a, type: 3}
   - {fileID: 7039595129018381877, guid: eafbd131256689a49a5942adacf8e81a, type: 3}
   - {fileID: -6324965628615627315, guid: eafbd131256689a49a5942adacf8e81a, type: 3}
-  - {fileID: 2100000, guid: d3ba0f15e3dbfab468ce9da930c01211, type: 2}
+  - {fileID: 2100000, guid: 0ca37000ba7255740a6f529c27edcaba, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -194,10 +194,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NeedToTurn: 0
   SpawnIndex: 0
-  emojiFxSpawnPoint: {fileID: 8967399502524544095}
+  emojiFxSpawnPoint: {fileID: 4574942394084127913}
   RayStartPoint: {fileID: 1682194258610805866}
   ArrowIndicatorEndPoint: {fileID: 4062854521441217464}
-  VechicleTurnLights: {fileID: 7095591492009151777}
+  VechicleTurnLights: {fileID: 4595636266880608381}
 --- !u!114 &7818362556444605836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,8 +214,8 @@ MonoBehaviour:
   SuccessPoints: 2
   FailPoints: 0
   TimeToWorstScore: 0
-  ScoreMaterialsComponent: {fileID: 3803227225705719867}
---- !u!114 &7095591492009151777
+  ScoreMaterialsComponent: {fileID: 8631193262079060173}
+--- !u!114 &4595636266880608381
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -998,7 +998,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1001 &1847528843373897828
+--- !u!1001 &6533687566794352786
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -1156,11 +1156,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 13cc7533629db768e8eef89574a93bbb, type: 3}
---- !u!114 &3803227225705719867 stripped
+--- !u!224 &4574942394084127913 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7336689144668331067, guid: 13cc7533629db768e8eef89574a93bbb,
+    type: 3}
+  m_PrefabInstance: {fileID: 6533687566794352786}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8631193262079060173 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3270874139297988703, guid: 13cc7533629db768e8eef89574a93bbb,
     type: 3}
-  m_PrefabInstance: {fileID: 1847528843373897828}
+  m_PrefabInstance: {fileID: 6533687566794352786}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
@@ -1168,12 +1174,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1291368fde4c4ee3852fdb8436cadac3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &8967399502524544095 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7336689144668331067, guid: 13cc7533629db768e8eef89574a93bbb,
-    type: 3}
-  m_PrefabInstance: {fileID: 1847528843373897828}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6926992641672158310
 PrefabInstance:
   m_ObjectHideFlags: 0

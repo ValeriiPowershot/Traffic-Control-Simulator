@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using BaseCode.Logic.Services.Interfaces.Car;
 using BaseCode.Logic.Vehicles.States.Movement;
-using BaseCode.Logic.Vehicles.Vehicles;
 using BaseCode.Logic.Ways;
 using UnityEngine;
 
@@ -16,9 +15,6 @@ namespace BaseCode.Logic.Vehicles.Controllers
         private Transform _endPoint;
         private readonly List<RoadPoint> _waypoints = new List<RoadPoint>();
         private int _currentWaypointIndex;
-
-        private const float TURN_ANGLE = 0.5f;
-        private const int CHECK_COUNT = 12;
         
         public VehiclePathController(VehicleMovementGoState vehicleGoState)
         {
@@ -48,14 +44,12 @@ namespace BaseCode.Logic.Vehicles.Controllers
         public void ProceedToNextWaypoint()
         {
             _currentWaypointIndex++;
-            //CheckForTurnLightActiveness();
 
-            if (IsEndPoint())
-            {
-                VehicleController.VehicleBase.DestinationReached(); 
-                _currentWaypointIndex = 0;
-                CarTransform.position = GetCurrentWaypoint().point.position;
-            }
+            if (!IsEndPoint()) return;
+            
+            VehicleController.VehicleBase.DestinationReached(); 
+            _currentWaypointIndex = 0;
+            CarTransform.position = GetCurrentWaypoint().point.position;
         }
         private bool IsEndPoint() => _currentWaypointIndex >= _waypoints.Count;
 
@@ -65,41 +59,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
             CarTransform.position = GetCurrentWaypoint().point.position;
             CarTransform.localScale= originalY;
         }
- 
-        /*public void CheckForTurnLightActiveness()
-        {
-            float dot = GetAngle();
-            
-            switch (dot)
-            {
-                case > TURN_ANGLE:
-                    VehicleController.VehicleBase.VechicleTurnLights.ShowTurnLight(Indicator.Right);
-                    break;
-                case < -TURN_ANGLE:
-                    VehicleController.VehicleBase.VechicleTurnLights.ShowTurnLight(Indicator.Left);
-                    break;
-                default:
-                    VehicleController.VehicleBase.VechicleTurnLights.StopTurnSignals();
-                    return;
-            }
-        }*/
-  
-        private float GetAngle()
-        {
-            int i;
-            if (_currentWaypointIndex + CHECK_COUNT < _waypoints.Count)
-                i = _currentWaypointIndex + CHECK_COUNT;
-            else
-                i = _waypoints.Count - 1;
-
-            Vector3 pointing = _waypoints[i].point.position - VehicleController.VehicleBase.transform.position;
-            pointing.Normalize();
-            pointing -= VehicleController.VehicleBase.transform.forward * 0.9f;
-            pointing.Normalize();
-
-            return Vector3.Dot(pointing, VehicleController.VehicleBase.transform.right);
-        }
-
+        
         public bool IsCloseToWaypoint()
         {
             Transform targetWaypoint = GetCurrentWaypoint().point;

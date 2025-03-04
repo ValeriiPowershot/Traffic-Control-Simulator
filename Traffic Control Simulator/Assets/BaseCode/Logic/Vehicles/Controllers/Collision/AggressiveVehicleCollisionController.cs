@@ -12,7 +12,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             if (hit.collider.TryGetComponent(out VehicleBase hitVehicle))
             {
                 Debug.Log("hitVehicle: " + hitVehicle);
-                if (AreTheyInIntersection(hitVehicle) && AreTheyUsingDifferentPath(hitVehicle))
+                if (AreTheyFromAnotherSpawner(hitVehicle))
                 {
                     PlayFx(FxTypes.Angry);  
 
@@ -33,20 +33,14 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
 
         private void StopAndLetSameTypeCar(VehicleBase hitVehicle)
         {
-            if (hitVehicle.VehicleController.GetStateCurrentState().GetType() != typeof(VehicleMovementStopState))
-            {
+            if (hitVehicle.VehicleController.GetStateCurrentState().GetType() != typeof(VehicleMovementStopState)) 
                 VehicleController.SetState<VehicleMovementStopState>();
-            }
         }
 
-        private bool IsOtherCarSameWithThisVehicle(VehicleBase hitVehicle)
-        {
-            return hitVehicle.GetType() == BasicCar.GetType();
-        }
+        private bool IsOtherCarSameWithThisVehicle(VehicleBase hitVehicle) =>
+            hitVehicle.GetType() == BasicCar.GetType();
 
-        protected override bool IsItRedLight()
-        {
-            return false;
-        }
+        protected override bool IsItRedLight() =>
+            false;
     }
 }

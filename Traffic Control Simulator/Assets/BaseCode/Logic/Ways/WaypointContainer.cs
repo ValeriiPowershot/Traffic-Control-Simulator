@@ -6,38 +6,43 @@ namespace BaseCode.Logic.Ways
 {
     public class WaypointContainer : MonoBehaviour
     {
-        public List<RoadPoint> roadPoints = new List<RoadPoint>();
-        
+        public List<RoadPoint> roadPoints = new();
+
         public void SetRoadPoints(List<Transform> waypoints,List<Transform> decelerationPoints,List<Transform> accelerationPoints)
         {
-            foreach (var waypoint in waypoints)
+            foreach (Transform waypoint in waypoints)
             {
                 if (decelerationPoints.Contains(waypoint))
                 {
-                    roadPoints.Add(
-                        new RoadPoint() { point = waypoint, roadPointType = RoadPointType.Slowdown}
-                    );    
+                    roadPoints.Add(new RoadPoint
+                    {
+                        point = waypoint, roadPointType = RoadPointType.Slowdown
+                    });    
                 }
                 else if (accelerationPoints.Contains(waypoint))
                 {
                     roadPoints.Add(
-                        new RoadPoint() { point = waypoint, roadPointType = RoadPointType.Acceleration}
-                    );    
+                        new RoadPoint
+                        {
+                            point = waypoint, roadPointType = RoadPointType.Acceleration
+                        });    
                 }
                 else
                 {
-                    roadPoints.Add(
-                        new RoadPoint() { point = waypoint, roadPointType = RoadPointType.Normal}
-                    );
+                    roadPoints.Add(new RoadPoint
+                    {
+                        point = waypoint, roadPointType = RoadPointType.Normal
+                    });
                 }
             }
         }
+        
         public void OnDrawGizmosSelected()
         {
             if(roadPoints.Count == 0)
                 return;
             
-            foreach (var waypoint in roadPoints)
+            foreach (RoadPoint waypoint in roadPoints)
             {
                 switch (waypoint.roadPointType)
                 {

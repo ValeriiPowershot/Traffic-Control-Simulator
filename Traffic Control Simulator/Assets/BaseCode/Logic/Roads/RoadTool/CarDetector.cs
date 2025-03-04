@@ -1,21 +1,22 @@
-using System;
 using System.Collections.Generic;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Roads.RoadTool
 {
     [RequireComponent(typeof(Rigidbody))]
     public class CarDetector : MonoBehaviour
     {
-        public List<BasicCar> cars = new List<BasicCar>();
+        public List<BasicCar> cars = new();
         private LayerMask _carLayer;
+
+        public int CarDetectorSpawnIndex;
 
         public void Start()
         {
             _carLayer = LayerMask.GetMask("Car"); 
         }
+        
         public bool IsThereCarInSpawnPoint()
         {
             return cars.Count > 0;
@@ -23,11 +24,12 @@ namespace BaseCode.Logic.Roads.RoadTool
         
         private void OnTriggerEnter(Collider other)
         {
-            var result = IsCarInLayer(other);
+            bool result = IsCarInLayer(other);
             
             if (result && other.TryGetComponent(out BasicCar car))
             {
                 cars.Add(car); 
+                car.SpawnIndex = CarDetectorSpawnIndex;
             }
         }
 
