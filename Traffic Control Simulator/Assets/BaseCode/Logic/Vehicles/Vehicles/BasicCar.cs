@@ -29,26 +29,30 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         
         private void CheckTurnLightState()
         {
-            if (NeedToTurn)
+            if (VechicleTurnLights != null)
             {
-                float rotationY = ArrowIndicatorEndPoint.localRotation.eulerAngles.y;
-                
-                if (rotationY > 180) 
-                    rotationY -= 360;
-                
-                switch (rotationY)
+                if (NeedToTurn)
                 {
-                    case > 20:
-                        VehicleController.VehicleBase.VechicleTurnLights.ShowTurnLight(Indicator.Right);
-                        break;
-                    case < -20:
-                        VehicleController.VehicleBase.VechicleTurnLights.ShowTurnLight(Indicator.Left);
-                        break;
-                    default:
-                        VehicleController.VehicleBase.VechicleTurnLights.StopTurnSignals();
-                        break;
+                    float rotationY = ArrowIndicatorEndPoint.localRotation.eulerAngles.y;
+                
+                    if (rotationY > 180) 
+                        rotationY -= 360;
+                
+                    switch (rotationY)
+                    {
+                        case > 20:
+                            VehicleController.VehicleBase.VechicleTurnLights.ShowTurnLight(Indicator.Right);
+                            break;
+                        case < -20:
+                            VehicleController.VehicleBase.VechicleTurnLights.ShowTurnLight(Indicator.Left);
+                            break;
+                        default:
+                            VehicleController.VehicleBase.VechicleTurnLights.StopTurnSignals();
+                            break;
+                    }
                 }
             }
+            
         }
 
 

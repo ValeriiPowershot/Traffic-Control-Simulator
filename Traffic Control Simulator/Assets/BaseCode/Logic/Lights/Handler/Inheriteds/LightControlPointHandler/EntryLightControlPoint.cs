@@ -15,7 +15,7 @@ namespace BaseCode.Logic.Lights.Handler.Inheriteds.LightControlPointHandler
 
         public override void OnVehicleEnter(VehicleBase vehicle)
         {
-            Debug.Log(vehicle.name);
+            
         }
     }
 
