@@ -18,7 +18,7 @@ namespace BaseCode.Core.ObjectPool
         
         public virtual void AddPool(VehicleScriptableObject poolObjectPrefab, Transform spawnPoint = null)
         {
-            Pool.Add(poolObjectPrefab, new Pool(poolObjectPrefab.VehiclePrefab, spawnPoint));
+            Pool.Add(poolObjectPrefab, new Pool(poolObjectPrefab.vehiclePrefab, spawnPoint));
         }
     }
 }

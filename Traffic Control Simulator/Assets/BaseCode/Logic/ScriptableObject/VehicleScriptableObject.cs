@@ -1,36 +1,23 @@
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace BaseCode.Logic.ScriptableObject
 {
     [CreateAssetMenu(fileName = "Vehicle", menuName = "ScriptableObject/Vehicle", order = 0)]
     public class VehicleScriptableObject : UnityEngine.ScriptableObject
     {
-        public GameObject VehiclePrefab;
-        
-        [SerializeField] private float _speed = 5;
-        [SerializeField] private float _slowdownSpeed = 4;
-        [SerializeField] private float _accelerationSpeed = 6;
-        
-        public float RayLenght = 5f;
+        public GameObject vehiclePrefab;
 
-        public float DefaultSpeed
-        {
-            get => _speed;
-            set => _speed = value;
-        }
-
-        public float AccelerationSpeed
-        {
-            get => _accelerationSpeed;
-            set => _accelerationSpeed = value;
-        }
+        public float minSpeed = 6;
+        public float maxSpeed = 10;
         
-        public float SlowdownSpeed
-        {
-            get => _slowdownSpeed;
-            set => _slowdownSpeed = value;
-        }
-
-        public float RotationSpeed => 960;
+        public float rayLenght = 5f;
+        public float rotationSpeed;
+        
+        private float SpeedStep => (maxSpeed - minSpeed) / 3;
+        public float DefaultSpeed => Random.Range(minSpeed + SpeedStep, minSpeed + SpeedStep * 2);
+        public float AccelerationSpeed => Random.Range(minSpeed + SpeedStep * 2, maxSpeed);
+        public float SlowdownSpeed => Random.Range(minSpeed, minSpeed + SpeedStep);
     }
 }

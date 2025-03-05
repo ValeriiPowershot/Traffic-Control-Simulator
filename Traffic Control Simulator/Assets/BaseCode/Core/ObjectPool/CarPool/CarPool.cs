@@ -16,7 +16,7 @@ namespace BaseCode.Core.ObjectPool.CarPool
         private VehicleScriptableObject _currentCar;
 
         public CarPool(ICarSpawnService carSpawnService, VehicleScriptableObject currentCar, int maxCarsCount) : 
-            base(currentCar.VehiclePrefab)
+            base(currentCar.vehiclePrefab)
         {
             _currentCar = currentCar;
             Capacity = maxCarsCount;

@@ -4,6 +4,7 @@ using BaseCode.Logic.Services.Handler.Car;
 using BaseCode.Logic.Services.Interfaces.Car;
 using BaseCode.Logic.Vehicles.Controllers;
 using BaseCode.Logic.Vehicles.Controllers.Collision;
+using BaseCode.Logic.Vehicles.States.Movement;
 
 namespace BaseCode.Logic.Vehicles.Vehicles
 {
@@ -48,6 +49,9 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         {
             Pool.DestroyObject(this);
             CarManager.CarSpawnServiceHandler.CheckAllCarPoolMaxed();
+            
+            VehicleMovementGoState goState = VehicleController.StateController.GetState<VehicleMovementGoState>();
+            goState.AssignNewSpeedValues();
         }
         
         public CarManager CarManager => _carManager;

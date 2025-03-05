@@ -14,17 +14,30 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         public VehicleController VehicleController { get; set; }
         
         public VehiclePathController VehiclePathController { get; set; }
-        
-        private float _speed;
 
+        private float _currentSpeed;
+        private float _defaultSpeed;
+        private float _slowDownSpeed;
+        private float _accelerationSpeed;
+        
         public VehicleMovementGoState(VehicleController vehicleController)
         {
             VehicleController = vehicleController;
             CarData = VehicleController.VehicleBase.VehicleScriptableObject;
-            _speed = CarData.DefaultSpeed;
-            
             VehiclePathController = new VehiclePathController(this);
+
+            AssignNewSpeedValues();
         }
+
+        public void AssignNewSpeedValues()
+        {
+            _defaultSpeed = CarData.DefaultSpeed;
+            _slowDownSpeed = CarData.SlowdownSpeed;
+            _accelerationSpeed = CarData.AccelerationSpeed;
+
+            _currentSpeed = _defaultSpeed;
+        }
+        
         public void InitializePath()
         {
             VehiclePathController.InitializePath();
@@ -58,11 +71,11 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         {
             RoadPoint roadPoint = VehiclePathController.GetCurrentWaypoint();
 
-            _speed = roadPoint.roadPointType switch
+            _currentSpeed = roadPoint.roadPointType switch
             {
-                RoadPointType.Slowdown => CarData.SlowdownSpeed,
-                RoadPointType.Acceleration => CarData.AccelerationSpeed,
-                _ => CarData.DefaultSpeed
+                RoadPointType.Slowdown => _slowDownSpeed,
+                RoadPointType.Acceleration => _accelerationSpeed,
+                _ => _defaultSpeed
             };
         }
 
@@ -72,7 +85,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
             CarTransform.position = Vector3.MoveTowards(
                 CarTransform.position, 
                 targetWaypoint.position, 
-                _speed * Time.deltaTime
+                _currentSpeed * Time.deltaTime
             );
         }
         private void RotateTowardsWaypoint()
@@ -87,7 +100,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
                 CarTransform.rotation = Quaternion.RotateTowards(
                     CarTransform.rotation, 
                     targetRotation, 
-                    CarData.RotationSpeed * Time.deltaTime
+                    CarData.rotationSpeed * Time.deltaTime
                 );
 
                 Vector3 arrowForward = (VehiclePathController.GetEndPoint().position - VehicleController.VehicleBase.ArrowIndicatorEndPoint.position).normalized;

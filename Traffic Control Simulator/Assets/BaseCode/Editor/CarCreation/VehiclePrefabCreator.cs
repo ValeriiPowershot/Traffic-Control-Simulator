@@ -25,9 +25,8 @@ namespace BaseCode.Editor.CarCreation
         private int _failPoints;
         private int _timeToWorstScore;
 
-        private int _speed;
-        private int _acceleration;
-        private int _slowdown;
+        private int _maxSpeed;
+        private int _minSpeed;
         private float _rayLenght = 2f;
 
         private bool _needToCopyColliderSize;
@@ -320,9 +319,9 @@ namespace BaseCode.Editor.CarCreation
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             GUILayout.Label("Step 3: Set Vehicle Parameters", EditorStyles.boldLabel);
             
-            _speed = EditorGUILayout.IntField("Vehicle Speed", _speed);
-            _acceleration = EditorGUILayout.IntField("Vehicle Acceleration", _acceleration);
-            _slowdown = EditorGUILayout.IntField("Slowdown", _slowdown);
+            _maxSpeed = EditorGUILayout.IntField("Max Vehicle Speed", _maxSpeed);
+            _minSpeed = EditorGUILayout.IntField("Min Vehicle Speed", _minSpeed);
+            
             _rayLenght = EditorGUILayout.FloatField("Ray Length", _rayLenght);
 
             GUILayout.Label("Enter four integer values to customize your vehicle.", EditorStyles.wordWrappedLabel);
@@ -548,12 +547,11 @@ namespace BaseCode.Editor.CarCreation
             string soFilePath = System.IO.Path.Combine(path, fileName);
 
             VehicleScriptableObject vehicleScriptableObject = CreateInstance<VehicleScriptableObject>();
-            vehicleScriptableObject.VehiclePrefab = vehiclePrefab;
+            vehicleScriptableObject.vehiclePrefab = vehiclePrefab;
 
-            vehicleScriptableObject.DefaultSpeed = _speed;
-            vehicleScriptableObject.AccelerationSpeed = _acceleration;
-            vehicleScriptableObject.SlowdownSpeed = _slowdown;
-            vehicleScriptableObject.RayLenght = _rayLenght;
+            vehicleScriptableObject.maxSpeed = _maxSpeed;
+            vehicleScriptableObject.minSpeed = _minSpeed;
+            vehicleScriptableObject.rayLenght = _rayLenght;
 
             AssetDatabase.CreateAsset(vehicleScriptableObject, soFilePath);
             AssetDatabase.SaveAssets();
