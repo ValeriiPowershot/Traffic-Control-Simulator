@@ -9,6 +9,7 @@ namespace BaseCode.Logic
         public CarManager carManager;
         public FxManager fxManager;
         public InputManager inputManager;
+        public CameraManager cameraManager;
         public ScoringManager scoringManager;
         public PopUpController popUpController;
 

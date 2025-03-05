@@ -26,6 +26,8 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
         }
         protected override void PressCar(VehicleBase hitVehicle)
         {
+            Debug.Log("Press Effect Truck");
+
             VehicleController.SetState<VehicleMovementTruckStopState>();
             
             CurrentVehicle = hitVehicle;

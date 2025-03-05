@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using BaseCode.Logic.Vehicles.Controllers.Collision;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -16,7 +18,12 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
             VehicleCollisionController = new AmbulanceVehicleCollisionController();
             VehicleCollisionController.Starter(this);
         }
-        
+
+        public override void StartToMove()
+        {
+            base.StartToMove();
+            StartCoroutine(OpenSetActiveOfArrows());
+        }
         public override void AssignNewPathContainer()
         {
             base.AssignNewPathContainer();
@@ -38,8 +45,20 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
                 if (IsThereEnoughIntervalBetweenArrows(accumulatedDistance, segmentDistance))
                 {
                     AddArrow(nextSegment, currentSegment);
-                    accumulatedDistance = 0f; // Reset distance accumulator
+                    accumulatedDistance = 0f; 
                 }
+            }
+
+        }
+        
+        private IEnumerator OpenSetActiveOfArrows()
+        {
+            Vector3 targetScale = new Vector3(0.3f, 0.3f, 0.3f); // original was 0.3f sorry for this imp
+            foreach (var arrow in _arrows)
+            {
+                arrow.SetActive(true);
+                arrow.transform.DOScale(targetScale, 0.5f).SetEase(Ease.OutBounce);
+                yield return new WaitForSeconds(0.1f);
             }
         }
 
@@ -53,7 +72,6 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
             
             SpawnArrow(arrowPrefabPos, rot);
         }
-
         private bool IsThereEnoughIntervalBetweenArrows(float accumulatedDistance, float segmentDistance)
         {
             return accumulatedDistance >= MinDistanceToSpawnArrow;
@@ -73,8 +91,11 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
             GameObject newArrow = Instantiate(arrowPrefab);
             newArrow.transform.SetPositionAndRotation(arrowPrefabPos, rot);
             _arrows.Add(newArrow);
+            newArrow.gameObject.SetActive(false);
+            newArrow.transform.localScale = Vector3.zero;
         }
-        
+  
+
         private Transform GetIndex(int index)
         {
             return PathContainerService.GetIndexWaypoint(index).point;

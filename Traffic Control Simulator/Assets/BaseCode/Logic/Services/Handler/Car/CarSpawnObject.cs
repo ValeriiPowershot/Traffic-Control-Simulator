@@ -36,7 +36,7 @@ namespace BaseCode.Logic.Services.Handler.Car
             {
                 if (IsSpawnPointClear())
                 {
-                    _newCar.gameObject.SetActive(true);
+                    _newCar.StartToMove(); // it is for ambulance's arrow 
                     _newCar = null;
                     _isCarWaiting = false;
                 }

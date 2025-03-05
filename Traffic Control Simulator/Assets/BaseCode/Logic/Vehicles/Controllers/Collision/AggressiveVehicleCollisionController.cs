@@ -21,6 +21,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
                         return false;
                     }
                     Debug.Log("Game Is Over");
+                    PressCar(hitVehicle);
                 }
 
                 VehicleController.SetState<VehicleMovementStopState>();

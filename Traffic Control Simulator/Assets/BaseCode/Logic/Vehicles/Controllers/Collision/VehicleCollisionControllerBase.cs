@@ -1,7 +1,9 @@
+using System.Collections;
 using BaseCode.Logic.Lights;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Vehicles.Vehicles;
+using DG.Tweening;
 using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles.Controllers.Collision
@@ -56,15 +58,55 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             
             if (AreTheyFromAnotherSpawner(hitVehicle))
             {
-                Debug.Log("Game Is Over");
-                PlayFx(FxTypes.Angry);  
-                PlayFx(FxTypes.Smoke, VehicleController.VehicleBase.transform);  
+                OnGameOver(hitVehicle);
+                return true;
+             
             }
             
             VehicleController.SetState<VehicleMovementStopState>();
             return true;
         }
 
+        private void OnGameOver(VehicleBase hitVehicle)
+        {
+            Debug.Log("Game Is Over");
+            PlayFx(FxTypes.Angry);  
+            PlayFx(FxTypes.Smoke, VehicleController.VehicleBase.transform);
+            PressCar(hitVehicle);
+        }
+        protected virtual void PressCar(VehicleBase hitVehicle)
+        {
+            Debug.Log("Press Effect");
+            DisableVehicle(hitVehicle);
+            BasicCar.CarManager.StartCoroutine(PressEffect(hitVehicle));
+        }
+
+        private IEnumerator PressEffect(VehicleBase hitVehicle)
+        {
+            Vector3 originalScale = hitVehicle.transform.localScale;
+            Vector3 originalPosition = hitVehicle.transform.position;
+
+            Vector3 pressedScale = new Vector3(originalScale.x, originalScale.y * 0.1f, originalScale.z);
+
+            PlayFx(FxTypes.StarCarCrash, hitVehicle.transform);
+            GameManager.cameraManager.CameraShake();
+            
+            hitVehicle.transform.DOScaleY(pressedScale.y, 0.5f).SetEase(Ease.OutQuad);
+
+            yield return new WaitForSeconds(1f);
+
+            hitVehicle.transform.DOMoveY(originalPosition.y - 5f, 1f).SetEase(Ease.OutQuad);
+    
+            yield return new WaitForSeconds(1f);
+            
+            hitVehicle.transform.position = originalPosition;
+            hitVehicle.transform.localScale = originalScale;
+
+            EnableVehicle(hitVehicle);
+            hitVehicle.VehicleController.StateController.GetState<VehicleMovementGoState>()
+                .VehiclePathController.SetPathToEndPosition(originalScale);
+        }
+        
         protected virtual bool IsItRedLight() =>
             BasicCar.CarLightService.CarLightState == LightState.Red;
 
@@ -83,13 +125,26 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
                    BasicCar.CarLightService.LightPlaceSave != LightPlace.None;
         }
 
+        private void DisableVehicle(VehicleBase vehicle)
+        {
+            vehicle.GetComponent<BoxCollider>().enabled = false;
+            vehicle.enabled = false;
+        }
+
+        private void EnableVehicle(VehicleBase vehicle)
+        {
+            vehicle.enabled = true;
+            vehicle.GetComponent<BoxCollider>().enabled = true;
+        }
         protected void PlayFx(FxTypes fxTypes) =>
             PlayFx(fxTypes, BasicCar.emojiFxSpawnPoint);
 
         public void PlayFx(FxTypes fxTypes, Transform spawnPoint) =>
-            BasicCar.CarManager.gameManager.fxManager.PlayFx(fxTypes, spawnPoint);
+            GameManager.fxManager.PlayFx(fxTypes, spawnPoint);
 
         protected BasicCar BasicCar => 
             VehicleController.VehicleBase;
+
+        protected GameManager GameManager => BasicCar.CarManager.gameManager;
     }
 }

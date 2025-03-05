@@ -55,7 +55,11 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         }
         
         public CarManager CarManager => _carManager;
-        
+
+        public virtual void StartToMove()
+        {
+            gameObject.SetActive(true);
+        }
     }
 
     public enum LightState
