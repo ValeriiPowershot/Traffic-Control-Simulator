@@ -1,20 +1,14 @@
 using BaseCode.Interfaces;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace BaseCode.Logic.ScoringSystem
 {
     public class ScoreObjectCar : MonoBehaviour, IScoringObject
     {
-        public float AcceptableWaitingTime = 1f;
-        [Tooltip("Amount of points player will gain in best scenario (for this certain car)")]
-        public float SuccessPoints;
-        [Tooltip("(Negative value) this amount of points player will lose in worst scenario (for this certain car)")]
-        public float FailPoints;
-        [Tooltip("Amount of time have to pass after acceptable time runs out to reach worst scenario")]
-        public float TimeToWorstScore;
-
-        public ScoringMaterials ScoreMaterialsComponent;
+        public ScoringMaterials scoreMaterialsComponent;
 
         private ScoringManager _manager;
         private VehicleBase _car;
@@ -22,43 +16,39 @@ namespace BaseCode.Logic.ScoringSystem
         private ScoreType _scoreType = ScoreType.Good;
         private Vector3 _prevPosition;
         private float _waitingTime;
+    
+        private void Awake() => _car = GetComponentInParent<VehicleBase>();
 
-        private const float MIN_MOVING_RANGE = 0.001f;
+        private void OnEnable() => _car.CarLightService.LightExited += ExitLight;
 
-        private void Awake() =>
-            _car = GetComponentInParent<VehicleBase>();
-
-        private void OnEnable() =>
-            _car.CarLightService.LightExited += ExitLight;
-
-        private void OnDisable() =>
-            _car.CarLightService.LightExited -= ExitLight;
-
-        public void Initialize(ScoringManager Manager)
+        private void OnDisable() => _car.CarLightService.LightExited -= ExitLight;
+        
+        public void Initialize(ScoringManager manager)
         {
-            _manager = Manager;
-            Debug.Log("Initialized");
+            _manager = manager;
         }
-        public void Calculate(float DeltaTime)
+        
+        public void Calculate(float deltaTime)
         {
             if (_car.CarLightService.CarLightState == LightState.Red)
             {
-                ProcessWaitingAtRedLight(DeltaTime);
+                ProcessWaitingAtRedLight(deltaTime);
             }
             _prevPosition = transform.position;
         }
-        public void ExitLight()
+
+        private void ExitLight()
         {
             float resultPoints = CalculateResultPoints();
             ResetLightState();
             _manager.ChangeScore(resultPoints);
         }
 
-        private void ProcessWaitingAtRedLight(float DeltaTime)
+        private void ProcessWaitingAtRedLight(float deltaTime)
         {
             if (IsCarMoving())
             {
-                _waitingTime += DeltaTime;
+                _waitingTime += deltaTime;
 
                 if (ShouldChangeToNeutral())
                 {
@@ -73,35 +63,37 @@ namespace BaseCode.Logic.ScoringSystem
 
         private bool IsCarMoving()
         {
-            return (_prevPosition - transform.position).sqrMagnitude <= MIN_MOVING_RANGE * MIN_MOVING_RANGE;
+            var minRange = _car.VehicleScriptableObject.MIN_MOVING_RANGE;
+            return (_prevPosition - transform.position).sqrMagnitude <= minRange * minRange;
         }
 
         private bool ShouldChangeToNeutral()
         {
-            return _scoreType == ScoreType.Good && _waitingTime >= AcceptableWaitingTime;
+            return _scoreType == ScoreType.Good && _waitingTime >= _car.VehicleScriptableObject.AcceptableWaitingTime;
         }
 
         private bool ShouldChangeToBad()
         {
             return _scoreType == ScoreType.Neuteral && 
-                   _waitingTime - AcceptableWaitingTime >= TimeToWorstScore;
+                   _waitingTime - _car.VehicleScriptableObject.AcceptableWaitingTime >= _car.VehicleScriptableObject.TimeToWorstScore;
         }
 
         private void UpdateScoreType(ScoreType newScoreType)
         {
             _scoreType = newScoreType;
-            ScoreMaterialsComponent.SetNewMaterial(newScoreType);
+            scoreMaterialsComponent.SetNewMaterial(newScoreType);
         }
         
         private float CalculateResultPoints()
         {
-            float resultPoints = SuccessPoints;
+            float resultPoints = _car.VehicleScriptableObject.SuccessPoints;
 
-            if (_waitingTime > AcceptableWaitingTime)
+            if (_waitingTime > _car.VehicleScriptableObject.AcceptableWaitingTime)
             {
-                float unAcceptWaitTime = _waitingTime - AcceptableWaitingTime;
-                float ratio = Mathf.Min(unAcceptWaitTime / TimeToWorstScore, 1);
-                resultPoints += (FailPoints - SuccessPoints) * ratio;
+                float unAcceptWaitTime = _waitingTime - _car.VehicleScriptableObject.AcceptableWaitingTime;
+                float ratio = Mathf.Min(unAcceptWaitTime / _car.VehicleScriptableObject.TimeToWorstScore, 1);
+                resultPoints += (_car.VehicleScriptableObject.FailPoints - 
+                                 _car.VehicleScriptableObject.SuccessPoints) * ratio;
             }
 
             return resultPoints;

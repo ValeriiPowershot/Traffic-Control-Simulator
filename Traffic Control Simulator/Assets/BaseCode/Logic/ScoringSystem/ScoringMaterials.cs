@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace BaseCode.Logic.ScoringSystem
 {
-    public class ScoringMaterials : MonoBehaviour
+    [Serializable]
+    public class ScoringMaterials
     {
         public Image indicatorOfScore;
 

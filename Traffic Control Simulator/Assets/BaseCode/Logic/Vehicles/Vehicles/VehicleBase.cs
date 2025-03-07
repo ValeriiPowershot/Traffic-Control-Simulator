@@ -20,7 +20,6 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         public IPathFindingService PathContainerService { get; } = new PathContainerService();
 
         public bool NeedToTurn;
-
         public int SpawnIndex;
         
         

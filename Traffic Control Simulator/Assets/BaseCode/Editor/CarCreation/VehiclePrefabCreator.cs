@@ -510,13 +510,10 @@ namespace BaseCode.Editor.CarCreation
             if (vehicleObject.GetComponent<ScoreObjectCar>() == null)
             {
                 ScoreObjectCar scoreObjectCar = vehicleObject.AddComponent<ScoreObjectCar>();
-
-                scoreObjectCar.AcceptableWaitingTime = _acceptableWaitingTime;
-                scoreObjectCar.SuccessPoints = _successPoints;
-                scoreObjectCar.FailPoints = _failPoints;
-                scoreObjectCar.TimeToWorstScore = _timeToWorstScore;
-
-                scoreObjectCar.ScoreMaterialsComponent = _scoringMaterials.GetComponent<ScoringMaterials>();
+                // scoreObjectCar.AcceptableWaitingTime = _acceptableWaitingTime;
+                // scoreObjectCar.SuccessPoints = _successPoints;
+                // scoreObjectCar.FailPoints = _failPoints;
+                // scoreObjectCar.TimeToWorstScore = _timeToWorstScore;
             }
         }
 

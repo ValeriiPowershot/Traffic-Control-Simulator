@@ -12,7 +12,7 @@ namespace BaseCode.Logic.ScoringSystem
     {
         private GameMenuPopUp _gameMenuPopUp;
         
-        private List<IScoringObject> _scoringObjects = new();
+        private readonly List<IScoringObject> _scoringObjects = new();
 
         private float _deltaTime;
 
@@ -26,11 +26,10 @@ namespace BaseCode.Logic.ScoringSystem
         {
             _gameMenuPopUp = gameManager.popUpController.GetPopUp<GameMenuPopUp>();
         }
-
-        public void AddCar(IScoringObject ScoringObj)
+        public void AddCar(IScoringObject scoringObj)
         {
-            ScoringObj.Initialize(this);
-            _scoringObjects.Add(ScoringObj);
+            scoringObj.Initialize(this);
+            _scoringObjects.Add(scoringObj);
         }
         
         private void Update()
