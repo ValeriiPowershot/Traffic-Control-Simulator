@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using BaseCode.Interfaces;
+using BaseCode.Logic.PopUps;
+using BaseCode.Logic.ScriptableObject;
 using TMPro;
 using UnityEngine;
 
@@ -7,21 +10,29 @@ namespace BaseCode.Logic.ScoringSystem
 {
     public class ScoringManager : ManagerBase
     {
-        [SerializeField] private TMP_Text _scoreText;
-
+        private GameMenuPopUp _gameMenuPopUp;
+        
         private List<IScoringObject> _scoringObjects = new();
 
         private float _deltaTime;
-        private float _playerScore;
-        private const string SCORE_MESSAGE = "Score: ";
 
-        public float PlayerScore { get { return _playerScore; } }
+        private float PlayerScore
+        {
+            get => PlayerSo.playerScore;
+            set => PlayerSo.playerScore = value;
+        }
+
+        private void Start()
+        {
+            _gameMenuPopUp = gameManager.popUpController.GetPopUp<GameMenuPopUp>();
+        }
 
         public void AddCar(IScoringObject ScoringObj)
         {
             ScoringObj.Initialize(this);
             _scoringObjects.Add(ScoringObj);
         }
+        
         private void Update()
         {
             AccumulateDeltaTime();
@@ -55,15 +66,14 @@ namespace BaseCode.Logic.ScoringSystem
         {
             _deltaTime = 0f;
         }
-
-
-        public void ChangeScore(float Change)
+        
+        
+        public void ChangeScore(float change)
         {
-            _playerScore += Change;
-
-            _playerScore = _playerScore < 0 ? 0 : _playerScore;// if below 0 set to 0
-
-            _scoreText.text = SCORE_MESSAGE + _playerScore.ToString("F0");
+            PlayerScore = Mathf.Max(0, PlayerScore + change);
+            _gameMenuPopUp.soreText.text = $"{ConfigSo.ScoreMessage}{PlayerScore:F0}";
         }
+        
+        private PlayerSo PlayerSo => gameManager.saveManager.playerSo;
     }
 }

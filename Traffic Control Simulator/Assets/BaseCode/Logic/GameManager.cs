@@ -11,11 +11,11 @@ namespace BaseCode.Logic
         public InputManager inputManager;
         public CameraManager cameraManager;
         public ScoringManager scoringManager;
+        public SaveManager saveManager;
         public PopUpController popUpController;
-
         private void Start()
         {
-            popUpController.ShowPopUp<PopUpMainMenu>();
+            popUpController.ShowPopUp<GameMenuPopUp>();
         }
     }
 }
