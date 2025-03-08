@@ -1,4 +1,5 @@
 using BaseCode.Core.ObjectPool.Base;
+using BaseCode.Logic.ScoringSystem;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.Handler.Car;
 using BaseCode.Logic.Services.Interfaces.Car;
@@ -46,6 +47,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         public virtual void DestinationReached()
         {
             Pool.DestroyObject(this);
+            GetComponent<ScoreObjectCarBase>().OnReachedDestination();
             CarManager.CarSpawnServiceHandler.CheckAllCarPoolMaxed();
             
             GoState.AssignNewSpeedValues();

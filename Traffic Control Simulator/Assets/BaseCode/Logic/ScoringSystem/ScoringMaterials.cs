@@ -10,23 +10,11 @@ namespace BaseCode.Logic.ScoringSystem
         public Image indicatorOfScore;
 
         public Color good;
-        public Color neutral;
         public Color bad;
         
-        public void SetNewMaterial(ScoreType scoreType)
+        public void SetNewMaterial(Color color)
         {
-            switch (scoreType)
-            {
-                case ScoreType.Good:
-                    indicatorOfScore.color = good;
-                    break;
-                case ScoreType.Neuteral:
-                    indicatorOfScore.color = neutral;
-                    break;
-                case ScoreType.Bad:
-                    indicatorOfScore.color = bad;
-                    break;
-            }
+            indicatorOfScore.color = color;
         }
     }
 }

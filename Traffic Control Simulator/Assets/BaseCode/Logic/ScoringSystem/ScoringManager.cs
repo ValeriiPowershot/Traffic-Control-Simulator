@@ -46,7 +46,8 @@ namespace BaseCode.Logic.ScoringSystem
         {
             foreach (var scoringObj in _scoringObjects)
             {
-                scoringObj.Calculate(UpdateTime);
+                if(scoringObj.IsActive())
+                    scoringObj.Calculate(UpdateTime);
             }
         }
         public void ChangeScore(float change)

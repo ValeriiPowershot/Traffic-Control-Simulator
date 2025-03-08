@@ -507,9 +507,9 @@ namespace BaseCode.Editor.CarCreation
                 basicCar.ArrowIndicatorEndPoint = _arrow.transform;
             }
 
-            if (vehicleObject.GetComponent<ScoreObjectCar>() == null)
+            if (vehicleObject.GetComponent<ScoreObjectCarBase>() == null)
             {
-                ScoreObjectCar scoreObjectCar = vehicleObject.AddComponent<ScoreObjectCar>();
+                ScoreObjectCarBase scoreObjectCarBase = vehicleObject.AddComponent<ScoreObjectCarBase>();
                 // scoreObjectCar.AcceptableWaitingTime = _acceptableWaitingTime;
                 // scoreObjectCar.SuccessPoints = _successPoints;
                 // scoreObjectCar.FailPoints = _failPoints;
