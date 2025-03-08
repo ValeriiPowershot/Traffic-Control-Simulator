@@ -40,6 +40,8 @@ namespace BaseCode.Logic.Vehicles.Controllers
         {
             ((VehicleMovementGoState)_states[typeof(VehicleMovementGoState)]).InitializePath();
         }
+        public bool IsOnState<T>() where T : IVehicleMovementState => _currentMovementMovementState is T;
+
         public IVehicleMovementState GetStateCurrentState() =>
             _currentMovementMovementState;
 

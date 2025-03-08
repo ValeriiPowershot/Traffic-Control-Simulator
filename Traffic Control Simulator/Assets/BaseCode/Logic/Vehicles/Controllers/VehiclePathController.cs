@@ -38,6 +38,9 @@ namespace BaseCode.Logic.Vehicles.Controllers
         public RoadPoint GetCurrentWaypoint() =>
             _waypoints[_currentWaypointIndex];
 
+        public RoadPoint GetPointIndex(int i) =>_waypoints[i];
+        public RoadPoint GetPointIndexReverse(int i) => _waypoints[_waypoints.Count - 1 - i];
+        
         public Transform GetEndPoint() =>
             _endPoint;
         

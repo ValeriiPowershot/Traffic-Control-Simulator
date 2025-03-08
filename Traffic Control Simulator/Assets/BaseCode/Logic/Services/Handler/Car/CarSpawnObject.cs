@@ -70,7 +70,7 @@ namespace BaseCode.Logic.Services.Handler.Car
             _newCar = (VehicleBase)_carPool.InstantiateObject();
             _newCar.AssignNewPathContainer();
             _newCar.gameObject.SetActive(false);
-
+            
             _carDetector = _newCar.PathContainerService.GetCarDetector();
             _isCarWaiting = true;
         }

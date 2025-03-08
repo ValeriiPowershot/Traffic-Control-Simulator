@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Roads.RoadTool
 {
@@ -10,7 +11,7 @@ namespace BaseCode.Logic.Roads.RoadTool
         public List<BasicCar> cars = new();
         private LayerMask _carLayer;
 
-        public int CarDetectorSpawnIndex;
+        public int carDetectorSpawnIndex;
 
         public void Start()
         {
@@ -29,7 +30,7 @@ namespace BaseCode.Logic.Roads.RoadTool
             if (result && other.TryGetComponent(out BasicCar car))
             {
                 cars.Add(car); 
-                car.SpawnIndex = CarDetectorSpawnIndex;
+                car.SpawnIndex = carDetectorSpawnIndex;
             }
         }
 

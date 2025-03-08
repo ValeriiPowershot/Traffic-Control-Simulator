@@ -22,7 +22,6 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         public bool NeedToTurn;
         public int SpawnIndex;
         
-        
         public virtual void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             VehicleScriptableObject = currentCar;
@@ -49,11 +48,11 @@ namespace BaseCode.Logic.Vehicles.Vehicles
             Pool.DestroyObject(this);
             CarManager.CarSpawnServiceHandler.CheckAllCarPoolMaxed();
             
-            VehicleMovementGoState goState = VehicleController.StateController.GetState<VehicleMovementGoState>();
-            goState.AssignNewSpeedValues();
+            GoState.AssignNewSpeedValues();
         }
         
         public CarManager CarManager => _carManager;
+        public VehicleMovementGoState GoState => VehicleController.StateController.GetState<VehicleMovementGoState>();
 
         public virtual void StartToMove()
         {

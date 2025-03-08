@@ -1,8 +1,8 @@
 using BaseCode.Interfaces;
+using BaseCode.Logic.ScriptableObject;
+using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 namespace BaseCode.Logic.ScoringSystem
 {
@@ -14,8 +14,7 @@ namespace BaseCode.Logic.ScoringSystem
         private VehicleBase _car;
 
         private ScoreType _scoreType = ScoreType.Good;
-        private Vector3 _prevPosition;
-        private float _waitingTime;
+        private float _totalWaitingTime;
     
         private void Awake() => _car = GetComponentInParent<VehicleBase>();
 
@@ -30,25 +29,25 @@ namespace BaseCode.Logic.ScoringSystem
         
         public void Calculate(float deltaTime)
         {
-            if (_car.CarLightService.CarLightState == LightState.Red)
+            if (IsLightState(LightState.Red))
             {
                 ProcessWaitingAtRedLight(deltaTime);
             }
-            _prevPosition = transform.position;
         }
-
+        
         private void ExitLight()
         {
-            float resultPoints = CalculateResultPoints();
-            ResetLightState();
+            float resultPoints = CalculateResult();
+            
             _manager.ChangeScore(resultPoints);
+            ResetLightState();
         }
 
         private void ProcessWaitingAtRedLight(float deltaTime)
         {
-            if (IsCarMoving())
+            if (IsCarOnStopState())
             {
-                _waitingTime += deltaTime;
+                _totalWaitingTime += deltaTime;
 
                 if (ShouldChangeToNeutral())
                 {
@@ -60,50 +59,54 @@ namespace BaseCode.Logic.ScoringSystem
                 }
             }
         }
-
-        private bool IsCarMoving()
+ 
+        private float CalculateResult()
         {
-            var minRange = _car.VehicleScriptableObject.MIN_MOVING_RANGE;
-            return (_prevPosition - transform.position).sqrMagnitude <= minRange * minRange;
+            if (_totalWaitingTime <= VehicleSo.acceptableWaitingTime)
+                return VehicleSo.successPoints;
+
+            float lambda = _manager.ConfigSo.penaltyLambda; 
+            float penaltyFactor = Mathf.Exp(-lambda * (_totalWaitingTime - VehicleSo.acceptableWaitingTime));
+            
+            return VehicleSo.successPoints * penaltyFactor;
+        }
+
+        private bool IsCarOnStopState()
+        {
+            return _car.VehicleController.StateController.IsOnState<VehicleMovementStopState>();
         }
 
         private bool ShouldChangeToNeutral()
         {
-            return _scoreType == ScoreType.Good && _waitingTime >= _car.VehicleScriptableObject.AcceptableWaitingTime;
+            return IsScoreType(ScoreType.Good) && 
+                   _totalWaitingTime >= VehicleSo.acceptableWaitingTime;
         }
 
         private bool ShouldChangeToBad()
         {
-            return _scoreType == ScoreType.Neuteral && 
-                   _waitingTime - _car.VehicleScriptableObject.AcceptableWaitingTime >= _car.VehicleScriptableObject.TimeToWorstScore;
+            return IsScoreType(ScoreType.Neuteral) &&
+                   _totalWaitingTime - VehicleSo.acceptableWaitingTime >= 0;
         }
-
+        
+        private void ResetLightState()
+        {
+            _totalWaitingTime = 0f;
+            UpdateScoreType(ScoreType.Good);
+        }
         private void UpdateScoreType(ScoreType newScoreType)
         {
             _scoreType = newScoreType;
             scoreMaterialsComponent.SetNewMaterial(newScoreType);
         }
-        
-        private float CalculateResultPoints()
+        private bool IsScoreType(ScoreType scoreType)
         {
-            float resultPoints = _car.VehicleScriptableObject.SuccessPoints;
-
-            if (_waitingTime > _car.VehicleScriptableObject.AcceptableWaitingTime)
-            {
-                float unAcceptWaitTime = _waitingTime - _car.VehicleScriptableObject.AcceptableWaitingTime;
-                float ratio = Mathf.Min(unAcceptWaitTime / _car.VehicleScriptableObject.TimeToWorstScore, 1);
-                resultPoints += (_car.VehicleScriptableObject.FailPoints - 
-                                 _car.VehicleScriptableObject.SuccessPoints) * ratio;
-            }
-
-            return resultPoints;
+            return _scoreType == scoreType;
         }
-
-        private void ResetLightState()
+        private bool IsLightState(LightState state)
         {
-            _waitingTime = 0f;
-            UpdateScoreType(ScoreType.Good);
+            return _car.CarLightService.CarLightState == state;
         }
+        private VehicleScriptableObject VehicleSo => _car.VehicleScriptableObject; 
 
     }
 

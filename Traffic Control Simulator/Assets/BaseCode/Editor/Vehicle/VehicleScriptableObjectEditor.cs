@@ -18,12 +18,17 @@ namespace BaseCode.Editor.Vehicle
             vehicle.maxSpeed = EditorGUILayout.FloatField("Max Speed", vehicle.maxSpeed);
             vehicle.rotationSpeed = EditorGUILayout.FloatField("Rotation Speed", vehicle.rotationSpeed);
             vehicle.rayLenght = EditorGUILayout.FloatField("Ray Length", vehicle.rayLenght);
+            
+            EditorGUILayout.Space();
+            
+            vehicle.acceptableWaitingTime = EditorGUILayout.FloatField("Acceptable Waiting Time In Second", vehicle.acceptableWaitingTime);
+            vehicle.successPoints = EditorGUILayout.FloatField("Success Points", vehicle.successPoints);
+            vehicle.failPoints = EditorGUILayout.FloatField("Fail Points", vehicle.failPoints);
+            
+            EditorGUILayout.Space();
+            ShowSpeedValues(vehicle);
 
             EditorUtility.SetDirty(vehicle);    
-
-            EditorGUILayout.Space();
-
-            ShowSpeedValues(vehicle);
         }
 
         private void ShowSpeedValues(VehicleScriptableObject vehicle)

@@ -75,7 +75,7 @@ namespace BaseCode.Logic.Services.Handler.Car
                 Transform firstElement = container.roadPoints[0].point.transform;
                 CarDetector carDetectorObject =  Object.Instantiate(CarManager.allWaysContainer.carDetectorPrefab, firstElement.position, firstElement.rotation, firstElement);
                 
-                carDetectorObject.CarDetectorSpawnIndex = _spawnedCarIndex;
+                carDetectorObject.carDetectorSpawnIndex = _spawnedCarIndex;
                 _spawnedCarIndex++;
             }
         }

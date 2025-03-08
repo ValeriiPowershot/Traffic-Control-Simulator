@@ -111,6 +111,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
                 VehicleController.VehicleBase.ArrowIndicatorEndPoint.rotation = arrowRotation;
             }
         }
+
         public Transform CarTransform => VehicleController.VehicleBase.transform;
 
     }

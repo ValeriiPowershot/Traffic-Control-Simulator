@@ -14,15 +14,14 @@ namespace BaseCode.Logic.ScriptableObject
         
         public float rayLenght = 5f;
         public float rotationSpeed;
-        public float MIN_MOVING_RANGE = 0.001f;
 
         private float SpeedStep => (maxSpeed - minSpeed) / 3;
         public float DefaultSpeed => Random.Range(minSpeed + SpeedStep, minSpeed + SpeedStep * 2);
         public float AccelerationSpeed => Random.Range(minSpeed + SpeedStep * 2, maxSpeed);
         public float SlowdownSpeed => Random.Range(minSpeed, minSpeed + SpeedStep);
-        public float AcceptableWaitingTime { get; set; }
-        public float TimeToWorstScore { get; set; }
-        public float SuccessPoints;
-        public float FailPoints;
+        
+        public float acceptableWaitingTime; 
+        public float successPoints;
+        public float failPoints;
     }
 }
