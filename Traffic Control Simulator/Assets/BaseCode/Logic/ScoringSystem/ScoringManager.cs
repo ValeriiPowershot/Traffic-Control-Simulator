@@ -22,8 +22,9 @@ namespace BaseCode.Logic.ScoringSystem
         }
         private void Start()
         {
-            _timerBase.AddDelay(UpdateTime);
+            _timerBase.AddDelay(ScoreCarUpdateTime);
             _gameMenuPopUp = gameManager.popUpController.GetPopUp<GameMenuPopUp>();
+            PlayerScore = 0;
         }
         public void AddCar(IScoringObject scoringObj)
         {
@@ -35,7 +36,7 @@ namespace BaseCode.Logic.ScoringSystem
         {
             if (!IsTimerUp()) return;
             
-            _timerBase.AddDelay(UpdateTime);
+            _timerBase.AddDelay(ScoreCarUpdateTime);
             UpdateScoringObjects();
         }
         private bool IsTimerUp()
@@ -47,17 +48,17 @@ namespace BaseCode.Logic.ScoringSystem
             foreach (var scoringObj in _scoringObjects)
             {
                 if(scoringObj.IsActive())
-                    scoringObj.Calculate(UpdateTime);
+                    scoringObj.Calculate(ScoreCarUpdateTime);
             }
         }
         public void ChangeScore(float change)
         {
-            PlayerScore = Mathf.Max(0, PlayerScore + change);
+            PlayerScore += change;
             _gameMenuPopUp.soreText.text = $"{ConfigSo.ScoreMessage}{PlayerScore:F0}";
         }
 
         public ConfigSo ConfigSo => gameManager.saveManager.configSo;
-        private float UpdateTime => ConfigSo.updateTime;
+        private float ScoreCarUpdateTime => ConfigSo.scoreCarUpdateTime;
         private PlayerSo PlayerSo => gameManager.saveManager.playerSo;
     }
 }

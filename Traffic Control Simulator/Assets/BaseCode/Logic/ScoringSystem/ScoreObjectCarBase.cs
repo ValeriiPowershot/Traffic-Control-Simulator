@@ -1,3 +1,4 @@
+using System;
 using BaseCode.Interfaces;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.States.Movement;
@@ -13,10 +14,11 @@ namespace BaseCode.Logic.ScoringSystem
         private ScoringManager _manager;
         private VehicleBase _car;
 
-        private float _totalWaitingTime;
-    
+        protected float TotalWaitingTime;
+        protected float CurrentScore = 1;
+        
         private void Awake() => _car = GetComponentInParent<VehicleBase>();
-
+        
         public void Initialize(ScoringManager manager)
         {
             _manager = manager;
@@ -29,46 +31,63 @@ namespace BaseCode.Logic.ScoringSystem
 
         private void ProcessWaitingAtRedLight(float deltaTime)
         {
-            _totalWaitingTime += deltaTime;
+            TotalWaitingTime += deltaTime;
             UpdateScoreType();
         }
         private void UpdateScoreType()
         {
+            CalculateResult();
             scoreMaterialsComponent.SetNewMaterial(GetScoreColor());
         }
-
         private Color GetScoreColor()
         {
-            if (_totalWaitingTime <= VehicleSo.acceptableWaitingTime)
-                return scoreMaterialsComponent.good;
+            var leftTime = LeftTime;
+            
+            if(leftTime <= 0f)
+                return scoreMaterialsComponent.bad;
 
-            float maxScore = VehicleSo.successPoints;
-            float minScore = 0f;
+            float maxTime = VehicleSo.acceptableWaitingTime;
+            float minTime = 0f;
     
-            float score = CalculateResult(); 
-            float t = Mathf.InverseLerp(minScore, maxScore, score); 
-
+            float t = Mathf.InverseLerp(minTime, maxTime, leftTime); 
             return Color.Lerp(scoreMaterialsComponent.bad, scoreMaterialsComponent.good, t);
         }
-        private float CalculateResult()
+
+        protected virtual void CalculateResult()
         {
-            if (_totalWaitingTime <= VehicleSo.acceptableWaitingTime)
+            if (CurrentScore <= 0)
+            {
+                CurrentScore = 0;
+                return;
+            }
+            
+            CurrentScore = CalculateScore(); 
+        }
+
+        public float CalculateScore()
+        {
+            if (TotalWaitingTime <= VehicleSo.acceptableWaitingTime)
                 return VehicleSo.successPoints;
 
-            float lambda = _manager.ConfigSo.penaltyLambda; 
-            float penaltyFactor = Mathf.Exp(-lambda * (_totalWaitingTime - VehicleSo.acceptableWaitingTime));
-            
-            return VehicleSo.successPoints * penaltyFactor;
-        } 
+            float penaltyTime = TotalWaitingTime - VehicleSo.acceptableWaitingTime;
+
+            float penalty = penaltyTime * (VehicleSo.successPoints / VehicleSo.acceptableWaitingTime);
+
+            return -(VehicleSo.successPoints - penalty);
+        }
+
         public void OnReachedDestination()
         {
-            float resultPoints = CalculateResult();
-            _manager.ChangeScore(resultPoints);
-            _totalWaitingTime = 0f;
+            _manager.ChangeScore(CurrentScore);
+            Debug.Log("Earned Score " + CurrentScore + " " + LeftTime);   
+            TotalWaitingTime = 0f;
             scoreMaterialsComponent.SetNewMaterial(scoreMaterialsComponent.good);
         }
+        
         public bool IsActive() => _car.isActiveAndEnabled;
-        private VehicleScriptableObject VehicleSo => _car.VehicleScriptableObject; 
+        public float LeftTime => VehicleSo.acceptableWaitingTime - TotalWaitingTime;
+        protected VehicleScriptableObject VehicleSo => _car.VehicleScriptableObject; 
+        
     }
     
     

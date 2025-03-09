@@ -22,7 +22,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
 
         public bool NeedToTurn;
         public int SpawnIndex;
-        
+        public bool IsDiedOnCollision;
         public virtual void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             VehicleScriptableObject = currentCar;
@@ -44,10 +44,17 @@ namespace BaseCode.Logic.Vehicles.Vehicles
             
         }
 
+        
         public virtual void DestinationReached()
         {
             Pool.DestroyObject(this);
-            GetComponent<ScoreObjectCarBase>().OnReachedDestination();
+
+            if (IsDiedOnCollision == false) // willing to change this shit
+            {
+                GetComponent<ScoreObjectCarBase>().OnReachedDestination();
+                IsDiedOnCollision = true;
+            }
+            
             CarManager.CarSpawnServiceHandler.CheckAllCarPoolMaxed();
             
             GoState.AssignNewSpeedValues();
@@ -60,6 +67,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         {
             gameObject.SetActive(true);
         }
+        public void SetCarDiedOnCollision() => IsDiedOnCollision = true;
     }
 
     public enum LightState

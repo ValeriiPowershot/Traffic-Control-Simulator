@@ -105,6 +105,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             EnableVehicle(hitVehicle);
             hitVehicle.VehicleController.StateController.GetState<VehicleMovementGoState>()
                 .VehiclePathController.SetPathToEndPosition(originalScale);
+            hitVehicle.VehicleController.VehicleBase.SetCarDiedOnCollision();
         }
         
         protected virtual bool IsItRedLight() =>

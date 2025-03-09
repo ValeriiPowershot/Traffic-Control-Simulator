@@ -23,7 +23,6 @@ namespace BaseCode.Editor.Vehicle
             
             vehicle.acceptableWaitingTime = EditorGUILayout.FloatField("Acceptable Waiting Time In Second", vehicle.acceptableWaitingTime);
             vehicle.successPoints = EditorGUILayout.FloatField("Success Points", vehicle.successPoints);
-            vehicle.failPoints = EditorGUILayout.FloatField("Fail Points", vehicle.failPoints);
             
             EditorGUILayout.Space();
             ShowSpeedValues(vehicle);

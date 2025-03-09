@@ -22,6 +22,5 @@ namespace BaseCode.Logic.ScriptableObject
         
         public float acceptableWaitingTime; 
         public float successPoints;
-        public float failPoints;
     }
 }

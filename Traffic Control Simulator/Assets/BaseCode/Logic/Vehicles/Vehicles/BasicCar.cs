@@ -64,5 +64,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
 
             VehicleController.StateController.InitializePath();
         }
+
+      
     }
 }

@@ -71,7 +71,6 @@ namespace BaseCode.Logic.Services.Handler.Car
         {
             foreach (WaypointContainer container in CarManager.allWaysContainer.allWays)
             {
-                Debug.Log("yes");
                 Transform firstElement = container.roadPoints[0].point.transform;
                 CarDetector carDetectorObject =  Object.Instantiate(CarManager.allWaysContainer.carDetectorPrefab, firstElement.position, firstElement.rotation, firstElement);
                 
@@ -109,7 +108,6 @@ namespace BaseCode.Logic.Services.Handler.Car
             CheckForEndGame();
         }
 
-        // under these two function will move to another class
         private void CheckForEndGame() =>
             CarManager.StartCoroutine(currentWaveIndex == waves.Count - 1 ? EndShower() : WaveShower());
 
