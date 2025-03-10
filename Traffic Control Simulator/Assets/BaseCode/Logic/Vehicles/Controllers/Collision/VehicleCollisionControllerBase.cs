@@ -71,7 +71,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
         {
             Debug.Log("Game Is Over");
             PlayFx(FxTypes.Angry);  
-            PlayFx(FxTypes.Smoke, VehicleController.VehicleBase.transform);
+            PlayFx(FxTypes.Smoke, VehicleController.VehicleBase.transform, new Vector3(2.7f,2.7f,2.7f));
             PressCar(hitVehicle);
         }
         protected virtual void PressCar(VehicleBase hitVehicle)
@@ -88,7 +88,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
 
             Vector3 pressedScale = new Vector3(originalScale.x, originalScale.y * 0.1f, originalScale.z);
 
-            PlayFx(FxTypes.StarCarCrash, hitVehicle.transform);
+            PlayFx(FxTypes.StarCarCrash, hitVehicle.transform, new Vector3(10,10,10));
             GameManager.cameraManager.CameraShake();
             
             hitVehicle.transform.DOScaleY(pressedScale.y, 0.5f).SetEase(Ease.OutQuad);
@@ -138,10 +138,10 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             vehicle.GetComponent<BoxCollider>().enabled = true;
         }
         protected void PlayFx(FxTypes fxTypes) =>
-            PlayFx(fxTypes, BasicCar.emojiFxSpawnPoint);
+            PlayFx(fxTypes, BasicCar.emojiFxSpawnPoint, new Vector3(15,15,15)); // sorry for static values :D
 
-        public void PlayFx(FxTypes fxTypes, Transform spawnPoint) =>
-            GameManager.fxManager.PlayFx(fxTypes, spawnPoint);
+        public void PlayFx(FxTypes fxTypes, Transform spawnPoint, Vector3 localScale = default) =>
+            GameManager.fxManager.PlayFx(fxTypes, spawnPoint, localScale);
 
         protected BasicCar BasicCar => 
             VehicleController.VehicleBase;

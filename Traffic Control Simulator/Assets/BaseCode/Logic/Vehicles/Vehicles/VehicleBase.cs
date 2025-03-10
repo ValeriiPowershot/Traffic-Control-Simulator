@@ -6,6 +6,7 @@ using BaseCode.Logic.Services.Interfaces.Car;
 using BaseCode.Logic.Vehicles.Controllers;
 using BaseCode.Logic.Vehicles.Controllers.Collision;
 using BaseCode.Logic.Vehicles.States.Movement;
+using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles.Vehicles
 {
@@ -23,6 +24,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         public bool NeedToTurn;
         public int SpawnIndex;
         public bool IsDiedOnCollision;
+        
         public virtual void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             VehicleScriptableObject = currentCar;

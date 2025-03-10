@@ -13,7 +13,6 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         public VechicleTurnLights VechicleTurnLights;
 
         private bool _needToCheck;
-        
         public override void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             base.Starter(manager, currentCar);

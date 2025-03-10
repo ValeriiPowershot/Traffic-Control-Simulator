@@ -9,7 +9,7 @@ namespace BaseCode.Logic
     {
         public FxEffectsScriptableObject fxEffectsSo;
 
-        public void PlayFx(FxTypes fxType, Transform parent)
+        public void PlayFx(FxTypes fxType, Transform parent, Vector3 localSize = default)
         {
             GameObject fxPrefab = fxEffectsSo.GetFxPrefab(fxType);
 
@@ -21,6 +21,7 @@ namespace BaseCode.Logic
 
             GameObject createdFx = Instantiate(fxPrefab, parent);
 
+            createdFx.transform.localScale = localSize;
             createdFx.AddComponent<LookAtCamera>();
             ParticleSystem particleEffectComponent = createdFx.GetComponent<ParticleSystem>();
             StartCoroutine(DestroyAfterParticleEffect(particleEffectComponent, createdFx));

@@ -103,7 +103,8 @@ namespace BaseCode.Logic.Vehicles.States.Movement
                     CarData.rotationSpeed * Time.deltaTime
                 );
 
-                Vector3 arrowForward = (VehiclePathController.GetEndPoint().position - VehicleController.VehicleBase.ArrowIndicatorEndPoint.position).normalized;
+                Vector3 arrowForward = (VehiclePathController.GetEndPoint().position - 
+                                        VehicleController.VehicleBase.ArrowIndicatorEndPoint.position).normalized;
                 Quaternion arrowRotation = Quaternion.LookRotation(arrowForward);
         
                 arrowRotation = Quaternion.Euler(arrowRotation.eulerAngles.x, arrowRotation.eulerAngles.y, 0);
