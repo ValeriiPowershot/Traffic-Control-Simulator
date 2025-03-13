@@ -7,23 +7,20 @@ namespace BaseCode.Logic.ScoringSystem.Vehicle
     {
         public override void Calculate(float deltaTime)
         {
-            base.Calculate(deltaTime);
+            CalculateResult(deltaTime);
             SetNewTimeImageWeight();
         }
     
         private void SetNewTimeImageWeight()
         {
-            var currentColor = scoreMaterialsComponent.indicatorOfScore.color.grayscale;
-            
-            float t = Mathf.InverseLerp(scoreMaterialsComponent.bad.grayscale, 
-                scoreMaterialsComponent.good.grayscale, currentColor);
-            
-            scoreMaterialsComponent.indicatorOfScore.fillAmount = Mathf.Lerp(0f, 1f, t);
+            float t = Mathf.InverseLerp(0, VehicleSo.acceptableWaitingTime, TotalWaitingTime);
+            scoreMaterialsComponent.indicatorOfScore.fillAmount = Mathf.Lerp(1f,0f, t);
         }
 
-        protected override void CalculateResult()
+        protected override void CalculateResult(float deltaTime)
         {
-            CurrentScore = CalculateScore(); 
+            CurrentScore = CalculateScore(deltaTime); 
         }
+        
     }
 }

@@ -18,10 +18,15 @@ namespace BaseCode.Logic
                 Debug.Log("Effect Prefab not found.");
                 return;
             }
-
-            GameObject createdFx = Instantiate(fxPrefab, parent);
-
+            GameObject createdFx = Instantiate(fxPrefab);
+            createdFx.transform.position = parent != null ? parent.position : Vector3.zero;
             createdFx.transform.localScale = localSize;
+
+            if (parent != null)
+            {
+                createdFx.transform.SetParent(parent, true);
+            }
+
             createdFx.AddComponent<LookAtCamera>();
             ParticleSystem particleEffectComponent = createdFx.GetComponent<ParticleSystem>();
             StartCoroutine(DestroyAfterParticleEffect(particleEffectComponent, createdFx));

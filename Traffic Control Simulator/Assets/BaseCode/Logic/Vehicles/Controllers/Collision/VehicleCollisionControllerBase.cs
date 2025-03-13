@@ -138,7 +138,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             vehicle.GetComponent<BoxCollider>().enabled = true;
         }
         protected void PlayFx(FxTypes fxTypes) =>
-            PlayFx(fxTypes, BasicCar.emojiFxSpawnPoint, new Vector3(15,15,15)); // sorry for static values :D
+            PlayFx(fxTypes, BasicCar.emojiFxSpawnPoint, new Vector3(5,5,5)); // sorry for static values :D
 
         public void PlayFx(FxTypes fxTypes, Transform spawnPoint, Vector3 localScale = default) =>
             GameManager.fxManager.PlayFx(fxTypes, spawnPoint, localScale);

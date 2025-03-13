@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using BaseCode.Interfaces;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.States.Movement;
@@ -14,7 +15,8 @@ namespace BaseCode.Logic.ScoringSystem
         private ScoringManager _manager;
         private VehicleBase _car;
 
-        protected float TotalWaitingTime;
+        private float _totalWaitingTime;
+        
         protected float CurrentScore = 1;
         
         private void Awake() => _car = GetComponentInParent<VehicleBase>();
@@ -22,38 +24,15 @@ namespace BaseCode.Logic.ScoringSystem
         public void Initialize(ScoringManager manager)
         {
             _manager = manager;
+            scoreMaterialsComponent.Initialize(this);
         }
         
         public virtual void Calculate(float deltaTime)
         {
-            ProcessWaitingAtRedLight(deltaTime);
+            CalculateResult(deltaTime);
+            scoreMaterialsComponent.CheckAndAssignNewColor();
         }
-
-        private void ProcessWaitingAtRedLight(float deltaTime)
-        {
-            TotalWaitingTime += deltaTime;
-            UpdateScoreType();
-        }
-        private void UpdateScoreType()
-        {
-            CalculateResult();
-            scoreMaterialsComponent.SetNewMaterial(GetScoreColor());
-        }
-        private Color GetScoreColor()
-        {
-            var leftTime = LeftTime;
-            
-            if(leftTime <= 0f)
-                return scoreMaterialsComponent.bad;
-
-            float maxTime = VehicleSo.acceptableWaitingTime;
-            float minTime = 0f;
-    
-            float t = Mathf.InverseLerp(minTime, maxTime, leftTime); 
-            return Color.Lerp(scoreMaterialsComponent.bad, scoreMaterialsComponent.good, t);
-        }
-
-        protected virtual void CalculateResult()
+        protected virtual void CalculateResult(float deltaTime)
         {
             if (CurrentScore <= 0)
             {
@@ -61,15 +40,17 @@ namespace BaseCode.Logic.ScoringSystem
                 return;
             }
             
-            CurrentScore = CalculateScore(); 
+            CurrentScore = CalculateScore(deltaTime); 
         }
 
-        public float CalculateScore()
+        public float CalculateScore(float deltaTime)
         {
-            if (TotalWaitingTime <= VehicleSo.acceptableWaitingTime)
+            _totalWaitingTime += deltaTime;
+
+            if (_totalWaitingTime <= VehicleSo.acceptableWaitingTime)
                 return VehicleSo.successPoints;
 
-            float penaltyTime = TotalWaitingTime - VehicleSo.acceptableWaitingTime;
+            float penaltyTime = _totalWaitingTime - VehicleSo.acceptableWaitingTime;
 
             float penalty = penaltyTime * (VehicleSo.successPoints / VehicleSo.acceptableWaitingTime);
 
@@ -80,13 +61,19 @@ namespace BaseCode.Logic.ScoringSystem
         {
             _manager.ChangeScore(CurrentScore);
             Debug.Log("Earned Score " + CurrentScore + " " + LeftTime);   
-            TotalWaitingTime = 0f;
+            _totalWaitingTime = 0f;
             scoreMaterialsComponent.SetNewMaterial(scoreMaterialsComponent.good);
+            
+            if(scoreMaterialsComponent.ColorTransformationCoroutine != null)
+                StopCoroutine(scoreMaterialsComponent.ColorTransformationCoroutine);
         }
         
+        
+        
         public bool IsActive() => _car.isActiveAndEnabled;
-        public float LeftTime => VehicleSo.acceptableWaitingTime - TotalWaitingTime;
-        protected VehicleScriptableObject VehicleSo => _car.VehicleScriptableObject; 
+        private float LeftTime => VehicleSo.acceptableWaitingTime - _totalWaitingTime;
+        public float TotalWaitingTime => _totalWaitingTime;
+        public VehicleScriptableObject VehicleSo => _car.VehicleScriptableObject; 
         
     }
     

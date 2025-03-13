@@ -33,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0.04, y: 0.11, z: 0.034604702}
-  m_LocalScale: {x: 0.9957651, y: 0.9957651, z: 0.9957651}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1573193632383872918}
@@ -574,6 +574,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4838381409441117470}
     m_Modifications:
+    - target: {fileID: 5410976825837143754, guid: 13cc7533629db768e8eef89574a93bbb,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 7336689144668331067, guid: 13cc7533629db768e8eef89574a93bbb,
         type: 3}
       propertyPath: m_Pivot.x
@@ -693,6 +698,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ReactionIndicator
+      objectReference: {fileID: 0}
+    - target: {fileID: 8094465824878471206, guid: 13cc7533629db768e8eef89574a93bbb,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -817,7 +827,7 @@ PrefabInstance:
     - target: {fileID: 4365008950542837918, guid: 0f5109b4f4c3f7142a1241f3ae377cfe,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6.505
+      value: -0.77
       objectReference: {fileID: 0}
     - target: {fileID: 4365008950542837918, guid: 0f5109b4f4c3f7142a1241f3ae377cfe,
         type: 3}
