@@ -1,7 +1,6 @@
 using System;
 using BaseCode.Core.ObjectPool.Base;
 using BaseCode.Interfaces;
-using BaseCode.Logic.ScoringSystem;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.Interfaces.Car;
 using BaseCode.Logic.Vehicles.Vehicles;

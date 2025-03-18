@@ -6,6 +6,6 @@ namespace BaseCode.Logic.ScriptableObject
     public class PlayerSo : UnityEngine.ScriptableObject
     {
         public float playerScore;
-        
+        public int currentLevel;
     }
 }

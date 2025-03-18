@@ -1,5 +1,4 @@
 using BaseCode.Logic.PopUps;
-using BaseCode.Logic.ScoringSystem;
 using UnityEngine;
 
 namespace BaseCode.Logic

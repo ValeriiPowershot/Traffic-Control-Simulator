@@ -15,12 +15,19 @@ namespace BaseCode.Logic.ScriptableObject
         public float rayLenght = 5f;
         public float rotationSpeed;
 
+        public float maxAcceptableWaitingTime;
+        public float minAcceptableWaitingTime;
+        
+        public float maxSuccessPoints;
+        public float minSuccessPoints;
+        
         private float SpeedStep => (maxSpeed - minSpeed) / 3;
+        
         public float DefaultSpeed => Random.Range(minSpeed + SpeedStep, minSpeed + SpeedStep * 2);
         public float AccelerationSpeed => Random.Range(minSpeed + SpeedStep * 2, maxSpeed);
         public float SlowdownSpeed => Random.Range(minSpeed, minSpeed + SpeedStep);
         
-        public float acceptableWaitingTime; 
-        public float successPoints;
+        public float AcceptableWaitingTime => Random.Range(minAcceptableWaitingTime, maxAcceptableWaitingTime);
+        public float SuccessPoints => Random.Range(minSuccessPoints, maxSuccessPoints);
     }
 }

@@ -1,12 +1,13 @@
 using BaseCode.Core.ObjectPool.Base;
-using BaseCode.Logic.ScoringSystem;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.Handler.Car;
 using BaseCode.Logic.Services.Interfaces.Car;
 using BaseCode.Logic.Vehicles.Controllers;
 using BaseCode.Logic.Vehicles.Controllers.Collision;
+using BaseCode.Logic.Vehicles.Controllers.Score;
 using BaseCode.Logic.Vehicles.States.Movement;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Vehicles.Vehicles
 {
@@ -24,6 +25,9 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         public bool NeedToTurn;
         public int SpawnIndex;
         public bool IsDiedOnCollision;
+
+        public float acceptableWaitingTime;
+        public float successPoints;
         
         public virtual void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
@@ -33,6 +37,11 @@ namespace BaseCode.Logic.Vehicles.Vehicles
             
             ((CarLightServiceHandler)CarLightService).Starter(VehicleController);  // we can use it in initializer but i forgot why i did like this.
             ((PathContainerService)PathContainerService).Starter(manager);
+
+            acceptableWaitingTime = VehicleScriptableObject.AcceptableWaitingTime;
+            successPoints = VehicleScriptableObject.SuccessPoints;
+            
+            // Debug.Log("Current Car time:" + acceptableWaitingTime + " point: " + successPoints);
         }
 
         protected virtual void AssignCollisionController()

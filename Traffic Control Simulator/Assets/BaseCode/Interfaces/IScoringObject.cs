@@ -1,4 +1,4 @@
-using BaseCode.Logic.ScoringSystem;
+using BaseCode.Logic;
 
 namespace BaseCode.Interfaces
 {
