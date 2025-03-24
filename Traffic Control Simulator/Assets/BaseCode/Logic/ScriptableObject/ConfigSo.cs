@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -9,5 +10,15 @@ namespace BaseCode.Logic.ScriptableObject
         public float scoreCarUpdateTime = 1.5f;
         public float penaltyLambda = 0.1f;
         public const string ScoreMessage = "Score: ";
+
+        public GameSettings gameSettings;
+    }
+
+    [Serializable]
+    public class GameSettings
+    {
+        public bool isNotificationsOn;
+        public float soundVolume;
+        public float musicVolume;
     }
 }

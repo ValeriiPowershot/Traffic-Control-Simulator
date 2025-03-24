@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using BaseCode.Extensions.UI;
 using BaseCode.Logic.PopUps.Base;
+using DG.Tweening;
+using UnityEngine;
 
 namespace BaseCode.Logic.PopUps
 {
@@ -19,7 +22,7 @@ namespace BaseCode.Logic.PopUps
 
             return (T)_lastActivePopUpBase;
         }
-        
+    
         public void HidePopUp<T>() where T : PopUpBase
         {
             var currentPopUp = GetPopUp<T>();
@@ -31,15 +34,15 @@ namespace BaseCode.Logic.PopUps
             if (popUpBase == null)
                 return;
             
-            popUpBase.gameObject.SetActive(false);
+            popUpBase.transform.ReverseDoPopUp(0.5f).OnCompleteCloseActiveness();
             popUpBase.OnStartHidden();
         }
         
         public void ShowPopUp(PopUpBase popUpBase)
         {
-            if (popUpBase == null)
-                return;
             popUpBase.gameObject.SetActive(true);
+            popUpBase.transform.DoPopUp(0.5f);
+
             popUpBase.OnStartShow();
         }
         

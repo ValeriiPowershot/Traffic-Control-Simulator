@@ -1,9 +1,10 @@
+using BaseCode.Core;
 using BaseCode.Logic.PopUps;
 using UnityEngine;
 
 namespace BaseCode.Logic
 {
-    public class GameManager : MonoBehaviour
+    public class GameManager : Singleton<GameManager>
     {
         public CarManager carManager;
         public FxManager fxManager;
@@ -11,11 +12,17 @@ namespace BaseCode.Logic
         public CameraManager cameraManager;
         public ScoringManager scoringManager;
         public SaveManager saveManager;
+        public VfxManager vfxManager;
         public PopUpController popUpController;
-        
+
         private void Start()
         {
-            popUpController.ShowPopUp<GameMenuPopUp>();
+            popUpController.ShowPopUp<PopUpMainMenu>();
+        }
+
+        public void ExitGame()
+        {
+            Debug.Log("Exit Game");
         }
     }
 }

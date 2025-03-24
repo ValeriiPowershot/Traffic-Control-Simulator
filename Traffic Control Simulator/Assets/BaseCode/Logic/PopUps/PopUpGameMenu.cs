@@ -1,5 +1,6 @@
 using System;
 using BaseCode.Logic.PopUps.Base;
+using BaseCode.Logic.ScriptableObject;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -11,7 +12,13 @@ namespace BaseCode.Logic.PopUps
     {
         public TextMeshProUGUI soreText;
 
+        public override void OnStartShow()
+        {
+            base.OnStartShow();
+            
+            var createdVfx = VfxManager.PlayVfx(VfxTypes.GameMenuPopUpVfx);
+        }
         
-        
+        public VfxManager VfxManager => gameManager.vfxManager;
     }
 }

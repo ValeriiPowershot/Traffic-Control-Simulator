@@ -370,13 +370,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8752433061575210246}
+  - component: {fileID: 310421857266075186}
   m_Layer: 5
   m_Name: InformationPopUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8752433061575210246
 RectTransform:
   m_ObjectHideFlags: 0
@@ -398,6 +399,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &310421857266075186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3444322234616963126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a75c956898145f4847c298f0d85e889, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
+  closeThisPopUp: {fileID: 326701209279044722}
 --- !u!1 &3450924868106202299
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,6 +779,7 @@ GameObject:
   - component: {fileID: 6396485561815201213}
   - component: {fileID: 6862717580126800470}
   - component: {fileID: 1909454175256180123}
+  - component: {fileID: 326701209279044722}
   m_Layer: 5
   m_Name: Button_Close
   m_TagString: Untagged
@@ -873,6 +889,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &326701209279044722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7987740125205524894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5086084d3f4653b2aa875d3a689f8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8007659727293637800
 GameObject:
   m_ObjectHideFlags: 0
