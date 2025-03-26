@@ -20,7 +20,9 @@ namespace BaseCode.Logic.PopUps
         {
             openSettingsButton.onClick.AddListener(OnOpenSettingsButtonClicked);
             exitButton.onClick.AddListener(OnOpenExitButtonClicked);
+            levelsButton.onClick.AddListener(OnOpenLevelsButtonClicked);
         }
+
         public override void OnStartShow()
         {
             base.OnStartShow();
@@ -32,6 +34,10 @@ namespace BaseCode.Logic.PopUps
             Debug.Log("OnStartHidden");
             gameManager.StartCoroutine(gameManager.vfxManager.FadeOutMusic(_lastMusicTime));
         }
+        private void OnOpenLevelsButtonClicked()
+        {
+            PopUpController.ShowPopUp<PopUpLevelsMenu>();
+        }
 
         private void OnOpenExitButtonClicked()
         {
@@ -40,7 +46,7 @@ namespace BaseCode.Logic.PopUps
 
         private void OnOpenSettingsButtonClicked()
         {
-            PopUpController.ShowPopUp<PopUpSettingMenu>();
+            PopUpController.ShowPopUp(PopUpController.GetPopUp<PopUpSettingMenu>());
         }
     }
 }

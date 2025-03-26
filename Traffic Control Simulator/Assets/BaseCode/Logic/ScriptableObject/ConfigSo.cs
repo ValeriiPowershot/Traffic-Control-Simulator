@@ -8,7 +8,6 @@ namespace BaseCode.Logic.ScriptableObject
     public class ConfigSo : UnityEngine.ScriptableObject
     {
         public float scoreCarUpdateTime = 1.5f;
-        public float penaltyLambda = 0.1f;
         public const string ScoreMessage = "Score: ";
 
         public GameSettings gameSettings;

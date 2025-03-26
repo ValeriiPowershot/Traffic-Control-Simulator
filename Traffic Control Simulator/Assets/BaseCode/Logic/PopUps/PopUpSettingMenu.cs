@@ -33,7 +33,7 @@ namespace BaseCode.Logic.PopUps
 
             openMainMenu.onClick.AddListener(() =>
             {
-                PopUpController.ShowPopUp<PopUpMainMenu>();
+                PopUpController.HidePopUp(this);
             });
         }
 
@@ -48,6 +48,5 @@ namespace BaseCode.Logic.PopUps
         }
 
         public GameSettings GameSettings => gameManager.saveManager.configSo.gameSettings;
-        public VfxManager VfxManager => gameManager.vfxManager;
     }
 }

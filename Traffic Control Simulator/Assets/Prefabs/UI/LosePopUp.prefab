@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 5007835246702860804}
   - component: {fileID: 4255457114526466800}
   - component: {fileID: 4233276414259463313}
+  - component: {fileID: 8864194144789957208}
   m_Layer: 5
   m_Name: Button_Foward
   m_TagString: Untagged
@@ -196,6 +197,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8864194144789957208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447885985875422545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5086084d3f4653b2aa875d3a689f8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &540887070982641858
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,6 +428,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4287647478804686914}
+  - component: {fileID: 8035420271777494627}
   m_Layer: 5
   m_Name: LosePopUp
   m_TagString: Untagged
@@ -429,7 +443,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1610285735649300843}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -444,6 +458,26 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8035420271777494627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610285735649300843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99d2532c85b2430f8a0407fad8bcb977, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
+  home: {fileID: 76305596687580625}
+  reload: {fileID: 4863567783596199171}
+  nextLevel: {fileID: 8864194144789957208}
+  score: {fileID: 5384176580061462575}
+  combo: {fileID: 553601651612781067}
+  coin: {fileID: 1698313242508193830}
+  stars: []
 --- !u!1 &2069418054726008447
 GameObject:
   m_ObjectHideFlags: 0
@@ -856,6 +890,7 @@ GameObject:
   - component: {fileID: 9154672413317978797}
   - component: {fileID: 2406667259981077588}
   - component: {fileID: 1434396152411224272}
+  - component: {fileID: 76305596687580625}
   m_Layer: 5
   m_Name: Button_Home
   m_TagString: Untagged
@@ -965,6 +1000,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &76305596687580625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3173057582212631425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5086084d3f4653b2aa875d3a689f8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3230982821140152406
 GameObject:
   m_ObjectHideFlags: 0
@@ -1670,6 +1717,7 @@ GameObject:
   - component: {fileID: 4109456208532455336}
   - component: {fileID: 5220114805863444164}
   - component: {fileID: 3961235477470232357}
+  - component: {fileID: 4863567783596199171}
   m_Layer: 5
   m_Name: Button_Restart
   m_TagString: Untagged
@@ -1779,6 +1827,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4863567783596199171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6033871729234427536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5086084d3f4653b2aa875d3a689f8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6216184758502361800
 GameObject:
   m_ObjectHideFlags: 0

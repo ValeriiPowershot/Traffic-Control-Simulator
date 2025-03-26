@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
@@ -22,6 +23,22 @@ namespace BaseCode.Extensions.UI
     
             return target.DOScale(0f, duration)
                 .SetEase(Ease.Linear); 
+        }
+        public static Tween SequenceOpenerSetActive(this List<Transform> target, float durationBetween = 0.1f, int amount = -1)
+        {
+            if (target == null) return null;
+            if(amount == -1) amount = target.Count;
+    
+            Sequence sequence = DOTween.Sequence();
+            for (int i = 0; i < amount; i++)
+            {
+                var i1 = i;
+                var tween = target[i].DoPopUp().OnStart(()=>{target[i1].gameObject.SetActive(true);});
+                sequence.Append(tween);
+                sequence.AppendInterval(durationBetween);
+            }
+    
+            return sequence;
         }
     }
 }

@@ -7,6 +7,7 @@ namespace BaseCode.Logic
     {
         public PlayerSo playerSo;
         public ConfigSo configSo;
+        public SceneSo sceneSo;
     }
     
 }

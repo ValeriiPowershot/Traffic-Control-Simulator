@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
@@ -9,5 +10,6 @@ namespace BaseCode.Extensions.UI
         {
             tweener.onComplete = () => ((Transform)tweener.target).gameObject.SetActive(false);
         }
+       
     }
 }

@@ -13,6 +13,7 @@ namespace BaseCode.Logic
         public ScoringManager scoringManager;
         public SaveManager saveManager;
         public VfxManager vfxManager;
+        public SceneLoadManager sceneLoadManager;
         public PopUpController popUpController;
 
         private void Start()

@@ -41,9 +41,7 @@ namespace BaseCode.Logic.PopUps
         public void ShowPopUp(PopUpBase popUpBase)
         {
             popUpBase.gameObject.SetActive(true);
-            popUpBase.transform.DoPopUp(0.5f);
-
-            popUpBase.OnStartShow();
+            popUpBase.OnStartDoTween(); 
         }
         
         public T GetPopUp<T>() where T : PopUpBase

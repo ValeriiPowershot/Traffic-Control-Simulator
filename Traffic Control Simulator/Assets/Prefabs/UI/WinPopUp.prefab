@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6596988390400590227}
   - component: {fileID: 8517610092842163090}
   - component: {fileID: 9057703492784149482}
+  - component: {fileID: 6831756802036364202}
   m_Layer: 5
   m_Name: Button_Foward
   m_TagString: Untagged
@@ -121,6 +122,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6831756802036364202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 821700396400322639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5086084d3f4653b2aa875d3a689f8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &965319855886286097
 GameObject:
   m_ObjectHideFlags: 0
@@ -818,6 +831,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5896285972237599355}
+  - component: {fileID: 3012156924596378576}
   m_Layer: 5
   m_Name: WinPopUp
   m_TagString: Untagged
@@ -832,7 +846,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2509938277846583125}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -847,6 +861,29 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3012156924596378576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2509938277846583125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d85c8de154b4c7aa9b9a8293c21f5d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
+  home: {fileID: 8965638478117200492}
+  reload: {fileID: 3154759825531348979}
+  nextLevel: {fileID: 6831756802036364202}
+  score: {fileID: 8728495275931107953}
+  combo: {fileID: 5751748678271776263}
+  coin: {fileID: 997124274475895668}
+  stars:
+  - {fileID: 3889794512368029756}
+  - {fileID: 8453322358286325879}
+  - {fileID: 4724443506186368347}
 --- !u!1 &2703499523978137433
 GameObject:
   m_ObjectHideFlags: 0
@@ -1257,6 +1294,7 @@ GameObject:
   - component: {fileID: 2854114410448525467}
   - component: {fileID: 7735758997341337412}
   - component: {fileID: 8728558937556550372}
+  - component: {fileID: 8965638478117200492}
   m_Layer: 5
   m_Name: Button_Home
   m_TagString: Untagged
@@ -1366,6 +1404,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8965638478117200492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6068464268111646042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5086084d3f4653b2aa875d3a689f8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6072879216352700633
 GameObject:
   m_ObjectHideFlags: 0
@@ -1593,6 +1643,7 @@ GameObject:
   - component: {fileID: 992905251529699031}
   - component: {fileID: 6547031241774176931}
   - component: {fileID: 4229811180059076044}
+  - component: {fileID: 3154759825531348979}
   m_Layer: 5
   m_Name: Button_Restart
   m_TagString: Untagged
@@ -1702,6 +1753,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3154759825531348979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6492648237562687193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5086084d3f4653b2aa875d3a689f8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6546579716533559026
 GameObject:
   m_ObjectHideFlags: 0
