@@ -7,10 +7,11 @@ using UnityEngine.Events;
 
 namespace BaseCode.Logic
 {
-    public class VfxManager : ManagerBase
+    public class VfxManager : SingletonManagerBase<VfxManager>
     {
         public VfxEffectsScriptableObject fxEffectsSo;
         public AudioSource mainGameMusic;
+        
         // game sound effect
         public AudioSource PlayVfx(VfxTypes fxType)
         {
@@ -94,7 +95,7 @@ namespace BaseCode.Logic
             mainGameMusic.volume = targetVolume; 
         }
         
-        public GameSettings GameSettings => gameManager.saveManager.configSo.gameSettings;
-
+        public GameSettings GameSettings => GameManager.saveManager.configSo.gameSettings;
+    
     }
 }

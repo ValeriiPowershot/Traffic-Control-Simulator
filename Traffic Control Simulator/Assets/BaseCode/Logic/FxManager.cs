@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace BaseCode.Logic
 {
-    public class FxManager : ManagerBase
+    public class FxManager : SingletonManagerBase<FxManager>
     {
         public FxEffectsScriptableObject fxEffectsSo;
 

@@ -357,13 +357,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2537277736844469509}
+  - component: {fileID: 1003354285253508206}
   m_Layer: 5
   m_Name: QuitPopUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2537277736844469509
 RectTransform:
   m_ObjectHideFlags: 0
@@ -371,7 +372,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4910673813208456241}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -385,6 +386,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1003354285253508206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4910673813208456241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 450507a9a9794bd6b01face5c49679e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
+  cancelButton: {fileID: 7356719358127093919}
+  okButton: {fileID: 4461014141940071077}
 --- !u!1 &5430474515080980056
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,6 +548,7 @@ GameObject:
   - component: {fileID: 8004982560585606578}
   - component: {fileID: 4601758740389137451}
   - component: {fileID: 2484691179346841598}
+  - component: {fileID: 7356719358127093919}
   m_Layer: 5
   m_Name: Button_Cancel
   m_TagString: Untagged
@@ -642,6 +659,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7356719358127093919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5759200663447901041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5086084d3f4653b2aa875d3a689f8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6292832638821754279
 GameObject:
   m_ObjectHideFlags: 0
@@ -864,6 +893,7 @@ GameObject:
   - component: {fileID: 8966885720410724493}
   - component: {fileID: 8242381074191619558}
   - component: {fileID: 4911990781553296239}
+  - component: {fileID: 4461014141940071077}
   m_Layer: 5
   m_Name: Button_Ok
   m_TagString: Untagged
@@ -974,6 +1004,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4461014141940071077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7933322129643965458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5086084d3f4653b2aa875d3a689f8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8287288724505738540
 GameObject:
   m_ObjectHideFlags: 0

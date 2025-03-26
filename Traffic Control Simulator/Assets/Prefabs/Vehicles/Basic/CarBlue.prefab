@@ -32,8 +32,8 @@ Transform:
   m_GameObject: {fileID: 2068819878279463700}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0.04, y: 0.11, z: 0.034604702}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.040001, y: 1.59, z: 0.034605}
+  m_LocalScale: {x: 0.73483, y: 0.73483, z: 0.73483}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1573193632383872918}
@@ -161,6 +161,8 @@ MonoBehaviour:
   NeedToTurn: 0
   SpawnIndex: 0
   IsDiedOnCollision: 0
+  acceptableWaitingTime: 0
+  successPoints: 0
   emojiFxSpawnPoint: {fileID: 8967399502524544095}
   RayStartPoint: {fileID: 6679767412140090256}
   ArrowIndicatorEndPoint: {fileID: 2963326563964885876}
@@ -181,6 +183,7 @@ MonoBehaviour:
     indicatorOfScore: {fileID: 3585583666028766880}
     good: {r: 0.16470589, g: 1, b: 0, a: 1}
     bad: {r: 0.9607843, g: 0, b: 0, a: 1}
+    neutral: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!114 &7095591492009151777
 MonoBehaviour:
   m_ObjectHideFlags: 0

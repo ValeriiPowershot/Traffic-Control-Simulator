@@ -4,6 +4,7 @@ using BaseCode.Extensions.UI;
 using BaseCode.Logic.PopUps.Base;
 using BaseCode.Logic.ScriptableObject;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace BaseCode.Logic.PopUps
@@ -15,7 +16,7 @@ namespace BaseCode.Logic.PopUps
         public ButtonExtension continueButton;
         public ButtonExtension exitButton;
 
-        private readonly IteratorRefExtension<float> _lastMusicTime = new IteratorRefExtension<float>();
+        private readonly IteratorRefExtension<float> _lastMusicTime = new IteratorRefExtension<float>(); // move to fx manager?
         private void Start()
         {
             openSettingsButton.onClick.AddListener(OnOpenSettingsButtonClicked);
@@ -26,27 +27,29 @@ namespace BaseCode.Logic.PopUps
         public override void OnStartShow()
         {
             base.OnStartShow();
-            gameManager.vfxManager.PlayGameMusic(VfxTypes.GameMenuPopUpVfx, _lastMusicTime.Value);
+            GameManager.vfxManager.PlayGameMusic(VfxTypes.GameMenuPopUpVfx, _lastMusicTime.Value);
         }
         public override void OnStartHidden()
         {
             base.OnStartHidden();
-            Debug.Log("OnStartHidden");
-            gameManager.StartCoroutine(gameManager.vfxManager.FadeOutMusic(_lastMusicTime));
+            GameManager.StartCoroutine(GameManager.vfxManager.FadeOutMusic(_lastMusicTime));
         }
         private void OnOpenLevelsButtonClicked()
         {
-            PopUpController.ShowPopUp<PopUpLevelsMenu>();
+            GameManager.StartCoroutine(GameManager.vfxManager.FadeOutMusic(_lastMusicTime));
+            SceneLoadManager.LoadSceneNormal(SceneID.Levels);
         }
 
         private void OnOpenExitButtonClicked()
         {
-            PopUpController.ShowPopUp<PopUpExitMenu>();
+            PopUpManager.ShowPopUp<PopUpExitMenu>();
         }
 
         private void OnOpenSettingsButtonClicked()
         {
-            PopUpController.ShowPopUp(PopUpController.GetPopUp<PopUpSettingMenu>());
+            PopUpManager.ShowPopUpFromBase(PopUpManager.GetPopUp<PopUpSettingMenu>());
         }
+
+        private SceneLoadManager SceneLoadManager => GameManager.sceneLoadManager;
     }
 }

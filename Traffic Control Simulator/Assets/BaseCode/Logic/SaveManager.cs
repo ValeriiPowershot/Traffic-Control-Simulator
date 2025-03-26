@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace BaseCode.Logic
 {
-    public class SaveManager : ManagerBase
+    public class SaveManager : SingletonManagerBase<SaveManager>
     {
         public PlayerSo playerSo;
         public ConfigSo configSo;

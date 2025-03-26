@@ -6,10 +6,10 @@ using BaseCode.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace BaseCode.Logic.PopUps
 {
-    // dont check this file - it will be reviewed!
     public class PopUpLevelsMenu : PopUpGameBase
     {
         public ButtonExtension openMainMenuButton;
@@ -17,6 +17,8 @@ namespace BaseCode.Logic.PopUps
         public ButtonExtension openNextLevelButton;
         public ButtonExtension openPreviousLevelButton;
         public ButtonExtension startGameButton;
+        public ButtonExtension settingsGameButton;
+        public ButtonExtension tapToStartGameButton;
         
         public TextMeshProUGUI starAmountText;
         public TextMeshProUGUI currentLevelText;
@@ -24,7 +26,6 @@ namespace BaseCode.Logic.PopUps
         public List<Transform> stars;
         public int currentLevelIndex;
 
-        public OnLoadToggleObject mainMenuToggleObject; 
         private SceneIDData _scenes;
         
         private void Start()
@@ -32,13 +33,24 @@ namespace BaseCode.Logic.PopUps
             openMainMenuButton.onClick.AddListener(OnOpenMainMenuButtonClicked);
             startGameButton.onClick.AddListener(LoadGame);
 
+            settingsGameButton.onClick.AddListener(() =>
+            {
+                PopUpManager.ShowPopUpFromBase(PopUpManager.GetPopUp<PopUpSettingMenu>());
+            });
+            tapToStartGameButton.onClick.AddListener(() =>
+            {
+                GameManager.cameraManager.ChangeCameraSizeToGame();
+                PopUpManager.ShowPopUp<PopUpGameMenu>();
+                
+                CarManager.Initalize(); // there will be change
+                ScoreManager.Initalize();
+            });
             openNextLevelButton.onClick.AddListener(() =>
             {
                 if (currentLevelIndex >= _scenes.sceneNames.Count - 1) return;
                 
                 currentLevelIndex++;
                 SetStarAmountUI();
-                LoadCurrentIndexLastScene();
             });
             openPreviousLevelButton.onClick.AddListener(() =>
             {
@@ -46,7 +58,6 @@ namespace BaseCode.Logic.PopUps
                 
                 currentLevelIndex--;
                 SetStarAmountUI();
-                LoadCurrentIndexLastScene();
             });
         }
 
@@ -57,29 +68,17 @@ namespace BaseCode.Logic.PopUps
 
         private void OnOpenMainMenuButtonClicked()
         {
-            PopUpController.ShowPopUp<PopUpMainMenu>();
-            gameManager.sceneLoadManager.UnLoadScene();
-            mainMenuToggleObject.ToggleObjects();
+            SceneLoadManager.LoadSceneNormal(SceneID.MainMenu);
         }
 
         public override void OnStartShow()
         {
             base.OnStartShow();
 
-            _scenes = SceneSo.GetScenesFromId(SceneID.Levels);
+            _scenes = SceneSo.GetScenesFromId(SceneID.Levels); 
             SetCurrentLevel();
             SetStarAmount();
-            LoadCurrentIndexLastScene();
-        }
-
-        private void LoadCurrentIndexLastScene()
-        {
-            UnityAction afterLoad = () =>
-            {
-                mainMenuToggleObject.ToggleObjects();
-            };
-            
-            gameManager.sceneLoadManager.LoadScene(SceneID.Levels, currentLevelIndex, afterLoad:afterLoad);
+            GameManager.cameraManager.ChangeCameraSizeToLevel();
         }
 
         private void SetCurrentLevel()
@@ -127,7 +126,10 @@ namespace BaseCode.Logic.PopUps
             return totalStar;
         }
 
-
-        public SceneSo SceneSo => gameManager.saveManager.sceneSo;
+        private SceneLoadManager SceneLoadManager => GameManager.sceneLoadManager;
+        private CarManager CarManager => GameManager.carManager;
+        private ScoringManager ScoreManager => GameManager.scoringManager;
+        public SceneSo SceneSo => GameManager.saveManager.sceneSo;
+        
     }
 }

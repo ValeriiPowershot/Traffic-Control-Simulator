@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace BaseCode.Logic
 {
-    public class InputManager : ManagerBase
+    public class InputManager : SingletonManagerBase<InputManager>
     {
         [SerializeField] private InputAction _tapAction, _tapPosition;
         [SerializeField] private LayerMask _interactableMask;
@@ -12,7 +12,6 @@ namespace BaseCode.Logic
         private const float RAYCAST_LENGTH = 500f;
 
         private bool _tapPerformed;
-        private Camera _cam;
 
         private void OnEnable()
         {
@@ -25,11 +24,6 @@ namespace BaseCode.Logic
             _tapPosition.Disable();
         }
 
-        private void Awake()
-        {
-            _cam = Camera.main;
-        }
-
         private void Update()
         {
             float PlayerPress = _tapAction.ReadValue<float>();
@@ -40,7 +34,7 @@ namespace BaseCode.Logic
                 _tapPerformed = true;
 
                 Vector2 TapPos = _tapPosition.ReadValue<Vector2>();
-                Ray InputRay = _cam.ScreenPointToRay(TapPos);
+                Ray InputRay = CameraManager.Camera.ScreenPointToRay(TapPos);
 
                 //Hits only interactable objects
                 if (Physics.Raycast(InputRay, out RaycastHit hit, RAYCAST_LENGTH, _interactableMask))
@@ -51,5 +45,7 @@ namespace BaseCode.Logic
             else if (PlayerPress <= 0f && _tapPerformed)
                 _tapPerformed = false;
         }
+
+        public CameraManager CameraManager => GameManager.cameraManager;
     }
 }

@@ -28,18 +28,19 @@ namespace BaseCode.Logic.PopUps
 
             helpButton.onClick.AddListener(() =>
             {
-                PopUpController.ShowPopUp(PopUpController.GetPopUp<PopUpHelpMenu>());
+                PopUpManager.ShowPopUpFromBase(PopUpManager.GetPopUp<PopUpHelpMenu>());
             });
 
             openMainMenu.onClick.AddListener(() =>
             {
-                PopUpController.HidePopUp(this);
+                PopUpManager.HidePopUp(this);
             });
         }
 
         private void OnMusicSliderValueChanged(float value)
         {
             GameSettings.musicVolume = value;
+            GameManager.vfxManager.mainGameMusic.volume = value;
         }
 
         private void OnSoundSliderValueChanged(float value)
@@ -47,6 +48,6 @@ namespace BaseCode.Logic.PopUps
             GameSettings.soundVolume = value;
         }
 
-        public GameSettings GameSettings => gameManager.saveManager.configSo.gameSettings;
+        public GameSettings GameSettings => GameManager.saveManager.configSo.gameSettings;
     }
 }

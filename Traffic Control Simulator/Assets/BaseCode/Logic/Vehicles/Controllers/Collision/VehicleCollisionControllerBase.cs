@@ -143,9 +143,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
         public void PlayFx(FxTypes fxTypes, Transform spawnPoint, Vector3 localScale = default) =>
             GameManager.fxManager.PlayFx(fxTypes, spawnPoint, localScale);
 
-        protected BasicCar BasicCar => 
-            VehicleController.VehicleBase;
-
-        protected GameManager GameManager => BasicCar.CarManager.gameManager;
+        protected BasicCar BasicCar => VehicleController.VehicleBase;
+        protected GameManager GameManager => BasicCar.CarManager.GameManager;
     }
 }

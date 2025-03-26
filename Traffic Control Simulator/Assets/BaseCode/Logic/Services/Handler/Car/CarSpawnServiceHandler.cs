@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BaseCode.Core.ObjectPool.CarPool;
+using BaseCode.Extensions.UI;
+using BaseCode.Logic.PopUps;
 using BaseCode.Logic.Roads.RoadTool;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.Interfaces.Car;
@@ -26,8 +28,6 @@ namespace BaseCode.Logic.Services.Handler.Car
         private Coroutine _updateCoroutine;
 
         private int _spawnedCarIndex;
-
-        public TextMeshProUGUI textMeshProUGUI;
         public void Initialize(CarManager carManagerInScene)
         {
             CarManager = carManagerInScene;
@@ -113,22 +113,45 @@ namespace BaseCode.Logic.Services.Handler.Car
 
         private IEnumerator EndShower()
         {
-            textMeshProUGUI.gameObject.SetActive(true);
-            textMeshProUGUI.text = "You Won";
-            yield return new WaitForSeconds(1);
-            textMeshProUGUI.gameObject.SetActive(false);
+            float currentScore = ScoreManager.PlayerScore;
+            if (currentScore < 0)
+            {
+                PopUpManager.ShowPopUp<PopUpLoseMenuGamePopUp>();
+            }
+            else
+            {
+                PopUpManager.ShowPopUp<PopUpWinMenuGamePopUp>();
+            }
+            yield break;
         }
 
         private IEnumerator WaveShower()
         {
-            textMeshProUGUI.gameObject.SetActive(true);
+            float currentScore = ScoreManager.PlayerScore;
+            if (currentScore < 0)
+            {
+                PopUpManager.ShowPopUp<PopUpLoseMenuGamePopUp>();
+                yield break;
+            }
+            
+            PopUpGameMenu popUpLevelsMenu = PopUpManager.GetPopUp<PopUpGameMenu>();
+            var informationText = popUpLevelsMenu.informationText;
 
-            textMeshProUGUI.text = "You Passed";
+            informationText.Toggle();
+            informationText.SetText("You Passed");
+            
             yield return new WaitForSeconds(1);
-            textMeshProUGUI.text = wavesRankSo.GetWaveWord(waves[currentWaveIndex].waveRank);
+            
+            informationText.text = wavesRankSo.GetWaveWord(waves[currentWaveIndex].waveRank);
+            
             yield return new WaitForSeconds(1);
+            
             currentWaveIndex++;
-            textMeshProUGUI.gameObject.SetActive(false);
+            informationText.Toggle();
         }
+        
+
+        public PopUpManager PopUpManager => CarManager.GameManager.popUpManager;
+        public ScoringManager ScoreManager => CarManager.GameManager.scoringManager;
     }
 }

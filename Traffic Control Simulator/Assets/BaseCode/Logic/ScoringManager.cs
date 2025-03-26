@@ -6,23 +6,38 @@ using BaseCode.Logic.Services.Handler;
 
 namespace BaseCode.Logic
 {
-    public class ScoringManager : ManagerBase
+    public class ScoringManager : ManagerBase<ScoringManager>
     {
+        public override GameManager GameManager
+        {
+            get
+            {
+                var baseGameManager = base.GameManager;
+                baseGameManager.scoringManager = this; 
+                return baseGameManager; 
+            }
+        }
+        
         private readonly TimerBase _timerBase = new TimerBase();
         private readonly List<IScoringObject> _scoringObjects = new();
 
-        private GameMenuPopUp _gameMenuPopUp;
-        private float PlayerScore
+        private PopUpGameMenu _popUpGameMenu;
+        public float PlayerScore
         {
             get => PlayerSo.playerScore;
-            set => PlayerSo.playerScore = value;
+            private set => PlayerSo.playerScore = value;
         }
-        private void Start()
+
+        public bool canCheck = false;
+        
+        public void Initalize()
         {
             _timerBase.AddDelay(ScoreCarUpdateTime);
-            _gameMenuPopUp = gameManager.popUpController.GetPopUp<GameMenuPopUp>();
+            _popUpGameMenu = GameManager.popUpManager.GetPopUp<PopUpGameMenu>();
             PlayerScore = 0;
+            canCheck = true;
         }
+
         public void AddCar(IScoringObject scoringObj)
         {
             scoringObj.Initialize(this);
@@ -31,6 +46,8 @@ namespace BaseCode.Logic
         
         private void Update()
         {
+            if(canCheck == false) return;
+            
             if (!IsTimerUp()) return;
             
             _timerBase.AddDelay(ScoreCarUpdateTime);
@@ -51,11 +68,14 @@ namespace BaseCode.Logic
         public void ChangeScore(float change)
         {
             PlayerScore += change;
-            _gameMenuPopUp.soreText.text = $"{ConfigSo.ScoreMessage}{PlayerScore:F0}";
+            if(_popUpGameMenu == null) // i wanna use it in main menu
+                return;
+            _popUpGameMenu.soreText.text = $"{ConfigSo.ScoreMessage}{PlayerScore:F0}";
         }
 
-        public ConfigSo ConfigSo => gameManager.saveManager.configSo;
+        public ConfigSo ConfigSo => GameManager.saveManager.configSo;
         private float ScoreCarUpdateTime => ConfigSo.scoreCarUpdateTime;
-        private PlayerSo PlayerSo => gameManager.saveManager.playerSo;
+        private PlayerSo PlayerSo => GameManager.saveManager.playerSo;
+
     }
 }

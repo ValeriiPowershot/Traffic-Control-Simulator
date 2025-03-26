@@ -17,11 +17,11 @@ namespace BaseCode.Logic.PopUps
         }
         private void ResumeGame()
         {
-            PopUpController.ShowPopUp<PopUpMainMenu>();
+            PopUpManager.ShowPopUp<PopUpMainMenu>();
         }
         private void ExitGame()
         {
-            gameManager.ExitGame();
+            GameManager.ExitGame();
         }
     }
 }

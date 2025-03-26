@@ -10,6 +10,7 @@ namespace BascoCity
 public class Player_controller : MonoBehaviour
 {
 
+    /*
     public Animator anim;
     public Rigidbody rb;
     public Transform trs;
@@ -42,6 +43,6 @@ public class Player_controller : MonoBehaviour
 
             anim.SetBool("run", true);
         }
-    }
+    }*/
 }
 }

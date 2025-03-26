@@ -18,11 +18,6 @@ namespace BaseCode.Logic.ScriptableObject
     {
         public List<SceneIDData> scenes = new List<SceneIDData>();
         
-        public SceneLocalData GetScenePathFromId(SceneID id, int index = 0)
-        {
-            return GetScenesFromId(id).sceneNames[index];
-        }
-
         public SceneIDData GetScenesFromId(SceneID id)
         {
             foreach (var sceneData in scenes)
@@ -42,6 +37,7 @@ namespace BaseCode.Logic.ScriptableObject
     public class SceneIDData
     {
         public SceneID id;
+        public SceneAsset sceneAsset;
         public List<SceneLocalData> sceneNames = new List<SceneLocalData>();
     }
     
@@ -50,6 +46,5 @@ namespace BaseCode.Logic.ScriptableObject
     {
         public int AmountOfStar;
         public bool IsUnLocked;
-        public SceneAsset sceneAsset;
     }
 }

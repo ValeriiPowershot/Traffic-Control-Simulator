@@ -7,15 +7,30 @@ using UnityEngine.SceneManagement;
 
 namespace BaseCode.Logic
 {
-    public class SceneLoadManager : ManagerBase
+    public class SceneLoadManager : SingletonManagerBase<SceneLoadManager>
     {
-        private Scene? _currentScene = null;
-        public void LoadScene(SceneID id, int index = 0, UnityAction beforeLoad = null,UnityAction afterLoad = null)
+        /*private Scene? _currentScene = null;
+        public void LoadSceneAdditive(SceneID id, UnityAction beforeLoad = null,UnityAction afterLoad = null)
         {
-            var sceneName = SceneSo.GetScenePathFromId(id,index);
+            var sceneName = SceneSo.GetScenesFromId(id);
             StartCoroutine(LoadSceneAdditively(sceneName.sceneAsset.name, beforeLoad, afterLoad));
+        }*/
+        public void LoadSceneNormal(SceneID id, UnityAction beforeLoad = null,UnityAction afterLoad = null)
+        {
+            var sceneName = SceneSo.GetScenesFromId(id);
+            StartCoroutine(LoadSceneNormally(sceneName.sceneAsset.name, beforeLoad, afterLoad));
         }
 
+        private IEnumerator LoadSceneNormally(string sceneName, UnityAction beforeLoad = null,UnityAction afterLoad = null)
+        {
+            beforeLoad?.Invoke();
+            yield return SceneManager.LoadSceneAsync(sceneName);
+            afterLoad?.Invoke();
+            // _currentScene = SceneManager.GetSceneByName(sceneName);
+        }
+        
+
+        /*
         public void UnLoadScene()
         {
             StartCoroutine(UnLoadLoadedScene());
@@ -40,8 +55,9 @@ namespace BaseCode.Logic
             
             _currentScene = SceneManager.GetSceneByName(sceneName);
         }
+        */
         
         
-        private SceneSo SceneSo => gameManager.saveManager.sceneSo;
+        private SceneSo SceneSo => GameManager.saveManager.sceneSo;
     }
 }

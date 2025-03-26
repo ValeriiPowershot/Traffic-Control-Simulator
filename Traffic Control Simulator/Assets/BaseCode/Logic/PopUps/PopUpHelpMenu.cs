@@ -15,7 +15,7 @@ namespace BaseCode.Logic.PopUps
         }
         private void OnOpenSettingsButtonClicked()
         {
-            gameManager.popUpController.HidePopUp<PopUpHelpMenu>();
+            GameManager.popUpManager.HidePopUp<PopUpHelpMenu>();
         }
     }
 }

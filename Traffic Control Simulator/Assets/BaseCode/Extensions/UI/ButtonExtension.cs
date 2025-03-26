@@ -44,8 +44,8 @@ namespace BaseCode.Extensions.UI
         {
             _defaultClickSoundButtonAction = () => VfxManager.PlayVfx(vfxTypes);
         }
-        
-        public GameManager GameManager => GameManager.Instance;
+
+        public GameManager GameManager => (GameManager)GameManager.Instance;
         public VfxManager VfxManager => GameManager.vfxManager;
         public GameSettings GameSettings => GameManager.saveManager.configSo.gameSettings;
     }
