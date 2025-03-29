@@ -38,6 +38,16 @@ namespace BaseCode.Logic.Lights.Handler.Abstracts
             _notifier.NotifyVehicle(vehicle,CurrentState);
         }
 
+        public virtual void RemoveAllVehicle()
+        {
+            if(_controlledVehicles.Count == 0)  return;
+
+            var freeUp = new List<VehicleBase>();
+            freeUp.AddRange(_controlledVehicles);
+            
+            foreach (var controlled in freeUp)
+                RemoveVehicle(controlled);
+        }
         public virtual void RemoveVehicle(VehicleBase vehicle)
         {
             if (!_controlledVehicles.Contains(vehicle)) return;
@@ -45,6 +55,7 @@ namespace BaseCode.Logic.Lights.Handler.Abstracts
             _controlledVehicles.Remove(vehicle);
             vehicle.CarLightService.ExitLightControl();
         }
+        
 
         public abstract void ChangeLight();
         public abstract void SetChangeoverState();

@@ -1,4 +1,5 @@
 using BaseCode.Core.ObjectPool.Base;
+using BaseCode.Interfaces;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.Handler.Car;
 using BaseCode.Logic.Services.Interfaces.Car;
@@ -24,11 +25,12 @@ namespace BaseCode.Logic.Vehicles.Vehicles
 
         public bool NeedToTurn;
         public int SpawnIndex;
-        public bool IsDiedOnCollision;
+        public bool lostScore;
 
         public float acceptableWaitingTime;
         public float successPoints;
-        
+
+        public IScoringObject ScoringObject;
         public virtual void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             VehicleScriptableObject = currentCar;
@@ -37,11 +39,10 @@ namespace BaseCode.Logic.Vehicles.Vehicles
             
             ((CarLightServiceHandler)CarLightService).Starter(VehicleController);  // we can use it in initializer but i forgot why i did like this.
             ((PathContainerService)PathContainerService).Starter(manager);
-
-            acceptableWaitingTime = VehicleScriptableObject.AcceptableWaitingTime;
-            successPoints = VehicleScriptableObject.SuccessPoints;
+            AssignNewTimeSores();
             
-            // Debug.Log("Current Car time:" + acceptableWaitingTime + " point: " + successPoints);
+            ScoringObject = GetComponent<IScoringObject>();
+            ScoringObject.Initialize(_carManager.GameManager.scoringManager);
         }
 
         protected virtual void AssignCollisionController()
@@ -54,23 +55,28 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         {
             
         }
-
-        
         public virtual void DestinationReached()
         {
             Pool.DestroyObject(this);
+            
+            CarManager.CarSpawnServiceHandler.RemoveThisAndCheckAllCarPoolMaxed(this);
+            UpdateCarScore();
 
-            if (IsDiedOnCollision == false) // willing to change this shit
-            {
-                GetComponent<ScoreObjectCarBase>().OnReachedDestination();
-                IsDiedOnCollision = true;
-            }
-            
-            CarManager.CarSpawnServiceHandler.CheckAllCarPoolMaxed();
-            
             GoState.AssignNewSpeedValues();
+            AssignNewTimeSores();
         }
-        
+
+        private void UpdateCarScore()
+        {
+            GetComponent<ScoreObjectCarBase>().OnReachedDestination(lostScore);
+            lostScore = false;
+        }
+        private void AssignNewTimeSores()
+        {
+            acceptableWaitingTime = VehicleScriptableObject.AcceptableWaitingTime;
+            successPoints = VehicleScriptableObject.SuccessPoints;
+            // Debug.Log("Current Car time:" + acceptableWaitingTime + " point: " + successPoints);
+        }
         public CarManager CarManager => _carManager;
         public VehicleMovementGoState GoState => VehicleController.StateController.GetState<VehicleMovementGoState>();
 
@@ -78,7 +84,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         {
             gameObject.SetActive(true);
         }
-        public void SetCarDiedOnCollision() => IsDiedOnCollision = true;
+        public void SetCarDiedOnCollision() => lostScore = true;
     }
 
     public enum LightState

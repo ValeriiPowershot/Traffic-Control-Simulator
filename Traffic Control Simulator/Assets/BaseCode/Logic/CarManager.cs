@@ -1,3 +1,4 @@
+using System.Collections;
 using BaseCode.Logic.Ways;
 using BaseCode.Logic.Services.Handler.Car;
 using UnityEngine;
@@ -16,28 +17,47 @@ namespace BaseCode.Logic
                 return baseGameManager; 
             }
         }
+        
         public AllWaysContainer allWaysContainer;
         [SerializeField] private CarSpawnServiceHandler carSpawnServiceHandler;
 
-        private bool tempCheck = false;
-
+        private Coroutine _startLoadingUpdateSpawning;
         protected override void Awake()
         {
-            
-        }
-
-        public void Initalize()
-        {
             carSpawnServiceHandler.Initialize(this);
-            tempCheck = true;
         }
 
-        private void Update()
+        public void StartGame()
         {
-            if(tempCheck)
-               carSpawnServiceHandler.Update();
+            Debug.Log("Start New Game!");
+            ExitGame();
+            
+            if(_startLoadingUpdateSpawning != null)
+                StopCoroutine(_startLoadingUpdateSpawning);
+            
+            _startLoadingUpdateSpawning = StartCoroutine(StartLoadingUpdateSpawning());
         }
 
+        public void ExitGame()
+        {
+            carSpawnServiceHandler.ResetWave(); // car detector + lıghts clean
+        }
+
+        public void ExitWave()
+        {
+            StopCoroutine(_startLoadingUpdateSpawning);
+            _startLoadingUpdateSpawning = null;
+        }
+
+        private IEnumerator StartLoadingUpdateSpawning()
+        {
+            while (true)
+            {
+                carSpawnServiceHandler.Update();
+                yield return null;
+            }
+        }
+        
         public ScoringManager ScoringManager => GameManager.scoringManager;
         public CarSpawnServiceHandler CarSpawnServiceHandler => carSpawnServiceHandler;
     }

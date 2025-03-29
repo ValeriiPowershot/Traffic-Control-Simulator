@@ -46,5 +46,10 @@ namespace BaseCode.Logic.Roads.RoadTool
         {
             return _carLayer.value == (1 << other.gameObject.layer);
         }
+
+        public void ResetDetector()
+        {
+            cars.Clear();
+        }
     }
 }

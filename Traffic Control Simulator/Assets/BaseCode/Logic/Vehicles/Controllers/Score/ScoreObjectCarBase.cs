@@ -50,27 +50,28 @@ namespace BaseCode.Logic.Vehicles.Controllers.Score
 
             float penalty = penaltyTime * (SuccessPoints / AcceptableWaitingTime);
 
-            return -(SuccessPoints - penalty);
+            return (SuccessPoints - penalty);
         }
 
-        public void OnReachedDestination()
+        public void OnReachedDestination(bool isLostScore)
         {
-            _manager.ChangeScore(CurrentScore);
-            Debug.Log("Earned Score " + CurrentScore + " " + LeftTime);   
+            if(!isLostScore)
+                _manager.ChangeScore(CurrentScore);
+            ResetScoreObjectCarBase();
+        }
+
+        public void ResetScoreObjectCarBase()
+        {
+            CurrentScore = 1;
             _totalWaitingTime = 0f;
-            scoreMaterialsComponent.SetNewMaterial(scoreMaterialsComponent.good);
             
-            if(scoreMaterialsComponent.ColorTransformationCoroutine != null)
-                StopCoroutine(scoreMaterialsComponent.ColorTransformationCoroutine);
+            scoreMaterialsComponent.ResetScoringMaterial();
         }
         
         public bool IsActive() => _car.isActiveAndEnabled;
-        private float LeftTime => AcceptableWaitingTime - _totalWaitingTime;
         public float TotalWaitingTime => _totalWaitingTime;
         public float AcceptableWaitingTime=> _car.acceptableWaitingTime;
         public float SuccessPoints => _car.successPoints;
-        public VehicleScriptableObject VehicleSo => _car.VehicleScriptableObject; 
-        
     }
     
     

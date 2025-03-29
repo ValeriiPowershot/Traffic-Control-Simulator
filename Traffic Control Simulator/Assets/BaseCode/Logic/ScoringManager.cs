@@ -3,6 +3,8 @@ using BaseCode.Interfaces;
 using BaseCode.Logic.PopUps;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.Handler;
+using BaseCode.Logic.Vehicles.Vehicles;
+using UnityEngine;
 
 namespace BaseCode.Logic
 {
@@ -17,9 +19,7 @@ namespace BaseCode.Logic
                 return baseGameManager; 
             }
         }
-        
         private readonly TimerBase _timerBase = new TimerBase();
-        private readonly List<IScoringObject> _scoringObjects = new();
 
         private PopUpGameMenu _popUpGameMenu;
         public float PlayerScore
@@ -28,28 +28,17 @@ namespace BaseCode.Logic
             private set => PlayerSo.playerScore = value;
         }
 
-        public bool canCheck = false;
-        
-        public void Initalize()
+        public override void Start()
         {
+            base.Start();
+            
             _timerBase.AddDelay(ScoreCarUpdateTime);
             _popUpGameMenu = GameManager.popUpManager.GetPopUp<PopUpGameMenu>();
             PlayerScore = 0;
-            canCheck = true;
         }
-
-        public void AddCar(IScoringObject scoringObj)
-        {
-            scoringObj.Initialize(this);
-            _scoringObjects.Add(scoringObj);
-        }
-        
         private void Update()
         {
-            if(canCheck == false) return;
-            
             if (!IsTimerUp()) return;
-            
             _timerBase.AddDelay(ScoreCarUpdateTime);
             UpdateScoringObjects();
         }
@@ -59,20 +48,22 @@ namespace BaseCode.Logic
         }
         private void UpdateScoringObjects()
         {
-            foreach (var scoringObj in _scoringObjects)
+            foreach (var scoringObj in VehicleBases())
             {
-                if(scoringObj.IsActive())
-                    scoringObj.Calculate(ScoreCarUpdateTime);
+                IScoringObject scoringObject = scoringObj.ScoringObject;
+                
+                if(scoringObject.IsActive())
+                    scoringObject.Calculate(ScoreCarUpdateTime);
             }
         }
         public void ChangeScore(float change)
         {
             PlayerScore += change;
-            if(_popUpGameMenu == null) // i wanna use it in main menu
-                return;
+            Debug.Log("Player Score " + PlayerScore + " Made Score" + change);   
             _popUpGameMenu.soreText.text = $"{ConfigSo.ScoreMessage}{PlayerScore:F0}";
         }
 
+        public List<VehicleBase> VehicleBases() => _gameManager.carManager.CarSpawnServiceHandler.onBoardGameCars;
         public ConfigSo ConfigSo => GameManager.saveManager.configSo;
         private float ScoreCarUpdateTime => ConfigSo.scoreCarUpdateTime;
         private PlayerSo PlayerSo => GameManager.saveManager.playerSo;

@@ -17,7 +17,7 @@ namespace BaseCode.Logic.PopUps
         
         private void Start()
         {
-            exit.onClick.AddListener(OnOpenMainMenuButtonClicked);
+            exit.onClick.AddListener(OnOpenExitMenuButtonClicked);
             settings.onClick.AddListener(OnOpenSettingMenuButtonClicked);
             resume.onClick.AddListener(OnOpenResumeMenuButtonClicked);
         }
@@ -32,8 +32,9 @@ namespace BaseCode.Logic.PopUps
             PopUpManager.ShowPopUpFromBase(PopUpManager.GetPopUp<PopUpSettingMenu>());
         }
 
-        private void OnOpenMainMenuButtonClicked()
+        private void OnOpenExitMenuButtonClicked()
         {
+            GameManager.carManager.ExitGame();
             PopUpManager.HidePopUp(this);
             PopUpManager.ShowPopUp<PopUpLevelsMenu>();
         }

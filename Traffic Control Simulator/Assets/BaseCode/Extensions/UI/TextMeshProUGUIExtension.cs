@@ -19,4 +19,4 @@ namespace BaseCode.Extensions.UI
             textMeshProUGUI.text = text;
         }
     }
-}
+} 

@@ -13,7 +13,7 @@ namespace BaseCode.Logic.PopUps
         private void Start()
         {
             cancelButton.onClick.AddListener(ResumeGame);
-            okButton.onClick.AddListener(ExitGame);
+            // okButton.onClick.AddListener(ExitGame);
         }
         private void ResumeGame()
         {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using BaseCode.Core.ObjectPool.Base;
 using BaseCode.Interfaces;
 using BaseCode.Logic.ScriptableObject;
@@ -13,7 +14,6 @@ namespace BaseCode.Core.ObjectPool.CarPool
     {
         private ICarSpawnService _carSpawnService;
         private VehicleScriptableObject _currentCar;
-
         public CarPool(ICarSpawnService carSpawnService, VehicleScriptableObject currentCar, int maxCarsCount) : 
             base(currentCar.vehiclePrefab)
         {
@@ -27,11 +27,15 @@ namespace BaseCode.Core.ObjectPool.CarPool
         public override IPoolObject InsertObjectToQueue()
         {
             VehicleBase newCar = (VehicleBase)base.InsertObjectToQueue();
-            _carSpawnService.CarManager.ScoringManager.AddCar(newCar.GetComponent<IScoringObject>());
             newCar.Starter(_carSpawnService.CarManager, _currentCar);
-
             return newCar;
         }
+        
         public bool IsThereCar => Queue.Count > 0;
+
+        public bool IsPoolEmpty()
+        {
+            return IsThereCar == false;
+        }
     }
 }

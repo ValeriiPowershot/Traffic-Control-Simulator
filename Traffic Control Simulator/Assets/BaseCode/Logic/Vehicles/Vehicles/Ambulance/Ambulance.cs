@@ -13,6 +13,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
         private readonly List<GameObject> _arrows = new();
 
         private const float MinDistanceToSpawnArrow = 4; // this is tested value, looks nice :) (not like u)
+        private GameObject _newArrow;
         protected override void AssignCollisionController()
         {
             VehicleCollisionController = new AmbulanceVehicleCollisionController();
@@ -34,6 +35,8 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
         {
             var roadPoints = PathContainerService.GetPathContainer().roadPoints;
             float accumulatedDistance = 0f;
+
+            _newArrow = new GameObject("Arrows");
 
             for (int i = 1; i < roadPoints.Count; i++)  
             {
@@ -85,10 +88,13 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
             {
                 Destroy(arr);
             }
+            Destroy(_newArrow);
+            _arrows.Clear();
+            Debug.Log("ASd");
         }
         private void SpawnArrow(Vector3 arrowPrefabPos, Quaternion rot)
         {
-            GameObject newArrow = Instantiate(arrowPrefab);
+            GameObject newArrow = Instantiate(arrowPrefab,_newArrow.transform);
             newArrow.transform.SetPositionAndRotation(arrowPrefabPos, rot);
             _arrows.Add(newArrow);
             newArrow.gameObject.SetActive(false);

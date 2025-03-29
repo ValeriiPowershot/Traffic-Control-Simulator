@@ -19,7 +19,6 @@ namespace BaseCode.Logic.PopUps
         public ButtonExtension startGameButton;
         public ButtonExtension settingsGameButton;
         public ButtonExtension tapToStartGameButton;
-        
         public TextMeshProUGUI starAmountText;
         public TextMeshProUGUI currentLevelText;
 
@@ -37,13 +36,12 @@ namespace BaseCode.Logic.PopUps
             {
                 PopUpManager.ShowPopUpFromBase(PopUpManager.GetPopUp<PopUpSettingMenu>());
             });
+            
             tapToStartGameButton.onClick.AddListener(() =>
             {
+                GameManager.carManager.StartGame();
                 GameManager.cameraManager.ChangeCameraSizeToGame();
                 PopUpManager.ShowPopUp<PopUpGameMenu>();
-                
-                CarManager.Initalize(); // there will be change
-                ScoreManager.Initalize();
             });
             openNextLevelButton.onClick.AddListener(() =>
             {

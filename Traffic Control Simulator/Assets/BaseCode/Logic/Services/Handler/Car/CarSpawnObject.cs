@@ -36,43 +36,62 @@ namespace BaseCode.Logic.Services.Handler.Car
             {
                 if (IsSpawnPointClear())
                 {
-                    _newCar.StartToMove(); // it is for ambulance's arrow 
-                    _newCar = null;
-                    _isCarWaiting = false;
+                    StartCarEngine();
                 }
             }
             else
             {
-                if(IsAllCarsSpawned())
+                if (IsAllCarsSpawned()) 
                     return;
-                
-                if (_carPool.IsThereCar && IsTimerUp())
-                {
+                    
+                if (CanSpawnNewCar())
                     SpawnNewCar();
-                }
             }
         }
 
-        private bool IsAllCarsSpawned() =>
-            _currentIndex >= size;
+        private void StartCarEngine()
+        {
+            _newCar.StartToMove();
+            _newCar = null;
+            _isCarWaiting = false;
+            ResetTimer();
+        }
 
-        private bool IsThereACarWaitingToBeActive() =>
-            _isCarWaiting;
+        private bool CanSpawnNewCar()
+        {
+            return _carPool.IsPoolEmpty() == false && IsTimerUp();
+        }
 
-        private bool IsSpawnPointClear() =>
-            _carDetector.IsThereCarInSpawnPoint() == false;
-
+        public void ResetCarSpawnObject()
+        {
+            _currentIndex = 0; 
+            _newCar = null;
+            _isCarWaiting = false;
+        }
         public void SpawnNewCar()
         {
             _currentIndex++;
             AddDelay(timeToSpawn);
-
+            
             _newCar = (VehicleBase)_carPool.InstantiateObject();
             _newCar.AssignNewPathContainer();
             _newCar.gameObject.SetActive(false);
+            CarSpawnServiceHandler.onBoardGameCars.Add(_newCar);
             
             _carDetector = _newCar.PathContainerService.GetCarDetector();
             _isCarWaiting = true;
         }
+        
+        public bool IsAllCarsSpawned() => _currentIndex > size;
+        
+        public bool IsOnMap() => _isCarWaiting == false && IsAllCarsSpawnedInSize();
+
+        private bool IsAllCarsSpawnedInSize() => _currentIndex > size - 1;
+        
+        private bool IsThereACarWaitingToBeActive() => _isCarWaiting;
+
+        private bool IsSpawnPointClear() => _carDetector.IsThereCarInSpawnPoint() == false;
+
+        private CarSpawnServiceHandler CarSpawnServiceHandler => CarManager.CarSpawnServiceHandler;
     }
 }

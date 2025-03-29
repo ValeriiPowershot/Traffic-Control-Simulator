@@ -58,10 +58,15 @@ namespace BaseCode.Logic.Vehicles.Controllers
 
         public void SetPathToEndPosition(Vector3 originalY)
         {
-            _currentWaypointIndex = _waypoints.Count-1;
-            CarTransform.position = GetCurrentWaypoint().point.position;
+            SetPathToEndPosition();
             CarTransform.localScale= originalY;
         }
+
+        public void SetPathToEndPosition()
+        {
+            _currentWaypointIndex = _waypoints.Count-1;
+            CarTransform.position = GetCurrentWaypoint().point.position;            
+        }        
         
         public bool IsCloseToWaypoint()
         {

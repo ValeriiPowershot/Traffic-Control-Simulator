@@ -52,8 +52,9 @@ namespace BaseCode.Logic.Vehicles.Controllers.Score
         {
             if(ColorTransformationCoroutine == null)
             {
-                Debug.Log("End time finished");
-                ColorTransformationCoroutine = _scoreObjectCarBase.StartCoroutine(TransitionToNewColor(AcceptableWaitingTime / 2, neutral, bad));
+                ColorTransformationCoroutine = 
+                    _scoreObjectCarBase.StartCoroutine(
+                        TransitionToNewColor(AcceptableWaitingTime / 2, neutral, bad));
             }
         }
 
@@ -61,8 +62,9 @@ namespace BaseCode.Logic.Vehicles.Controllers.Score
         {
             if(ColorTransformationCoroutine == null)
             {
-                Debug.Log("Half time finished");
-                ColorTransformationCoroutine = _scoreObjectCarBase.StartCoroutine(TransitionToNewColor(AcceptableWaitingTime / 2,good, neutral));
+                ColorTransformationCoroutine = 
+                    _scoreObjectCarBase.StartCoroutine(
+                        TransitionToNewColor(AcceptableWaitingTime / 2,good, neutral));
             }
         }
         
@@ -85,6 +87,15 @@ namespace BaseCode.Logic.Vehicles.Controllers.Score
 
             SetNewMaterial(targetColor);
             _scoreObjectCarBase.StopCoroutine(ColorTransformationCoroutine);
+            ColorTransformationCoroutine = null;
+        }
+
+        public void ResetScoringMaterial()
+        {
+            SetNewMaterial(good);
+            
+            if(ColorTransformationCoroutine != null)
+                _scoreObjectCarBase.StopCoroutine(ColorTransformationCoroutine);
             ColorTransformationCoroutine = null;
         }
 

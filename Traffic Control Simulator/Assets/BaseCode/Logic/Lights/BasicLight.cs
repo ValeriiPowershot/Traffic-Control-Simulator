@@ -45,7 +45,6 @@ namespace BaseCode.Logic.Lights
                 _currentIndex = 1;
 
             CurrentState = (LightState)_currentIndex;
-            Debug.Log(CurrentState);
         }
 
         public override void SetChangeoverState()
@@ -81,8 +80,6 @@ namespace BaseCode.Logic.Lights
         {
             _groundMesh.enabled = !_groundMesh.isVisible;
             light.SetActive(!light.activeSelf);
-
-            Debug.Log("Light is set to" + light.activeSelf);
         }
 
         private void SetActiveLight(int i)

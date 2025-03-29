@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using BaseCode.Core.ObjectPool.CarPool;
 using BaseCode.Extensions.UI;
+using BaseCode.Logic.Lights.Handler.Abstracts;
 using BaseCode.Logic.PopUps;
 using BaseCode.Logic.Roads.RoadTool;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.Interfaces.Car;
+using BaseCode.Logic.Vehicles.Vehicles;
 using BaseCode.Logic.Ways;
 using TMPro;
 using UnityEngine;
@@ -24,10 +26,15 @@ namespace BaseCode.Logic.Services.Handler.Car
         
         public List<CarWave> waves = new();
         public int currentWaveIndex;
+        public bool looped;
         
         private Coroutine _updateCoroutine;
-
         private int _spawnedCarIndex;
+
+        public List<VehicleBase> onBoardGameCars = new List<VehicleBase>();
+        public List<CarDetector> createdCarDetectors = new List<CarDetector>();
+        public List<LightBase> createdLights = new List<LightBase>();
+        
         public void Initialize(CarManager carManagerInScene)
         {
             CarManager = carManagerInScene;
@@ -35,20 +42,16 @@ namespace BaseCode.Logic.Services.Handler.Car
             InitializePools();
             InitializeWave();
             SpawnRoadDetectors();
+            FindLights();
         }
+
         public void Update()
         {
-            if (_updateCoroutine == null) // change this not good implementation. 
-                _updateCoroutine = CarManager.StartCoroutine(UpdateWithDelay());
+            waves[currentWaveIndex].Update();
         }
-        private IEnumerator UpdateWithDelay()
+        private void FindLights()
         {
-            foreach (CarSpawnObject spawnObject in waves[currentWaveIndex].carSpawnObjects)
-            {
-                yield return null;
-                spawnObject.Update();
-            }
-            _updateCoroutine = null;
+            createdLights.AddRange(Object.FindObjectsByType<LightBase>(FindObjectsInactive.Exclude,FindObjectsSortMode.None));
         }
 
         private void InitializeWave()
@@ -58,6 +61,30 @@ namespace BaseCode.Logic.Services.Handler.Car
             
             currentWaveIndex = 0;
         }
+        public void ResetWave()
+        {
+            foreach (CarWave wave in waves) 
+                wave.ResetWave();
+            
+            foreach (var carDetector in createdCarDetectors)
+                carDetector.ResetDetector();
+
+            foreach (var lightBase in createdLights)
+                lightBase.RemoveAllVehicle();
+            
+            ReleaseCars();
+        }
+        public void ReleaseCars()
+        {
+            var sentToDestination = new List<VehicleBase>();
+            sentToDestination.AddRange(onBoardGameCars);
+            
+            foreach (var vehicleBase in sentToDestination)
+            {
+                vehicleBase.lostScore = true;
+                vehicleBase.GoState.VehiclePathController.SetPathToEndPosition();
+            }
+        }
 
         private void InitializePools()
         {
@@ -66,13 +93,14 @@ namespace BaseCode.Logic.Services.Handler.Car
             foreach (KeyValuePair<VehicleScriptableObject, int> uniqueVehicleSo in setOfCurrentWaveSo) 
                 CarObjectPools.AddCarToCarPool(this, uniqueVehicleSo.Key, uniqueVehicleSo.Value);
         }
-        
+
         private void SpawnRoadDetectors()
         {
             foreach (WaypointContainer container in CarManager.allWaysContainer.allWays)
             {
                 Transform firstElement = container.roadPoints[0].point.transform;
                 CarDetector carDetectorObject =  Object.Instantiate(CarManager.allWaysContainer.carDetectorPrefab, firstElement.position, firstElement.rotation, firstElement);
+                createdCarDetectors.Add(carDetectorObject);
                 
                 carDetectorObject.carDetectorSpawnIndex = _spawnedCarIndex;
                 _spawnedCarIndex++;
@@ -81,38 +109,59 @@ namespace BaseCode.Logic.Services.Handler.Car
         
         private Dictionary<VehicleScriptableObject, int> GetCurrentSetsWithCounts()
         {
-            Dictionary<VehicleScriptableObject, int> vehicleCounts = new ();
+            Dictionary<VehicleScriptableObject, int> vehicleCounts = new();
 
             foreach (CarWave wave in waves)
             {
                 foreach (CarSpawnObject carSpawnObject in wave.carSpawnObjects)
                 {
                     VehicleScriptableObject carSo = carSpawnObject.carSoObjects;
+                    int requestSize = carSpawnObject.size;
 
-                    int poolSize = carSpawnObject.size;
-                    
-                    if (!vehicleCounts.TryAdd(carSo, poolSize)) 
-                        vehicleCounts[carSo] += poolSize; // Add to existing count
+                    if (vehicleCounts.ContainsKey(carSo))
+                    {
+                        requestSize -= vehicleCounts[carSo];
+                        if(requestSize < 0 )
+                            continue;
+                        
+                        vehicleCounts[carSo] += requestSize;
+                    }
+                    else
+                    {
+                        vehicleCounts[carSo] = requestSize;
+                    }
+                      
                 }
             }
 
             return vehicleCounts;
         }
-        
-        public void CheckAllCarPoolMaxed()
+
+        public void RemoveThisAndCheckAllCarPoolMaxed(VehicleBase vehicleBase)
         {
-            bool result = CarObjectPools.Pool.All(carObjectPool => carObjectPool.Value.GetActiveAmount() == 0);
-
-            if (!result) return;
-
+            onBoardGameCars.Remove(vehicleBase);
+            
+            if (onBoardGameCars.Count> 0) return;
             CheckForEndGame();
         }
 
-        private void CheckForEndGame() =>
+        private void CheckForEndGame()
+        {
+            if (looped)
+            {
+                foreach (var carSpawnObject in waves.SelectMany(wave => wave.carSpawnObjects))
+                {
+                    carSpawnObject.ResetCarSpawnObject();
+                }
+                return;
+            };
+            
             CarManager.StartCoroutine(currentWaveIndex == waves.Count - 1 ? EndShower() : WaveShower());
+        }
 
         private IEnumerator EndShower()
         {
+            currentWaveIndex = 0;
             float currentScore = ScoreManager.PlayerScore;
             if (currentScore < 0)
             {
@@ -147,11 +196,17 @@ namespace BaseCode.Logic.Services.Handler.Car
             yield return new WaitForSeconds(1);
             
             currentWaveIndex++;
+            StartNewWave();
             informationText.Toggle();
         }
-        
 
+        public void StartNewWave()
+        {
+            CarManager.StartGame();
+        }
+        
         public PopUpManager PopUpManager => CarManager.GameManager.popUpManager;
         public ScoringManager ScoreManager => CarManager.GameManager.scoringManager;
+
     }
 }

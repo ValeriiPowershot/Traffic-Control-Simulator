@@ -46,7 +46,9 @@ namespace BaseCode.Logic.PopUps
 
         private void OnOpenNextLevelButtonClicked()
         {
-            // load next level
+            GameManager.carManager.ExitGame();
+            PopUpManager.HidePopUp(this);
+            PopUpManager.ShowPopUp<PopUpLevelsMenu>();
         }
 
         private void OnOpenReloadButtonClicked()
