@@ -21,13 +21,13 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Boss
         }
         protected override void AssignCollisionController()
         {
-            VehicleCollisionController = new TruckVehicleCollisionController();
-            VehicleCollisionController.Starter(this);
+            VehicleController.VehicleCollisionController = new TruckVehicleCollisionController();
+            VehicleController.VehicleCollisionController.Starter(this);
         }
 
         public override void DestinationReached()
         {
-            ((TruckVehicleCollisionController)VehicleCollisionController).ReleaseLoad();
+            ((TruckVehicleCollisionController)VehicleController.VehicleCollisionController).ReleaseLoad();
             base.DestinationReached();
         }
         public void OnSlappingCarHandAnimAction()
@@ -43,7 +43,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Boss
             TruckVehicleCollisionController.LoadedVehicleBases.
                 Add(new Tuple<Vector3, VehicleBase>(localScale,CurrentVehicle));
             
-            VehicleCollisionController.PlayFx(FxTypes.StarCarCrash, CurrentVehicle.transform);
+            VehicleController.VehicleCollisionController.PlayFx(FxTypes.StarCarCrash, CurrentVehicle.transform);
         }
         
         public void OnPickTheCarHandAnimAction()
@@ -62,7 +62,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Boss
         }
         
         private TruckVehicleCollisionController TruckVehicleCollisionController =>
-            (TruckVehicleCollisionController)VehicleCollisionController;
+            (TruckVehicleCollisionController)VehicleController.VehicleCollisionController;
 
         private VehicleBase CurrentVehicle
         {

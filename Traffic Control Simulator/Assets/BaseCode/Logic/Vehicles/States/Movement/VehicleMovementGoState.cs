@@ -51,7 +51,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         {
             if (!VehiclePathController.HasWaypoints()) return;
             if (VehiclePathController.IsAtFinalWaypoint()) return;
-            if (VehicleController.VehicleBase.VehicleCollisionController.CheckForCollision()) return;
+            if (VehicleController.VehicleBase.VehicleController.VehicleCollisionController.CheckForCollision()) return;
 
             AdjustSpeed();
 

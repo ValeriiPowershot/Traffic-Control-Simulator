@@ -63,7 +63,7 @@ namespace BaseCode.Logic
             _popUpGameMenu.soreText.text = $"{ConfigSo.ScoreMessage}{PlayerScore:F0}";
         }
 
-        public List<VehicleBase> VehicleBases() => _gameManager.carManager.CarSpawnServiceHandler.onBoardGameCars;
+        public List<VehicleBase> VehicleBases() => _gameManager.carManager.CarSpawnServiceHandler.GetCurrentWave().onBoardGameCars;
         public ConfigSo ConfigSo => GameManager.saveManager.configSo;
         private float ScoreCarUpdateTime => ConfigSo.scoreCarUpdateTime;
         private PlayerSo PlayerSo => GameManager.saveManager.playerSo;

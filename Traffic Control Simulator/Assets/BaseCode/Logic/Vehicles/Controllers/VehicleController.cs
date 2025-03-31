@@ -1,3 +1,4 @@
+using BaseCode.Logic.Vehicles.Controllers.Collision;
 using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
@@ -7,7 +8,9 @@ namespace BaseCode.Logic.Vehicles.Controllers
     public class VehicleController 
     {
         public Transform CarTransform => VehicleBase.transform;
+        
         public VehicleMovementStateController StateController { get; private set; }
+        public VehicleCollisionControllerBase VehicleCollisionController;
 
         public void Starter(BasicCar basicCar)
         {

@@ -8,14 +8,10 @@ namespace BaseCode.Logic.PopUps.Base
     {
         public virtual void OnStartShow()
         {
-            Debug.Log("OnStartShow " + GetType());
-            
         }
         
         public virtual void OnStartHidden()
         {
-            Debug.Log("OnStartHidden " + GetType());
-            
         }
 
         public virtual void OnStartDoTween()

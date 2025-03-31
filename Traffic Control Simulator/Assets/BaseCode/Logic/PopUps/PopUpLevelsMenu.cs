@@ -23,7 +23,6 @@ namespace BaseCode.Logic.PopUps
         public TextMeshProUGUI currentLevelText;
 
         public List<Transform> stars;
-        public int currentLevelIndex;
 
         private SceneIDData _scenes;
         
@@ -45,23 +44,23 @@ namespace BaseCode.Logic.PopUps
             });
             openNextLevelButton.onClick.AddListener(() =>
             {
-                if (currentLevelIndex >= _scenes.sceneNames.Count - 1) return;
+                if (CurrentLevelIndex >= _scenes.sceneNames.Count - 1) return;
                 
-                currentLevelIndex++;
+                CurrentLevelIndex++;
                 SetStarAmountUI();
             });
             openPreviousLevelButton.onClick.AddListener(() =>
             {
-                if (currentLevelIndex <= 0) return;
+                if (CurrentLevelIndex <= 0) return;
                 
-                currentLevelIndex--;
+                CurrentLevelIndex--;
                 SetStarAmountUI();
             });
         }
 
         private void LoadGame()
         {
-            Debug.Log("Loading game " + currentLevelIndex);
+            Debug.Log("Loading game " + CurrentLevelIndex);
         }
 
         private void OnOpenMainMenuButtonClicked()
@@ -81,11 +80,11 @@ namespace BaseCode.Logic.PopUps
 
         private void SetCurrentLevel()
         {
-            currentLevelIndex = 0;
+            CurrentLevelIndex = 0;
             for (int i = 0; i < _scenes.sceneNames.Count; i++)
             {
                 if (_scenes.sceneNames[i].IsUnLocked)
-                    currentLevelIndex = i;
+                    CurrentLevelIndex = i;
                 else
                     break;
             }
@@ -94,13 +93,13 @@ namespace BaseCode.Logic.PopUps
 
         private void SetStarAmountUI()
         {
-            int currentStarAmount = _scenes.sceneNames[currentLevelIndex].AmountOfStar;
+            int currentStarAmount = _scenes.sceneNames[CurrentLevelIndex].AmountOfStar;
             for (int i = 0; i < stars.Count; i++)
             {
                 stars[i].gameObject.SetActive(i < currentStarAmount);
             }
             
-            currentLevelText.text = (currentLevelIndex + 1).ToString();
+            currentLevelText.text = (CurrentLevelIndex + 1).ToString();
         }
 
         private void SetStarAmount()
@@ -122,6 +121,12 @@ namespace BaseCode.Logic.PopUps
             }
 
             return totalStar;
+        }
+
+        private int CurrentLevelIndex
+        {
+            get => CarManager.CarSpawnServiceHandler.CurrentLevelIndex;
+            set => CarManager.CarSpawnServiceHandler.CurrentLevelIndex = value;
         }
 
         private SceneLoadManager SceneLoadManager => GameManager.sceneLoadManager;

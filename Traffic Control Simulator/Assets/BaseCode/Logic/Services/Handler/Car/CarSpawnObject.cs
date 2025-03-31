@@ -76,7 +76,7 @@ namespace BaseCode.Logic.Services.Handler.Car
             _newCar = (VehicleBase)_carPool.InstantiateObject();
             _newCar.AssignNewPathContainer();
             _newCar.gameObject.SetActive(false);
-            CarSpawnServiceHandler.onBoardGameCars.Add(_newCar);
+            CarSpawnServiceHandler.GetCurrentWave().onBoardGameCars.Add(_newCar);
             
             _carDetector = _newCar.PathContainerService.GetCarDetector();
             _isCarWaiting = true;

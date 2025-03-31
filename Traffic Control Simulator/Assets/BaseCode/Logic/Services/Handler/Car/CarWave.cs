@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using BaseCode.Core.ObjectPool.CarPool;
+using BaseCode.Logic.Roads.RoadTool;
 using BaseCode.Logic.ScriptableObject;
+using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
 
 namespace BaseCode.Logic.Services.Handler.Car
@@ -10,12 +12,14 @@ namespace BaseCode.Logic.Services.Handler.Car
     public class CarWave
     {
         private CarManager _carManager;
-        public List<CarSpawnObject> carSpawnObjects = new();
-        public WaveRank waveRank = WaveRank.Easy;
-        
         private CarObjectPools _carObjectPools;
         public int currentIndex;
+        public WaveRank waveRank = WaveRank.Easy;
         
+        public List<CarSpawnObject> carSpawnObjects = new();
+        public List<VehicleBase> onBoardGameCars = new List<VehicleBase>();
+        public List<CarDetector> createdCarDetectors = new List<CarDetector>();
+
         public void Initialize(CarManager carManagerInScene,CarObjectPools carObjectPools)
         {
             _carManager = carManagerInScene;
@@ -47,8 +51,22 @@ namespace BaseCode.Logic.Services.Handler.Car
             {
                 carSpawnObject.ResetCarSpawnObject();
             }
+            
+            foreach (var carDetector in createdCarDetectors)
+                carDetector.ResetDetector();
+            ReleaseCars();
         }
-
+        public void ReleaseCars()
+        {
+            var sentToDestination = new List<VehicleBase>();
+            sentToDestination.AddRange(onBoardGameCars);
+            
+            foreach (var vehicleBase in sentToDestination)
+            {
+                vehicleBase.lostScore = true;
+                vehicleBase.GoState.VehiclePathController.SetPathToEndPosition();
+            }
+        }
         public bool IsCurrentIndexWaveFinished()
         {
             var result = currentIndex >= carSpawnObjects.Count; 

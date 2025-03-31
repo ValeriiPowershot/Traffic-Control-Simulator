@@ -16,8 +16,8 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
         private GameObject _newArrow;
         protected override void AssignCollisionController()
         {
-            VehicleCollisionController = new AmbulanceVehicleCollisionController();
-            VehicleCollisionController.Starter(this);
+            VehicleController.VehicleCollisionController = new AmbulanceVehicleCollisionController();
+            VehicleController.VehicleCollisionController.Starter(this);
         }
 
         public override void StartToMove()

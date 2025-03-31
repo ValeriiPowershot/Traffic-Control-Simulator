@@ -14,6 +14,7 @@ namespace BaseCode.Core.ObjectPool.CarPool
         
         public void AddCarToCarPool(ICarSpawnService carSpawnService, VehicleScriptableObject currentCar, int maxCarsCount)
         {
+            
             Pool.Add(currentCar, new CarPool(carSpawnService,currentCar,maxCarsCount));
         }
         

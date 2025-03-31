@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using BaseCode.Logic.Ways;
 using BaseCode.Logic.Services.Handler.Car;
@@ -40,7 +41,7 @@ namespace BaseCode.Logic
 
         public void ExitGame()
         {
-            carSpawnServiceHandler.ResetWave(); // car detector + lıghts clean
+            carSpawnServiceHandler.GetCurrentWave().ResetWave(); // car detector + lıghts clean
         }
 
         public void ExitWave()
@@ -57,7 +58,12 @@ namespace BaseCode.Logic
                 yield return null;
             }
         }
-        
+
+        public void OnDestroy()
+        {
+            carSpawnServiceHandler.CarObjectPools.Pool.Clear();
+        }
+
         public ScoringManager ScoringManager => GameManager.scoringManager;
         public CarSpawnServiceHandler CarSpawnServiceHandler => carSpawnServiceHandler;
     }

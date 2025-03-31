@@ -18,7 +18,6 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         public VehicleScriptableObject VehicleScriptableObject { get; private set; }
         
         public readonly VehicleController VehicleController = new();
-        public VehicleCollisionControllerBase VehicleCollisionController;
         
         public ICarLightService CarLightService { get; } = new CarLightServiceHandler();
         public IPathFindingService PathContainerService { get; } = new PathContainerService();
@@ -31,6 +30,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         public float successPoints;
 
         public IScoringObject ScoringObject;
+        
         public virtual void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             VehicleScriptableObject = currentCar;
@@ -47,8 +47,8 @@ namespace BaseCode.Logic.Vehicles.Vehicles
 
         protected virtual void AssignCollisionController()
         {
-            VehicleCollisionController = new VehicleCollisionControllerBase();
-            VehicleCollisionController.Starter(this);
+            VehicleController.VehicleCollisionController = new VehicleCollisionControllerBase();
+            VehicleController.VehicleCollisionController.Starter(this);
         }
 
         public virtual void AssignNewPathContainer()
@@ -59,32 +59,35 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         {
             Pool.DestroyObject(this);
             
-            CarManager.CarSpawnServiceHandler.RemoveThisAndCheckAllCarPoolMaxed(this);
+            CarManager.CarSpawnServiceHandler.OnCarReachedDestination(this);
             UpdateCarScore();
-
-            GoState.AssignNewSpeedValues();
-            AssignNewTimeSores();
+            AssignNewRandomValues();
         }
-
         private void UpdateCarScore()
         {
-            GetComponent<ScoreObjectCarBase>().OnReachedDestination(lostScore);
+            ScoringObject.OnReachedDestination(lostScore);
             lostScore = false;
+        }
+        private void AssignNewRandomValues()
+        {
+            GoState.AssignNewSpeedValues();
+            AssignNewTimeSores();
         }
         private void AssignNewTimeSores()
         {
             acceptableWaitingTime = VehicleScriptableObject.AcceptableWaitingTime;
             successPoints = VehicleScriptableObject.SuccessPoints;
-            // Debug.Log("Current Car time:" + acceptableWaitingTime + " point: " + successPoints);
         }
-        public CarManager CarManager => _carManager;
-        public VehicleMovementGoState GoState => VehicleController.StateController.GetState<VehicleMovementGoState>();
 
         public virtual void StartToMove()
         {
             gameObject.SetActive(true);
         }
+        
+        public bool IsCarReachedEnd() => lostScore;
         public void SetCarDiedOnCollision() => lostScore = true;
+        public CarManager CarManager => _carManager;
+        public VehicleMovementGoState GoState => VehicleController.StateController.GetState<VehicleMovementGoState>();
     }
 
     public enum LightState

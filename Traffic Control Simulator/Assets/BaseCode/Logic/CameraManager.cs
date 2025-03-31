@@ -37,5 +37,14 @@ namespace BaseCode.Logic
             if (Camera != null)
                 Camera.DOOrthoSize(cameraSizeOnGame, cameraSpeed);
         }
+
+        public void SetNewPosition(Transform currentLevelCameraPosition)
+        {
+            if (Camera != null)
+            {
+                Camera.transform.position = currentLevelCameraPosition.position; 
+                Camera.transform.rotation = currentLevelCameraPosition.rotation;
+            }
+        }
     }
 }

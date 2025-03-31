@@ -29,8 +29,11 @@ namespace BaseCode.Core.ObjectPool.Base {
       public void InitializeQueue(int capacity)
       {
          Capacity = capacity;
-
-         for (int i = 0; i < Capacity; i++)
+         AddToQueue(Capacity);
+      }
+      public void AddToQueue(int amount)
+      {
+         for (int i = 0; i < amount; i++)
             InsertObjectToQueue();
       }
 
@@ -87,6 +90,8 @@ namespace BaseCode.Core.ObjectPool.Base {
       public int GetDeActiveAmount() => Queue.Count;
       public int GetActiveAmount() => Capacity - GetDeActiveAmount();
       public GameObject GetPoolObjectPrefab() => _poolObjectPrefab;
+
+      public int GetPoolSize() => Queue.Count;
    }
 
 

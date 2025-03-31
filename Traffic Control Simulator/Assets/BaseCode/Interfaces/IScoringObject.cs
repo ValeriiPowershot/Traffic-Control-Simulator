@@ -7,5 +7,6 @@ namespace BaseCode.Interfaces
         public void Initialize(ScoringManager manager);
         public void Calculate(float deltaTime);
         public bool IsActive();
+        public void OnReachedDestination(bool isLostScore);
     }
 }
