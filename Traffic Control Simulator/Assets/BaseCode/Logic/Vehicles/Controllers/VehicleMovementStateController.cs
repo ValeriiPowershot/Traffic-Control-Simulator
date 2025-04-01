@@ -9,11 +9,9 @@ namespace BaseCode.Logic.Vehicles.Controllers
     {
         private readonly Dictionary<Type, IVehicleMovementState> _states = new Dictionary<Type, IVehicleMovementState>();
         private IVehicleMovementState _currentMovementMovementState;
-
         public VehicleMovementStateController(VehicleController vehicleController)
         {
             _states[typeof(VehicleMovementGoState)] = new VehicleMovementGoState(vehicleController);
-            _states[typeof(VehicleMovementSlowDownState)] = new VehicleMovementSlowDownState(vehicleController);
             _states[typeof(VehicleMovementStopState)] = new VehicleMovementStopState(vehicleController);
         }
         
@@ -35,11 +33,7 @@ namespace BaseCode.Logic.Vehicles.Controllers
 
         public T GetState<T>() where T : IVehicleMovementState =>
             (T)_states[typeof(T)];
-
-        public void InitializePath()
-        {
-            ((VehicleMovementGoState)_states[typeof(VehicleMovementGoState)]).InitializePath();
-        }
+        
         public bool IsOnState<T>() where T : IVehicleMovementState => _currentMovementMovementState is T;
 
         public IVehicleMovementState GetStateCurrentState() =>
@@ -48,5 +42,10 @@ namespace BaseCode.Logic.Vehicles.Controllers
         public Dictionary<Type, IVehicleMovementState> GetStatesDict() =>
             _states;
 
+        public void RestartVehicleMovementStateController()
+        {
+            GetState<VehicleMovementGoState>().AssignNewSpeedValues();
+            
+        }
     }
 }

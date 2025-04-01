@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using BaseCode.Logic.Entity;
+using BaseCode.Logic.Entity.Interfaces;
+using BaseCode.Logic.Entity.Npcs.Npc;
 using BaseCode.Logic.Lights.Services;
-using BaseCode.Logic.Npcs.Npc;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
@@ -53,7 +53,7 @@ namespace BaseCode.Logic.Lights.Handler.Abstracts
             if (!_controlledVehicles.Contains(vehicle)) return;
             
             _controlledVehicles.Remove(vehicle);
-            vehicle.CarLightService.ExitLightControl();
+            vehicle.VehicleController.VehicleLightController.ExitLightControl();
         }
         
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using BaseCode.Extensions.UI;
-using BaseCode.Logic.PopUps.Base;
+using BaseCode.Logic.Managers;
+using BaseCode.Logic.PopUps.PopUp_Base;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Utilities;
 using TMPro;
@@ -25,7 +26,6 @@ namespace BaseCode.Logic.PopUps
         public List<Transform> stars;
 
         private SceneIDData _scenes;
-        
         private void Start()
         {
             openMainMenuButton.onClick.AddListener(OnOpenMainMenuButtonClicked);
@@ -125,8 +125,8 @@ namespace BaseCode.Logic.PopUps
 
         private int CurrentLevelIndex
         {
-            get => CarManager.CarSpawnServiceHandler.CurrentLevelIndex;
-            set => CarManager.CarSpawnServiceHandler.CurrentLevelIndex = value;
+            get => CarManager.CarSpawnServiceHandler.CarWaveController.CurrentLevelIndex;
+            set => CarManager.CarSpawnServiceHandler.CarWaveController.CurrentLevelIndex = value;
         }
 
         private SceneLoadManager SceneLoadManager => GameManager.sceneLoadManager;

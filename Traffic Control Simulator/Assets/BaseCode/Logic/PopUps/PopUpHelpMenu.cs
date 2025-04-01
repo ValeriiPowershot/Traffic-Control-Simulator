@@ -1,5 +1,5 @@
 using BaseCode.Extensions.UI;
-using BaseCode.Logic.PopUps.Base;
+using BaseCode.Logic.PopUps.PopUp_Base;
 using UnityEngine;
 using UnityEngine.UI;
 

@@ -45,7 +45,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
                 hitVehicle.transform.parent = null;
                 hitVehicle.enabled = true;
                 hitVehicle.GetComponent<BoxCollider>().enabled = true;
-                hitVehicle.VehicleController.StateController.GetState<VehicleMovementGoState>().VehiclePathController
+                hitVehicle.VehicleController.VehicleStateController.GetState<VehicleMovementGoState>().VehiclePathController
                     .SetPathToEndPosition(loadedVehicleBase.Item1);
             }
             LoadedVehicleBases.Clear();

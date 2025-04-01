@@ -17,7 +17,9 @@ namespace BaseCode.Core
             }
 
             _instance = this as T;
-            DontDestroyOnLoad(gameObject);
+            
+            if(gameObject.transform.parent == null)
+                DontDestroyOnLoad(gameObject);
         }
     }
 }

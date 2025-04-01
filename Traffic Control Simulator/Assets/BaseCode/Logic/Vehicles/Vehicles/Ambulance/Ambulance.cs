@@ -14,7 +14,8 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
 
         private const float MinDistanceToSpawnArrow = 4; // this is tested value, looks nice :) (not like u)
         private GameObject _newArrow;
-        protected override void AssignCollisionController()
+
+        public override void AssignCollisionController()
         {
             VehicleController.VehicleCollisionController = new AmbulanceVehicleCollisionController();
             VehicleController.VehicleCollisionController.Starter(this);
@@ -33,7 +34,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
 
         private void ProcessPathSegments()
         {
-            var roadPoints = PathContainerService.GetPathContainer().roadPoints;
+            var roadPoints = VehicleController.VehiclePathController.PathPointController.PathContainer.GetPathContainer().roadPoints;
             float accumulatedDistance = 0f;
 
             _newArrow = new GameObject("Arrows");
@@ -80,9 +81,9 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
             return accumulatedDistance >= MinDistanceToSpawnArrow;
         }
 
-        public override void DestinationReached()
+        public override void DestinationReached( bool isDied = false)
         {
-            base.DestinationReached();
+            base.DestinationReached(isDied);
 
             foreach(var arr in _arrows)
             {
@@ -100,11 +101,9 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
             newArrow.gameObject.SetActive(false);
             newArrow.transform.localScale = Vector3.zero;
         }
-  
-
         private Transform GetIndex(int index)
         {
-            return PathContainerService.GetIndexWaypoint(index).point;
+            return VehicleController.VehiclePathController.PathPointController.PathContainer.GetIndexWaypoint(index).point;
         }
     }
 }

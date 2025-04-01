@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using BaseCode.Extensions.UI;
-using BaseCode.Logic.PopUps.Base;
+using BaseCode.Logic.PopUps.PopUp_Base;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Utilities;
 using TMPro;
@@ -36,7 +36,6 @@ namespace BaseCode.Logic.PopUps
         {
             GameManager.carManager.ExitGame();
             PopUpManager.HidePopUp(this);
-            PopUpManager.ShowPopUp<PopUpLevelsMenu>();
         }
     }
 }

@@ -1,7 +1,9 @@
 using System;
+using BaseCode.Extensions.UI;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Controllers;
 using BaseCode.Logic.Vehicles.Controllers.Collision;
+using BaseCode.Logic.Vehicles.Controllers.Path;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
 
@@ -9,12 +11,8 @@ namespace BaseCode.Logic.Vehicles.States.Movement
 {
     public class VehicleMovementGoState : IVehicleMovementState
     {
-        public VehicleScriptableObject CarData { get; }
-        
         public VehicleController VehicleController { get; set; }
         
-        public VehiclePathController VehiclePathController { get; set; }
-
         private float _currentSpeed;
         private float _defaultSpeed;
         private float _slowDownSpeed;
@@ -23,24 +21,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         public VehicleMovementGoState(VehicleController vehicleController)
         {
             VehicleController = vehicleController;
-            CarData = VehicleController.VehicleBase.VehicleScriptableObject;
-            VehiclePathController = new VehiclePathController(this);
-
             AssignNewSpeedValues();
-        }
-
-        public void AssignNewSpeedValues()
-        {
-            _defaultSpeed = CarData.DefaultSpeed;
-            _slowDownSpeed = CarData.SlowdownSpeed;
-            _accelerationSpeed = CarData.AccelerationSpeed;
-
-            _currentSpeed = _defaultSpeed;
-        }
-        
-        public void InitializePath()
-        {
-            VehiclePathController.InitializePath();
         }
 
         public void MovementEnter()
@@ -49,27 +30,30 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         
         public void MovementUpdate() 
         {
-            if (!VehiclePathController.HasWaypoints()) return;
-            if (VehiclePathController.IsAtFinalWaypoint()) return;
-            if (VehicleController.VehicleBase.VehicleController.VehicleCollisionController.CheckForCollision()) return;
+            if (!PathPointController.HasWaypoints()) return;
+            if (PathPointController.IsAtFinalWaypoint()) return;
+            if (VehicleCollisionController.CheckForCollision()) return;
 
             AdjustSpeed();
-
             MoveTowardsWaypoint();
             RotateTowardsWaypoint();
 
-            if (VehiclePathController.IsCloseToWaypoint())
-                VehiclePathController.ProceedToNextWaypoint();
+            SetToNextPoint();
         }
 
         public void MovementExit()
         {
             
         }
+        private void SetToNextPoint()
+        {
+            if (PathPointController.IsCloseToWaypoint(VehicleController.VehicleBase.transform.position))
+                VehiclePathController.ProceedToNextWaypoint();
+        }
         
         private void AdjustSpeed()
         {
-            RoadPoint roadPoint = VehiclePathController.GetCurrentWaypoint();
+            RoadPoint roadPoint = PathPointController.GetCurrentWaypoint();
 
             _currentSpeed = roadPoint.roadPointType switch
             {
@@ -81,7 +65,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
 
         private void MoveTowardsWaypoint()
         {
-            Transform targetWaypoint = VehiclePathController.GetCurrentWaypoint().point;
+            Transform targetWaypoint = PathPointController.GetCurrentWaypoint().point;
             CarTransform.position = Vector3.MoveTowards(
                 CarTransform.position, 
                 targetWaypoint.position, 
@@ -90,7 +74,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         }
         private void RotateTowardsWaypoint()
         {
-            Transform targetWaypoint = VehiclePathController.GetCurrentWaypoint().point;
+            Transform targetWaypoint = PathPointController.GetCurrentWaypoint().point;
 
             Vector3 direction = (targetWaypoint.position - CarTransform.position).normalized;
 
@@ -103,7 +87,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
                     CarData.rotationSpeed * Time.deltaTime
                 );
 
-                Vector3 arrowForward = (VehiclePathController.GetEndPoint().position - 
+                Vector3 arrowForward = (PathPointController.GetEndPoint().position - 
                                         VehicleController.VehicleBase.ArrowIndicatorEndPoint.position).normalized;
                 Quaternion arrowRotation = Quaternion.LookRotation(arrowForward);
         
@@ -112,9 +96,27 @@ namespace BaseCode.Logic.Vehicles.States.Movement
                 VehicleController.VehicleBase.ArrowIndicatorEndPoint.rotation = arrowRotation;
             }
         }
+        public void AssignNewSpeedValues()
+        {
+            _defaultSpeed = CarData.DefaultSpeed;
+            _slowDownSpeed = CarData.SlowdownSpeed;
+            _accelerationSpeed = CarData.AccelerationSpeed;
 
+            _currentSpeed = _defaultSpeed;
+            
+            Debug.Log("Assigned New Values");
+        }
+        
         public Transform CarTransform => VehicleController.VehicleBase.transform;
+        public VehiclePathController VehiclePathController
+        {
+            get => VehicleController.VehiclePathController;
+            set => VehicleController.VehiclePathController = value;
+        }
+        private VehicleScriptableObject CarData => VehicleController.VehicleBase.VehicleScriptableObject;
+        public PathPointsContainerController PathPointController => VehiclePathController.PathPointController;
 
+        private VehicleCollisionControllerBase VehicleCollisionController => VehicleController.VehicleCollisionController;
     }
     
     [Serializable]

@@ -1,5 +1,5 @@
+using BaseCode.Logic.Entity.Npcs.Npc;
 using BaseCode.Logic.Lights.Services;
-using BaseCode.Logic.Npcs.Npc;
 using LightState = BaseCode.Logic.Vehicles.Vehicles.LightState;
 using VehicleBase = BaseCode.Logic.Vehicles.Vehicles.VehicleBase;
 
@@ -34,7 +34,7 @@ namespace BaseCode.Logic.Lights.Handler.Abstracts
         
         public void NotifyVehicle(VehicleBase vehicle, LightState state)
         {
-            vehicle.CarLightService.PassLightState(state);
+            vehicle.VehicleController.VehicleLightController.PassLightState(state);
         }
         
     }

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using BaseCode.Logic.Entity.Npcs.Npc;
 using BaseCode.Logic.Lights;
 using BaseCode.Logic.Lights.Handler.Abstracts;
-using BaseCode.Logic.Npcs.Npc;
-using BaseCode.Logic.PathData;
+using BaseCode.Logic.Roads.Editor;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEditor;
@@ -112,7 +112,7 @@ namespace BaseCode.Logic.Roads
         {
             if (other.TryGetComponent<VehicleBase>(out var vehicle))
             {
-                vehicle.CarLightService.ExitIntersection();
+                vehicle.VehicleController.VehicleLightController.ExitIntersection();
             }
         }
 

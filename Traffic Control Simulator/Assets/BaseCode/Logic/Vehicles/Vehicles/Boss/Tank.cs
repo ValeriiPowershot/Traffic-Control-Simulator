@@ -6,7 +6,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Boss
 {
     public class Tank : AggressiveCar
     {
-        protected override void AssignCollisionController()
+        public override void AssignCollisionController()
         {
             VehicleController.VehicleCollisionController = new TankVehicleCollisionController();
             VehicleController.VehicleCollisionController.Starter(this);

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using BaseCode.Extensions.UI;
-using BaseCode.Logic.PopUps.Base;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Utilities;
 using TMPro;

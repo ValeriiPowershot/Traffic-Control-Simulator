@@ -1,4 +1,6 @@
+using BaseCode.Logic.Managers;
 using BaseCode.Logic.ScriptableObject;
+using BaseCode.Logic.Vehicles.Controllers.Lights;
 using BaseCode.Logic.Vehicles.States.Movement;
 using UnityEngine;
 
@@ -29,7 +31,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         {
             if (VechicleTurnLights != null)
             {
-                if (NeedToTurn)
+                if (VehicleController.VehicleLightController.NeedToTurn)
                 {
                     float rotationY = ArrowIndicatorEndPoint.localRotation.eulerAngles.y;
                 
@@ -53,11 +55,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         }
         public override void AssignNewPathContainer()
         {
-            PathContainerService.SetNewPathContainerRandomly();
-
-            transform.SetPositionAndRotation(PathContainerService.GetFirstPosition(), Quaternion.identity);
-
-            VehicleController.StateController.InitializePath();
+            VehicleController.VehiclePathController.InitializeNewPath();
         }
 
       

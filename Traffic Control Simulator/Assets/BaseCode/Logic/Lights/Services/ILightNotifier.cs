@@ -1,4 +1,4 @@
-using BaseCode.Logic.Npcs.Npc;
+using BaseCode.Logic.Entity.Npcs.Npc;
 using LightState = BaseCode.Logic.Vehicles.Vehicles.LightState;
 using VehicleBase = BaseCode.Logic.Vehicles.Vehicles.VehicleBase;
 
