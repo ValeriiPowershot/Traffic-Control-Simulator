@@ -60,7 +60,6 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             {
                 OnGameOver(hitVehicle);
                 return true;
-             
             }
             
             VehicleController.SetState<VehicleMovementStopState>();
@@ -72,8 +71,14 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             Debug.Log("Game Is Over");
             PlayFx(FxTypes.Angry);  
             PlayFx(FxTypes.Smoke, VehicleController.VehicleBase.transform, new Vector3(2.7f,2.7f,2.7f));
-            PressCar(hitVehicle);
+            CarCrashed();
         }
+
+        protected virtual void CarCrashed()
+        {
+            BasicCar.VehicleController.StateController.SetState<VehicleMovementStopState>();
+        }
+        
         protected virtual void PressCar(VehicleBase hitVehicle)
         {
             Debug.Log("Press Effect");

@@ -10,15 +10,18 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         private readonly float _rayDistance = 0.2f; // Adjust distance as needed
         private readonly LayerMask _carLayer = LayerMask.GetMask("Car"); // Ensure cars are on a "Car" layer
         
-        private bool _isWaiting;
+        public bool IsWaiting;
+        
         public VehicleController VehicleController { get; set; }
+        
         public VehicleMovementStopState(VehicleController vehicleController)
         {
             VehicleController = vehicleController;
         }
+        
         public void MovementEnter()
         {
-            _isWaiting = false;
+            IsWaiting = false;
         }
 
         public void MovementUpdate() 
@@ -32,25 +35,23 @@ namespace BaseCode.Logic.Vehicles.States.Movement
             else
             {
                 Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.green);
-                if (_isWaiting == false)
+                if (IsWaiting == false)
                 {
-                    _isWaiting = true;
+                    IsWaiting = true;
                     VehicleController.VehicleBase.StartCoroutine(WaitForSeconds());
                 }
             }
         }
-        
+
         private IEnumerator WaitForSeconds()
         {
             yield return new WaitForSeconds(1f);
-            _isWaiting = false;
+            IsWaiting = false;
             VehicleController.SetState<VehicleMovementGoState>();
         }
 
         public void MovementExit()
         {
         }
-  
-         
     }
 }

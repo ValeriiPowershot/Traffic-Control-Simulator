@@ -13,6 +13,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         public VechicleTurnLights VechicleTurnLights;
 
         private bool _needToCheck;
+        
         public override void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             base.Starter(manager, currentCar);
@@ -53,8 +54,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
             }
             
         }
-
-
+        
         public override void AssignNewPathContainer()
         {
             PathContainerService.SetNewPathContainerRandomly();
@@ -63,7 +63,5 @@ namespace BaseCode.Logic.Vehicles.Vehicles
 
             VehicleController.StateController.InitializePath();
         }
-
-      
     }
 }

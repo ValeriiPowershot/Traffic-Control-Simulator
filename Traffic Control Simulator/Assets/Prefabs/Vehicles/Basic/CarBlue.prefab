@@ -181,6 +181,7 @@ MonoBehaviour:
     indicatorOfScore: {fileID: 3585583666028766880}
     good: {r: 0.16470589, g: 1, b: 0, a: 1}
     bad: {r: 0.9607843, g: 0, b: 0, a: 1}
+    neutral: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!114 &7095591492009151777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -574,6 +575,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4838381409441117470}
     m_Modifications:
+    - target: {fileID: 2382360861835592036, guid: 13cc7533629db768e8eef89574a93bbb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5410976825837143754, guid: 13cc7533629db768e8eef89574a93bbb,
         type: 3}
       propertyPath: m_SortingOrder
@@ -698,6 +704,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ReactionIndicator
+      objectReference: {fileID: 0}
+    - target: {fileID: 7564343387744799075, guid: 13cc7533629db768e8eef89574a93bbb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8094465824878471206, guid: 13cc7533629db768e8eef89574a93bbb,
         type: 3}
