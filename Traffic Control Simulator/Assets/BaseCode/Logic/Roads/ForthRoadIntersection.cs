@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using BaseCode.Logic.Lights.Handler.Abstracts;
-using BaseCode.Logic.Npcs.Npc;
 using BaseCode.Logic.ScriptableObject;
 using UnityEngine;
 

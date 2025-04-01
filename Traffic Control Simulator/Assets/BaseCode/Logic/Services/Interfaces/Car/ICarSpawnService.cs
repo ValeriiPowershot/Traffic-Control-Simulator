@@ -1,4 +1,6 @@
-namespace BaseCode.Logic.Services.Interfaces.Car
+using BaseCode.Logic.Managers;
+
+namespace BaseCode.Logic.Services.InterfaceHandler.Car
 {
     public interface ICarSpawnService
     {

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using BaseCode.Logic.Npcs.Npc;
-using BaseCode.Logic.PathData;
+using BaseCode.Logic.Entity.Npcs.Npc;
 using BaseCode.Logic.Roads;
 using BaseCode.Logic.Ways;
 using UnityEditor;

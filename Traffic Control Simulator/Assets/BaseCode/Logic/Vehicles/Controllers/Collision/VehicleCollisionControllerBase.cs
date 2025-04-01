@@ -1,6 +1,10 @@
 using System.Collections;
+using BaseCode.Extensions;
+using BaseCode.Extensions.UI;
 using BaseCode.Logic.Lights;
+using BaseCode.Logic.Managers;
 using BaseCode.Logic.ScriptableObject;
+using BaseCode.Logic.Vehicles.Controllers.Lights;
 using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Vehicles.Vehicles;
 using DG.Tweening;
@@ -15,15 +19,16 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
         private float _rayDistance;
         private LayerMask _stopLayer = 0;
         
+        public int spawnIndex;
         public void Starter(VehicleBase vehicleBase)
         {
             VehicleController = vehicleBase.VehicleController;
             
             _stopLayer += 1 << 7; //add car layer
             _stopLayer += 1 << 10; //add stop line layer
+            
             _rayDistance = vehicleBase.VehicleScriptableObject.rayLenght;
         }
-
         public bool CheckForCollision()
         {
             Ray ray = new Ray(BasicCar.RayStartPoint.position, VehicleController.CarTransform.forward);
@@ -60,7 +65,6 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             {
                 OnGameOver(hitVehicle);
                 return true;
-             
             }
             
             VehicleController.SetState<VehicleMovementStopState>();
@@ -72,29 +76,27 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             Debug.Log("Game Is Over");
             PlayFx(FxTypes.Angry);  
             PlayFx(FxTypes.Smoke, VehicleController.VehicleBase.transform, new Vector3(2.7f,2.7f,2.7f));
+            
             PressCar(hitVehicle);
         }
         protected virtual void PressCar(VehicleBase hitVehicle)
         {
-            Debug.Log("Press Effect");
-            DisableVehicle(hitVehicle);
+            hitVehicle.DisableVehicle();
             BasicCar.CarManager.StartCoroutine(PressEffect(hitVehicle));
         }
 
-        private IEnumerator PressEffect(VehicleBase hitVehicle)
+        private IEnumerator PressEffect(VehicleBase hitVehicle) // this should change!
         {
             Vector3 originalScale = hitVehicle.transform.localScale;
             Vector3 originalPosition = hitVehicle.transform.position;
 
-            Vector3 pressedScale = new Vector3(originalScale.x, originalScale.y * 0.1f, originalScale.z);
-
             PlayFx(FxTypes.StarCarCrash, hitVehicle.transform, new Vector3(10,10,10));
             GameManager.cameraManager.CameraShake();
-            
-            hitVehicle.transform.DOScaleY(pressedScale.y, 0.5f).SetEase(Ease.OutQuad);
+
+            hitVehicle.transform.PressedEffect(0.1f);
 
             yield return new WaitForSeconds(1f);
-
+            
             hitVehicle.transform.DOMoveY(originalPosition.y - 5f, 1f).SetEase(Ease.OutQuad);
     
             yield return new WaitForSeconds(1f);
@@ -102,48 +104,35 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             hitVehicle.transform.position = originalPosition;
             hitVehicle.transform.localScale = originalScale;
 
-            EnableVehicle(hitVehicle);
-            hitVehicle.VehicleController.StateController.GetState<VehicleMovementGoState>()
-                .VehiclePathController.SetPathToEndPosition(originalScale);
-            hitVehicle.VehicleController.VehicleBase.SetCarDiedOnCollision();
+            hitVehicle.EnableVehicle();
+
+            hitVehicle.DestinationReached(true);
         }
         
         protected virtual bool IsItRedLight() =>
-            BasicCar.CarLightService.CarLightState == LightState.Red;
+            VehicleLightController.CarLightState == LightState.Red;
 
         protected bool AreTheyFromAnotherSpawner(VehicleBase hitVehicle) =>
-            hitVehicle.SpawnIndex != BasicCar.SpawnIndex;
+            hitVehicle.VehicleController.VehicleCollisionController.spawnIndex != spawnIndex;
 
         protected bool AreTheyUsingDifferentPath(VehicleBase hitVehicle)
         {
-            return hitVehicle.CarLightService.LightPlaceSave !=
-                   BasicCar.CarLightService.LightPlaceSave;
+            return hitVehicle.VehicleController.VehicleLightController.LightPlaceSave !=
+                   VehicleLightController.LightPlaceSave;
         }
 
         protected bool AreTheyInIntersection(VehicleBase hitVehicle)
         {
-            return hitVehicle.CarLightService.LightPlaceSave != LightPlace.None &&
-                   BasicCar.CarLightService.LightPlaceSave != LightPlace.None;
-        }
-
-        private void DisableVehicle(VehicleBase vehicle)
-        {
-            vehicle.GetComponent<BoxCollider>().enabled = false;
-            vehicle.enabled = false;
-        }
-
-        private void EnableVehicle(VehicleBase vehicle)
-        {
-            vehicle.enabled = true;
-            vehicle.GetComponent<BoxCollider>().enabled = true;
+            return hitVehicle.VehicleController.VehicleLightController.LightPlaceSave != LightPlace.None &&
+                   VehicleLightController.LightPlaceSave != LightPlace.None;
         }
         protected void PlayFx(FxTypes fxTypes) =>
             PlayFx(fxTypes, BasicCar.emojiFxSpawnPoint, new Vector3(5,5,5)); // sorry for static values :D
 
         public void PlayFx(FxTypes fxTypes, Transform spawnPoint, Vector3 localScale = default) =>
             GameManager.fxManager.PlayFx(fxTypes, spawnPoint, localScale);
-
         protected BasicCar BasicCar => VehicleController.VehicleBase;
+        protected VehicleLightController VehicleLightController => BasicCar.VehicleController.VehicleLightController;
         protected GameManager GameManager => BasicCar.CarManager.GameManager;
     }
 }

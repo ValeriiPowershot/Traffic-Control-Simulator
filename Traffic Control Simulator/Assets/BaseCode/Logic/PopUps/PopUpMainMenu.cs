@@ -1,7 +1,8 @@
 using System;
 using BaseCode.Extensions;
 using BaseCode.Extensions.UI;
-using BaseCode.Logic.PopUps.Base;
+using BaseCode.Logic.Managers;
+using BaseCode.Logic.PopUps.PopUp_Base;
 using BaseCode.Logic.ScriptableObject;
 using UnityEngine;
 using UnityEngine.SceneManagement;

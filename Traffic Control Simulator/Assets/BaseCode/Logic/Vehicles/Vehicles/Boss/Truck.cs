@@ -1,4 +1,5 @@
 using System;
+using BaseCode.Logic.Managers;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Controllers;
 using BaseCode.Logic.Vehicles.Controllers.Collision;
@@ -16,19 +17,20 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Boss
         {
             base.Starter(manager, currentCar);
             
-            var dict = VehicleController.StateController.GetStatesDict();
+            var dict = VehicleController.VehicleStateController.GetStatesDict();
             dict[typeof(VehicleMovementTruckStopState)] = new VehicleMovementTruckStopState(VehicleController);
         }
-        protected override void AssignCollisionController()
+
+        public override void AssignCollisionController()
         {
             VehicleController.VehicleCollisionController = new TruckVehicleCollisionController();
             VehicleController.VehicleCollisionController.Starter(this);
         }
 
-        public override void DestinationReached()
+        public override void DestinationReached( bool isDied = false)
         {
             ((TruckVehicleCollisionController)VehicleController.VehicleCollisionController).ReleaseLoad();
-            base.DestinationReached();
+            base.DestinationReached(isDied);
         }
         public void OnSlappingCarHandAnimAction()
         {

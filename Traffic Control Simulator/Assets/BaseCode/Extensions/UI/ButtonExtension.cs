@@ -1,5 +1,6 @@
 using System;
 using BaseCode.Logic;
+using BaseCode.Logic.Managers;
 using BaseCode.Logic.ScriptableObject;
 using UnityEngine;
 using UnityEngine.Events;

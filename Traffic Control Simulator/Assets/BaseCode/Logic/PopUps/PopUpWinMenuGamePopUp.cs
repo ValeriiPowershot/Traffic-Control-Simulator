@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using BaseCode.Extensions;
 using BaseCode.Extensions.UI;
-using BaseCode.Logic.PopUps.Base;
+using BaseCode.Logic.PopUps.PopUp_Base;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Utilities;
 using TMPro;
@@ -36,6 +37,7 @@ namespace BaseCode.Logic.PopUps
         protected virtual void SetStars()
         {
             int numberOfStars = 3;
+
             
             stars.SequenceOpenerSetActive(amount:numberOfStars);
 
@@ -43,6 +45,12 @@ namespace BaseCode.Logic.PopUps
             combo.text = 1.ToString();
             coin.text = 1.ToString();
         }
+
+        public override void OnStartDoTween()
+        {
+            stars.SetLocalScales(Vector3.zero);
+            base.OnStartDoTween();
+        }   
 
         private void OnOpenNextLevelButtonClicked()
         {

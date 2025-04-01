@@ -1,5 +1,5 @@
 using BaseCode.Extensions.UI;
-using BaseCode.Logic.PopUps.Base;
+using BaseCode.Logic.PopUps.PopUp_Base;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +13,7 @@ namespace BaseCode.Logic.PopUps
         private void Start()
         {
             cancelButton.onClick.AddListener(ResumeGame);
-            // okButton.onClick.AddListener(ExitGame);
+            okButton.onClick.AddListener(ExitGame);
         }
         private void ResumeGame()
         {
@@ -21,7 +21,7 @@ namespace BaseCode.Logic.PopUps
         }
         private void ExitGame()
         {
-            GameManager.ExitGame();
+            
         }
     }
 }
