@@ -5,6 +5,7 @@ using BaseCode.Logic.Managers;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Controllers.Wave;
 using BaseCode.Logic.Vehicles.Vehicles;
+using BaseCode.Logic.Ways;
 
 namespace BaseCode.Logic.Services.InterfaceHandler.Car
 {
@@ -36,6 +37,20 @@ namespace BaseCode.Logic.Services.InterfaceHandler.Car
         public void OnCarReachedDestination(VehicleBase vehicleBase)
         {
             CarWaveController.OnCarReachedDestination(vehicleBase);
+        }
+
+        public List<WaypointContainer> GetCurrentContainerList()
+        {
+            int currentIndex = CarManager.CarSpawnServiceHandler.CarWaveController.CurrentLevelIndex;
+            return GetContainerListByIndex(currentIndex);
+        }
+        public List<WaypointContainer> GetContainerListByIndex(int ind)
+        {
+            return CarManager.allWaysContainer.GetWayGroupByIndex(ind);
+        }
+        public int GetLevelIndex(CarLevels find)
+        {
+            return carLevels.IndexOf(find);
         }
     }
  

@@ -30,22 +30,22 @@ namespace BaseCode.Logic.Managers
         {
             Debug.Log("Start New Game!");
             ExitGame();
-            
-            if(_startLoadingUpdateSpawning != null)
-                StopCoroutine(_startLoadingUpdateSpawning);
-            
             _startLoadingUpdateSpawning = StartCoroutine(StartLoadingUpdateSpawning());
         }
 
         public void ExitGame()
         {
+            ExitWave();
+            
             foreach (var carLevel in carSpawnServiceHandler.carLevels)
                 carLevel.ResetLevel();
         }
 
         public void ExitWave()
         {
-            StopCoroutine(_startLoadingUpdateSpawning);
+            if(_startLoadingUpdateSpawning != null)
+                StopCoroutine(_startLoadingUpdateSpawning);
+            
             _startLoadingUpdateSpawning = null;
         }
 

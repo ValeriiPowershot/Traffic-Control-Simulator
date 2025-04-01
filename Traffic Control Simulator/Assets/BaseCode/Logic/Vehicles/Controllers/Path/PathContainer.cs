@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using BaseCode.Logic.Managers;
 using BaseCode.Logic.Roads.RoadTool;
 using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Vehicles.Vehicles;
@@ -10,12 +12,12 @@ namespace BaseCode.Logic.Vehicles.Controllers.Path
 {
     public class PathContainer
     {
-        private AllWaysContainer _allWaysContainer;
         private WaypointContainer _waypointContainer;
+        private readonly CarManager _carManager;
 
         public PathContainer(VehicleBase vehicleBase)
         {
-           _allWaysContainer = vehicleBase.CarManager.allWaysContainer;
+            _carManager = vehicleBase.CarManager;
         }
 
         public void SetNewPathContainerRandomly()
@@ -25,13 +27,13 @@ namespace BaseCode.Logic.Vehicles.Controllers.Path
         
         public WaypointContainer GetPathContainer(int pathIndex)
         {
-            if (pathIndex < 0 || pathIndex >= _allWaysContainer.allWays.Length)
+            if (pathIndex < 0 || pathIndex >= GetContainerList().Count)
             {
                 Debug.Log("No Path Found!");
                 return null;
             }
 
-            return _allWaysContainer.allWays[pathIndex];
+            return GetContainerList()[pathIndex];
        
         }
         public WaypointContainer GetPathContainer()
@@ -46,7 +48,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Path
 
         public WaypointContainer GetPathRandom()
         {
-            return GetPathContainer(Random.Range(0, _allWaysContainer.allWays.Length));
+            return GetPathContainer(Random.Range(0, GetContainerList().Count));
         }
 
         public RoadPoint GetIndexWaypoint(int i)
@@ -57,6 +59,12 @@ namespace BaseCode.Logic.Vehicles.Controllers.Path
         public CarDetector GetCarDetector()
         {
             return GetIndexWaypoint(0).point.GetChild(0).GetComponent<CarDetector>();
+        }
+
+        public List<WaypointContainer> GetContainerList()
+        {
+            int currentIndex = _carManager.CarSpawnServiceHandler.CarWaveController.CurrentLevelIndex;
+            return _carManager.allWaysContainer.GetWayGroupByIndex(currentIndex);
         }
     }
 }

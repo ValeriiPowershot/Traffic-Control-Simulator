@@ -4,6 +4,7 @@ using BaseCode.Logic.Managers;
 using BaseCode.Logic.Roads.RoadTool;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Controllers.Path;
+using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Vehicles.Vehicles;
 using BaseCode.Utilities;
 using UnityEngine;
@@ -78,6 +79,7 @@ namespace BaseCode.Logic.Services.InterfaceHandler.Car
             
             _newCar = (VehicleBase)_carPool.InstantiateObject();
             _newCar.AssignNewPathContainer();
+            _newCar.VehicleController.VehicleStateController.SetState<VehicleMovementGoState>();
             _newCar.gameObject.SetActive(false);
             CarSpawnServiceHandler.CarWaveController.GetCurrentWave().onBoardGameCars.Add(_newCar);
             

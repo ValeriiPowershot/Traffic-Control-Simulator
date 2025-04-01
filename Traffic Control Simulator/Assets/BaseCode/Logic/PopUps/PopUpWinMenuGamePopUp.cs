@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Globalization;
 using BaseCode.Extensions;
 using BaseCode.Extensions.UI;
+using BaseCode.Logic.Managers;
 using BaseCode.Logic.PopUps.PopUp_Base;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Utilities;
@@ -38,12 +40,8 @@ namespace BaseCode.Logic.PopUps
         {
             int numberOfStars = 3;
 
-            
             stars.SequenceOpenerSetActive(amount:numberOfStars);
-
-            score.text = 1.ToString();
-            combo.text = 1.ToString();
-            coin.text = 1.ToString();
+            score.AnimateScore(ScoringManager.PlayerScore, 1f, this);            
         }
 
         public override void OnStartDoTween()
@@ -68,5 +66,7 @@ namespace BaseCode.Logic.PopUps
         {
             // load main menu
         }
+
+        public ScoringManager ScoringManager => GameManager.scoringManager;
     }
 }

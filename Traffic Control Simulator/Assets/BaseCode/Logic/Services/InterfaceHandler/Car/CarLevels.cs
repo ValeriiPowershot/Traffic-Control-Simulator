@@ -32,7 +32,7 @@ namespace BaseCode.Logic.Services.InterfaceHandler.Car
         public void InitializeLevel(CarManager carManager)
         {
             _carManager = carManager;
-            _carObjectPools = _carManager.CarSpawnServiceHandler.CarObjectPools;
+            _carObjectPools = CarSpawnServiceHandler.CarObjectPools;
             
             InitializePools();
             InitializeWave();
@@ -67,15 +67,16 @@ namespace BaseCode.Logic.Services.InterfaceHandler.Car
             Dictionary<VehicleScriptableObject, int> setOfCurrentWaveSo = GetCurrentSetsWithCounts();
             
             foreach (KeyValuePair<VehicleScriptableObject, int> uniqueVehicleSo in setOfCurrentWaveSo) 
-                _carObjectPools.AddCarToCarPool(_carManager.CarSpawnServiceHandler, uniqueVehicleSo.Key, uniqueVehicleSo.Value);
+                _carObjectPools.AddCarToCarPool(CarSpawnServiceHandler, uniqueVehicleSo.Key, uniqueVehicleSo.Value);
         }
 
-        private void SpawnRoadDetectors()
+        public void SpawnRoadDetectors()
         {
-            foreach (WaypointContainer container in _carManager.allWaysContainer.allWays)
+            int currentLevelIndex = CarSpawnServiceHandler.GetLevelIndex(this);
+            foreach (WaypointContainer container in CarSpawnServiceHandler.GetContainerListByIndex(currentLevelIndex))
             {
                 Transform firstElement = container.roadPoints[0].point.transform;
-                CarDetector carDetectorObject =  Object.Instantiate(_carManager.allWaysContainer.carDetectorPrefab, firstElement.position, firstElement.rotation, firstElement);
+                CarDetector carDetectorObject =  Object.Instantiate(AllWaysContainer.carDetectorPrefab, firstElement.position, firstElement.rotation, firstElement);
                 GetCurrentWave().createdCarDetectors.Add(carDetectorObject);
                 
                 carDetectorObject.carDetectorSpawnIndex = _spawnedCarIndex;
@@ -121,5 +122,9 @@ namespace BaseCode.Logic.Services.InterfaceHandler.Car
         {
             return waves[currentWaveIndex];
         }
+
+        private AllWaysContainer AllWaysContainer => _carManager.allWaysContainer;
+        public CarSpawnServiceHandler CarSpawnServiceHandler => _carManager.CarSpawnServiceHandler;
+
     }
 }

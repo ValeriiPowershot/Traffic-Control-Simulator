@@ -7,6 +7,7 @@ using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Roads
 {
@@ -25,6 +26,8 @@ namespace BaseCode.Logic.Roads
 
         // lights
         public List<BasicLight> basicLights;
+
+        public List<MeshRenderer> meshRayRoads = new List<MeshRenderer>();
         
         public override void ConnectPath(RoadBase nextBase)
         {
@@ -202,6 +205,14 @@ namespace BaseCode.Logic.Roads
         protected override void DrawArrowDirection()
         {
             
+        }
+
+        public void ToggleMeshRayRoad()
+        {
+            foreach (var meshRenderer in meshRayRoads)
+            {
+                meshRenderer.enabled = !meshRenderer.enabled;
+            }
         }
     }
 }

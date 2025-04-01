@@ -30,7 +30,12 @@ namespace BaseCode.Logic.ScriptableObject
             Debug.Log("Scene Not Found!");
             return null;
         }
-        
+
+        public void UnlockScene(int nextLevelIndex)
+        {
+            var sceneId = GetScenesFromId(SceneID.Levels);
+            sceneId.sceneNames[nextLevelIndex].IsUnLocked = true;
+        }
     }
     
     [System.Serializable] // Make the inner class serializable

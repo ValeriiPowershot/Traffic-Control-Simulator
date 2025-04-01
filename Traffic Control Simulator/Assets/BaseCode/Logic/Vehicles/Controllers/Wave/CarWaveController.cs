@@ -42,7 +42,10 @@ namespace BaseCode.Logic.Vehicles.Controllers.Wave
         public void CheckForEndGame() => CarManager.StartCoroutine(IsLastWave() ? 
                 CarWaveUIController.ShowEndGamePopup() :
                 CarWaveUIController.ShowWavePopup());
-
+        public void OpenLockOfCurrentLevel()
+        {
+            CarManager.GameManager.saveManager.sceneSo.UnlockScene(CurrentLevelIndex);
+        }
         private bool IsLastWave() => GetCurrentLevel().currentWaveIndex >= GetCurrentLevel().waves.Count - 1;
         public CarLevels GetCurrentLevel() =>CarLevels[CurrentLevelIndex];
         public CarWave GetCurrentWave() => GetCurrentLevel().GetCurrentWave();
@@ -60,6 +63,6 @@ namespace BaseCode.Logic.Vehicles.Controllers.Wave
         public CarWaveUIController CarWaveUIController => _carSpawnServiceHandler.CarWaveUIController;
         public List<CarLevels> CarLevels => _carSpawnServiceHandler.carLevels;
 
-        
+
     }
 }

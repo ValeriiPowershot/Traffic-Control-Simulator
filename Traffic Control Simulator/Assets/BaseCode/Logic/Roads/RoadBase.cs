@@ -160,9 +160,11 @@ namespace BaseCode.Logic.Roads
             boxCollider.enabled = false;
 
             Ray ray = new Ray(onLeftPathPoint.position, onLeftPathPoint.forward);
-            
-            if (Physics.Raycast(ray, out var hit, pointDistance, pointMask)) 
+
+            if (Physics.Raycast(ray, out var hit, pointDistance, pointMask))
                 nextBase.startPoint = hit.transform;
+            else
+                Debug.Log("Check Your Road Points");
 
             if (nextBase is TripleRoadIntersection) // when entering 
                 decelerationPoints.Add(path[^1]);

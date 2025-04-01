@@ -85,6 +85,25 @@ namespace BaseCode.Editor.Path
 
             EditorGUILayout.EndScrollView();
 
+            OpenCloseMeshRoad();
+
+        }
+
+        private void OpenCloseMeshRoad()
+        {
+            if (GUILayout.Button("Open/Close Mesh Road"))
+            {
+                var roads = IsInvalidStartOrEnd(_sceneRoadGenerationController.ClickedSelectedObject);
+                if(roads)
+                {
+                    var result = (TripleRoadIntersection)GetRoadBase(_sceneRoadGenerationController.ClickedSelectedObject);
+                    if(result == null)
+                        result = (ForthRoadIntersection)GetRoadBase(_sceneRoadGenerationController.ClickedSelectedObject);
+                    
+                    Debug.Log(result == null);
+                    result.ToggleMeshRayRoad();
+                }
+            }
         }
 
         private bool ValidatePathGenerationController()
@@ -253,6 +272,7 @@ namespace BaseCode.Editor.Path
         
         private void GeneratePathRoad()
         {
+            Debug.Log("Generating New Path View");
             var roads = _sceneRoadGenerationController.selectedRoads;
             var size = roads.Count;
 
@@ -272,6 +292,7 @@ namespace BaseCode.Editor.Path
                     roads[i].ConnectPath(roads[i + 1]);
                 }
             }
+            Debug.Log("Check Road On Map");
         }
         private bool AddSelectedRoads()
         {
@@ -289,6 +310,7 @@ namespace BaseCode.Editor.Path
                 if (AreConsecutiveIntersectionsInvalid(previousRoad, currentRoad))
                 {
                     _sceneRoadGenerationController.selectedRoads.Clear();
+                    Debug.Log("Are Consecutive Intersections Invalid?");
                     return false;
                 }
 
@@ -317,7 +339,7 @@ namespace BaseCode.Editor.Path
                 Debug.LogError("First or End of Path Can't Be Intersection");
                 return false;
             }
-
+            Debug.Log("Road is valid");
             return true;
         }
 
@@ -338,6 +360,7 @@ namespace BaseCode.Editor.Path
             if (road != null && !_sceneRoadGenerationController.selectedRoads.Contains(road))
             {
                 _sceneRoadGenerationController.selectedRoads.Add(road);
+                Debug.Log(road.name +" is added!");
             }
         }
         public void GenerateNewPath()
@@ -369,7 +392,7 @@ namespace BaseCode.Editor.Path
                 roadBase.decelerationPoints.Clear();
                 roadBase.accelerationPoints.Clear();
             }
-            
+            Debug.Log("New Path Is Created!");
             Selection.activeGameObject = createNewContainer;
         }
         

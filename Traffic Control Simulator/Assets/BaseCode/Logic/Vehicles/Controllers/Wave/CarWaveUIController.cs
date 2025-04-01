@@ -18,9 +18,14 @@ namespace BaseCode.Logic.Vehicles.Controllers.Wave
         public IEnumerator ShowEndGamePopup()
         {
             if (ScoreManager.PlayerScore <= 0)
+            {
                 PopUpManager.ShowPopUp<PopUpLoseMenuGamePopUp>();
+            }
             else
+            {
+                CarWaveController.OpenLockOfCurrentLevel();
                 PopUpManager.ShowPopUp<PopUpWinMenuGamePopUp>();
+            }
             yield break;
         }
 
