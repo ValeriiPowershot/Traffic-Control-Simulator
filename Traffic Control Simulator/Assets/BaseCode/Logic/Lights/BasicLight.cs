@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using LightState = BaseCode.Logic.Vehicles.Vehicles.LightState;
 
+// Todo
+// when this is not on mesh active, it should always gives green!
+
 namespace BaseCode.Logic.Lights
 {
     public enum LightPlace
@@ -63,6 +66,7 @@ namespace BaseCode.Logic.Lights
         
         private void UpdateVisualState()
         {
+            
             if (_lightImage != null && _lightMats.Length > 0)
             {
                 _lightImage.sprite = _lightMats[_currentIndex - 1];
