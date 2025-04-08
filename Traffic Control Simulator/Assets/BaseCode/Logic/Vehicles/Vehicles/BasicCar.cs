@@ -1,61 +1,24 @@
 using BaseCode.Logic.Managers;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Controllers.Lights;
-using BaseCode.Logic.Vehicles.States.Movement;
-using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles.Vehicles
 {
     public class BasicCar : VehicleBase
     {
-        public Transform emojiFxSpawnPoint;
-
-        public Transform RayStartPoint;
-        public Transform ArrowIndicatorEndPoint;
-        public VechicleTurnLights VechicleTurnLights;
-
         public override void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             base.Starter(manager, currentCar);
-            VehicleController.Starter(this);
+            vehicleController.Starter(this);
         }
-
         public virtual void Update()
         {
-            VehicleController.Update();
-
-            CheckTurnLightState();
+            vehicleController.Update(); 
         }
         
-        private void CheckTurnLightState()
-        {
-            if (VechicleTurnLights != null)
-            {
-                if (VehicleController.VehicleLightController.NeedToTurn)
-                {
-                    float rotationY = ArrowIndicatorEndPoint.localRotation.eulerAngles.y;
-                
-                    if (rotationY > 180) 
-                        rotationY -= 360;
-                
-                    switch (rotationY)
-                    {
-                        case > 20:
-                            VehicleController.VehicleBase.VechicleTurnLights.ShowTurnLight(Indicator.Right);
-                            break;
-                        case < -20:
-                            VehicleController.VehicleBase.VechicleTurnLights.ShowTurnLight(Indicator.Left);
-                            break;
-                        default:
-                            VehicleController.VehicleBase.VechicleTurnLights.StopTurnSignals();
-                            break;
-                    }
-                }
-            }
-        }
         public override void AssignNewPathContainer()
         {
-            VehicleController.VehiclePathController.InitializeNewPath();
+            vehicleController.VehiclePathController.InitializeNewPath();
         }
 
       

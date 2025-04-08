@@ -23,7 +23,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
 
         public void MovementUpdate() 
         {
-            var ray = new Ray(VehicleController.VehicleBase.RayStartPoint.position, VehicleController.VehicleBase.transform.forward);
+            var ray = new Ray(ReferenceController.rayStartPoint.position, VehicleController.VehicleBase.transform.forward);
 
             if (Physics.Raycast(ray, out var hit, _rayDistance,_carLayer))
             {
@@ -50,7 +50,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         public void MovementExit()
         {
         }
-  
+        protected VehicleReferenceController ReferenceController =>VehicleController.vehicleReferenceController; 
          
     }
 }

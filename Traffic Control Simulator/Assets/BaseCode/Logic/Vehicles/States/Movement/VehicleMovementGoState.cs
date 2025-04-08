@@ -88,12 +88,12 @@ namespace BaseCode.Logic.Vehicles.States.Movement
                 );
 
                 Vector3 arrowForward = (PathPointController.GetEndPoint().position - 
-                                        VehicleController.VehicleBase.ArrowIndicatorEndPoint.position).normalized;
+                                        ReferenceController.arrowIndicatorEndPoint.position).normalized;
                 Quaternion arrowRotation = Quaternion.LookRotation(arrowForward);
         
                 arrowRotation = Quaternion.Euler(arrowRotation.eulerAngles.x, arrowRotation.eulerAngles.y, 0);
 
-                VehicleController.VehicleBase.ArrowIndicatorEndPoint.rotation = arrowRotation;
+                ReferenceController.arrowIndicatorEndPoint.rotation = arrowRotation;
             }
         }
         public void AssignNewSpeedValues()
@@ -115,7 +115,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         }
         private VehicleScriptableObject CarData => VehicleController.VehicleBase.VehicleScriptableObject;
         public PathPointsContainerController PathPointController => VehiclePathController.PathPointController;
-
+        protected VehicleReferenceController ReferenceController =>VehicleController.vehicleReferenceController;
         private VehicleCollisionControllerBase VehicleCollisionController => VehicleController.VehicleCollisionController;
     }
     

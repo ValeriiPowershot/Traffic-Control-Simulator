@@ -4,25 +4,28 @@ using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.InterfaceHandler.Car;
 using BaseCode.Logic.Vehicles.Controllers;
 using BaseCode.Logic.Vehicles.Controllers.Collision;
+using BaseCode.Logic.Vehicles.Controllers.Lights;
+using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Vehicles.Vehicles
 {
     public class VehicleBase : PoolObjectBase
     {
         private CarManager _carManager;
+        
+        public VehicleController vehicleController;
         public VehicleScriptableObject VehicleScriptableObject { get; private set; }
-        public readonly VehicleController VehicleController = new();
 
         public virtual void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {
             VehicleScriptableObject = currentCar;
             _carManager = manager;
         }
-
         public virtual void AssignCollisionController()
         {
-            VehicleController.VehicleCollisionController = new VehicleCollisionControllerBase();
-            VehicleController.VehicleCollisionController.Starter(this);
+            vehicleController.VehicleCollisionController = new VehicleCollisionControllerBase();
+            vehicleController.VehicleCollisionController.Starter(this);
         }
 
         public virtual void AssignNewPathContainer()
@@ -33,7 +36,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         {
             Pool.DestroyObject(this);
             CarSpawnServiceHandler.OnCarReachedDestination(this);
-            VehicleController.RestartControllers(isDied);
+            vehicleController.RestartControllers(isDied);
         }
         public virtual void StartToMove()
         {

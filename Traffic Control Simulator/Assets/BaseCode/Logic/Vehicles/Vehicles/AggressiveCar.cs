@@ -8,8 +8,8 @@ namespace BaseCode.Logic.Vehicles.Vehicles
     {
         public override void AssignCollisionController()
         {
-            VehicleController.VehicleCollisionController = new AggressiveVehicleCollisionController();
-            VehicleController.VehicleCollisionController.Starter(this);
+            vehicleController.VehicleCollisionController = new AggressiveVehicleCollisionController();
+            vehicleController.VehicleCollisionController.Starter(this);
         }
     }
 }

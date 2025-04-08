@@ -114,7 +114,7 @@ namespace BaseCode.Logic.Roads
         {
             if (other.TryGetComponent<VehicleBase>(out var vehicle))
             {
-                vehicle.VehicleController.VehicleLightController.ExitIntersection();
+                vehicle.vehicleController.VehicleLightController.ExitIntersection();
             }
         }
 

@@ -33,7 +33,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
 
         private void StopAndLetAggressiveCar(VehicleBase hitVehicle)
         {
-            if (hitVehicle.VehicleController.GetStateCurrentState().GetType() != typeof(VehicleMovementStopState))
+            if (hitVehicle.vehicleController.GetStateCurrentState().GetType() != typeof(VehicleMovementStopState))
             {
                 VehicleController.SetState<VehicleMovementStopState>();
             }

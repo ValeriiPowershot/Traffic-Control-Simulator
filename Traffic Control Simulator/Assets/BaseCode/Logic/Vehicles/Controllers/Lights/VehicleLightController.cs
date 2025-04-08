@@ -5,19 +5,21 @@ using BaseCode.Logic.Vehicles.Vehicles;
 
 namespace BaseCode.Logic.Vehicles.Controllers.Lights
 {
+    
     public class VehicleLightController 
     {
-        private VehicleController _vehicleController;
+        
+        private VehicleController VehicleController { get; }
+
         private LightState _carLightState;
         private LightPlace _lightPlaceSave;
-        // public event Action LightExited;
         public bool NeedToTurn;
-
+        
         public VehicleLightController(VehicleController vehicleController)
         {
-            _vehicleController = vehicleController;
+            VehicleController = vehicleController;
         }
-        
+ 
         public void PassLightState(LightState state)
         {
             _carLightState = state;
@@ -25,10 +27,10 @@ namespace BaseCode.Logic.Vehicles.Controllers.Lights
             switch (_carLightState)
             {
                 case LightState.Green:
-                    _vehicleController.SetState<VehicleMovementGoState>();
+                    VehicleController.SetState<VehicleMovementGoState>();
                     break;
                 case LightState.Yellow:
-                    _vehicleController.SetState<VehicleMovementGoState>();
+                    VehicleController.SetState<VehicleMovementGoState>();
                     break;
                 case LightState.Red:
                     break;
@@ -39,23 +41,12 @@ namespace BaseCode.Logic.Vehicles.Controllers.Lights
             }
             
         }
-        public void PassLightPlaceState(LightPlace lightPlace) =>
-            _lightPlaceSave = lightPlace;
-
-        public void ExitLightControl()
-        {
-            RestartVehicleLightController();
-            // LightExited?.Invoke(); //necessary for scoring system - (looked by tolga, its ok :D)
-        }
-        public void RestartVehicleLightController()
-        {
-            _carLightState = LightState.None;
-        }
-        public void ExitIntersection() =>
-            _lightPlaceSave = LightPlace.None;
+        public void PassLightPlaceState(LightPlace lightPlace) => _lightPlaceSave = lightPlace;
+        public void ExitLightControl() => RestartVehicleLightController();
+        public void RestartVehicleLightController() => _carLightState = LightState.None;
+        public void ExitIntersection() => _lightPlaceSave = LightPlace.None;
 
         public LightState CarLightState => _carLightState;
-
         public LightPlace LightPlaceSave
         {
             get => _lightPlaceSave;

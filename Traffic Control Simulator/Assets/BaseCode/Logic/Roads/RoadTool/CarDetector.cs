@@ -26,7 +26,7 @@ namespace BaseCode.Logic.Roads.RoadTool
             if (other.TryGetSameLayerComponent(_carLayer, out BasicCar car))
             {
                 cars.Add(car); 
-                car.VehicleController.VehicleCollisionController.spawnIndex = carDetectorSpawnIndex;
+                car.vehicleController.VehicleCollisionController.spawnIndex = carDetectorSpawnIndex;
             }
         }
         private void OnTriggerExit(Collider other)

@@ -1,10 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles.Controllers.Lights
 {
-    public class VechicleTurnLights : MonoBehaviour
+    [Serializable]
+    public class VehicleTurnLights 
     {
+        public VehicleBase vehicleBase;
+        
         public MeshRenderer _leftFrontTurnLight;
         public MeshRenderer _rightFrontTurnLight;
         public MeshRenderer _leftRearTurnLight;
@@ -17,6 +22,35 @@ namespace BaseCode.Logic.Vehicles.Controllers.Lights
         private Coroutine _rightTurnCoroutine;
         private bool _isLeftTurning = false;
         private bool _isRightTurning = false;
+
+        public void CheckTurnLightState()
+        {
+            if (VehicleController.VehicleLightController.NeedToTurn)
+            {
+                float rotationY = VehicleReferenceController.arrowIndicatorEndPoint.localRotation.eulerAngles.y;
+            
+                if (rotationY > 180) 
+                    rotationY -= 360;
+            
+                SetLightState(rotationY);
+            }
+        }
+
+        private void SetLightState(float rotationY)
+        {
+            switch (rotationY)
+            {
+                case > 20:
+                    ShowTurnLight(Indicator.Right);
+                    break;
+                case < -20:
+                    ShowTurnLight(Indicator.Left);
+                    break;
+                default:
+                    StopTurnSignals();
+                    break;
+            }
+        }
 
         public void ShowTurnLight(Indicator indicator)
         {
@@ -41,8 +75,8 @@ namespace BaseCode.Logic.Vehicles.Controllers.Lights
             StopRightTurn();
             _isLeftTurning = true;
             if (_leftTurnCoroutine != null)
-                StopCoroutine(_leftTurnCoroutine);
-            _leftTurnCoroutine = StartCoroutine(TurnMeshLoop(_leftFrontTurnLight, _leftRearTurnLight));
+                vehicleBase.StopCoroutine(_leftTurnCoroutine);
+            _leftTurnCoroutine = vehicleBase.StartCoroutine(TurnMeshLoop(_leftFrontTurnLight, _leftRearTurnLight));
         }
 
         private void RightTurn()
@@ -50,8 +84,8 @@ namespace BaseCode.Logic.Vehicles.Controllers.Lights
             StopLeftTurn();
             _isRightTurning = true;
             if (_rightTurnCoroutine != null)
-                StopCoroutine(_rightTurnCoroutine);
-            _rightTurnCoroutine = StartCoroutine(TurnMeshLoop(_rightFrontTurnLight, _rightRearTurnLight));
+                vehicleBase.StopCoroutine(_rightTurnCoroutine);
+            _rightTurnCoroutine = vehicleBase.StartCoroutine(TurnMeshLoop(_rightFrontTurnLight, _rightRearTurnLight));
         }
 
         private IEnumerator TurnMeshLoop(MeshRenderer frontMesh, MeshRenderer rearMesh)
@@ -78,7 +112,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Lights
         {
             if (_leftTurnCoroutine != null)
             {
-                StopCoroutine(_leftTurnCoroutine);
+                vehicleBase.StopCoroutine(_leftTurnCoroutine);
                 _leftTurnCoroutine = null;
             }
             _isLeftTurning = false;
@@ -90,13 +124,16 @@ namespace BaseCode.Logic.Vehicles.Controllers.Lights
         {
             if (_rightTurnCoroutine != null)
             {
-                StopCoroutine(_rightTurnCoroutine);
+                vehicleBase.StopCoroutine(_rightTurnCoroutine);
                 _rightTurnCoroutine = null;
             }
             _isRightTurning = false;
             _rightFrontTurnLight.material = _defaultMaterial;
             _rightRearTurnLight.material = _defaultMaterial;
         }
+        private VehicleReferenceController VehicleReferenceController =>
+            VehicleController.vehicleReferenceController;
+        private VehicleController VehicleController => vehicleBase.vehicleController;
     }
 
     public enum Indicator

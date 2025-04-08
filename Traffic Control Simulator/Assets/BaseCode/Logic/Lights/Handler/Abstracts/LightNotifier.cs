@@ -34,7 +34,7 @@ namespace BaseCode.Logic.Lights.Handler.Abstracts
         
         public void NotifyVehicle(VehicleBase vehicle, LightState state)
         {
-            vehicle.VehicleController.VehicleLightController.PassLightState(state);
+            vehicle.vehicleController.VehicleLightController.PassLightState(state);
         }
         
     }

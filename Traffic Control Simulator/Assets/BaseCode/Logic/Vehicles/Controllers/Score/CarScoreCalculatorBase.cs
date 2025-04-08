@@ -72,8 +72,8 @@ namespace BaseCode.Logic.Vehicles.Controllers.Score
         
         public bool IsActive() => _car.isActiveAndEnabled;
         public float TotalWaitingTime => _totalWaitingTime;
-        public float AcceptableWaitingTime=> _car.VehicleController.VehicleScoreController.acceptableWaitingTime;
-        public float SuccessPoints => _car.VehicleController.VehicleScoreController.successPoints;
+        public float AcceptableWaitingTime=> _car.vehicleController.VehicleScoreController.acceptableWaitingTime;
+        public float SuccessPoints => _car.vehicleController.VehicleScoreController.successPoints;
     }
     
     

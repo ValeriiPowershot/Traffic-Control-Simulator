@@ -53,7 +53,7 @@ namespace BaseCode.Logic.Lights.Handler.Abstracts
             if (!_controlledVehicles.Contains(vehicle)) return;
             
             _controlledVehicles.Remove(vehicle);
-            vehicle.VehicleController.VehicleLightController.ExitLightControl();
+            vehicle.vehicleController.VehicleLightController.ExitLightControl();
         }
         
 

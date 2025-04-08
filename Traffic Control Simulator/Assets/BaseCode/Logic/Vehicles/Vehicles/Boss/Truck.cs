@@ -17,19 +17,19 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Boss
         {
             base.Starter(manager, currentCar);
             
-            var dict = VehicleController.VehicleStateController.GetStatesDict();
-            dict[typeof(VehicleMovementTruckStopState)] = new VehicleMovementTruckStopState(VehicleController);
+            var dict = vehicleController.VehicleStateController.GetStatesDict();
+            dict[typeof(VehicleMovementTruckStopState)] = new VehicleMovementTruckStopState(vehicleController);
         }
 
         public override void AssignCollisionController()
         {
-            VehicleController.VehicleCollisionController = new TruckVehicleCollisionController();
-            VehicleController.VehicleCollisionController.Starter(this);
+            vehicleController.VehicleCollisionController = new TruckVehicleCollisionController();
+            vehicleController.VehicleCollisionController.Starter(this);
         }
 
         public override void DestinationReached( bool isDied = false)
         {
-            ((TruckVehicleCollisionController)VehicleController.VehicleCollisionController).ReleaseLoad();
+            ((TruckVehicleCollisionController)vehicleController.VehicleCollisionController).ReleaseLoad();
             base.DestinationReached(isDied);
         }
         public void OnSlappingCarHandAnimAction()
@@ -45,7 +45,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Boss
             TruckVehicleCollisionController.LoadedVehicleBases.
                 Add(new Tuple<Vector3, VehicleBase>(localScale,CurrentVehicle));
             
-            VehicleController.VehicleCollisionController.PlayFx(FxTypes.StarCarCrash, CurrentVehicle.transform);
+            vehicleController.VehicleCollisionController.PlayFx(FxTypes.StarCarCrash, CurrentVehicle.transform);
         }
         
         public void OnPickTheCarHandAnimAction()
@@ -60,11 +60,11 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Boss
             CurrentVehicle.transform.parent = loadPos;
             CurrentVehicle.transform.localPosition= Vector3.zero;
             CurrentVehicle = null;
-            VehicleController.SetState<VehicleMovementGoState>();
+            vehicleController.SetState<VehicleMovementGoState>();
         }
         
         private TruckVehicleCollisionController TruckVehicleCollisionController =>
-            (TruckVehicleCollisionController)VehicleController.VehicleCollisionController;
+            (TruckVehicleCollisionController)vehicleController.VehicleCollisionController;
 
         private VehicleBase CurrentVehicle
         {

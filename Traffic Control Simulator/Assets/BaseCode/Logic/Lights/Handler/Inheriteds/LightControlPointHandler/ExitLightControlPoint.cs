@@ -12,7 +12,7 @@ namespace BaseCode.Logic.Lights.Handler.Inheriteds.LightControlPointHandler
 
         public override void OnVehicleEnter(VehicleBase vehicle)
         {
-            vehicle.VehicleController.VehicleLightController.PassLightPlaceState(ParentLightControlPoint.Place);
+            vehicle.vehicleController.VehicleLightController.PassLightPlaceState(ParentLightControlPoint.Place);
         }
     }
 

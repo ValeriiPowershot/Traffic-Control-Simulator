@@ -79,7 +79,7 @@ namespace BaseCode.Logic.Services.InterfaceHandler.Car
             
             _newCar = (VehicleBase)_carPool.InstantiateObject();
             _newCar.AssignNewPathContainer();
-            _newCar.VehicleController.VehicleStateController.SetState<VehicleMovementGoState>();
+            _newCar.vehicleController.VehicleStateController.SetState<VehicleMovementGoState>();
             _newCar.gameObject.SetActive(false);
             CarSpawnServiceHandler.CarWaveController.GetCurrentWave().onBoardGameCars.Add(_newCar);
             
@@ -96,7 +96,7 @@ namespace BaseCode.Logic.Services.InterfaceHandler.Car
         private bool IsThereACarWaitingToBeActive() => _isCarWaiting;
 
         private bool IsSpawnPointClear() => _carDetector.IsThereCarInSpawnPoint() == false;
-        private PathContainer PathContainer => _newCar.VehicleController.VehiclePathController.PathContainer;
+        private PathContainer PathContainer => _newCar.vehicleController.VehiclePathController.PathContainer;
 
         private CarSpawnServiceHandler CarSpawnServiceHandler => CarManager.CarSpawnServiceHandler;
     }

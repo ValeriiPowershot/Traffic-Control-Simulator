@@ -49,7 +49,7 @@ namespace BaseCode.Logic.Managers
         {
             foreach (var scoringObj in VehicleBases())
             {
-                var scoringObject = scoringObj.VehicleController.VehicleScoreController.CarScoreCalculator;
+                var scoringObject = scoringObj.vehicleController.VehicleScoreController.CarScoreCalculator;
                 
                 if(scoringObject.IsActive())
                     scoringObject.Calculate(ScoreCarUpdateTime);

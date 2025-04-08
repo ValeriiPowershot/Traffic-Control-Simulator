@@ -17,8 +17,8 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
 
         public override void AssignCollisionController()
         {
-            VehicleController.VehicleCollisionController = new AmbulanceVehicleCollisionController();
-            VehicleController.VehicleCollisionController.Starter(this);
+            vehicleController.VehicleCollisionController = new AmbulanceVehicleCollisionController();
+            vehicleController.VehicleCollisionController.Starter(this);
         }
 
         public override void StartToMove()
@@ -34,7 +34,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
 
         private void ProcessPathSegments()
         {
-            var roadPoints = VehicleController.VehiclePathController.PathPointController.PathContainer.GetPathContainer().roadPoints;
+            var roadPoints = vehicleController.VehiclePathController.PathPointController.PathContainer.GetPathContainer().roadPoints;
             float accumulatedDistance = 0f;
 
             _newArrow = new GameObject("Arrows");
@@ -103,7 +103,7 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Ambulance
         }
         private Transform GetIndex(int index)
         {
-            return VehicleController.VehiclePathController.PathPointController.PathContainer.GetIndexWaypoint(index).point;
+            return vehicleController.VehiclePathController.PathPointController.PathContainer.GetIndexWaypoint(index).point;
         }
     }
 }

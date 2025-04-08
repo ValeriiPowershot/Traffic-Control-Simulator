@@ -22,7 +22,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
         public int spawnIndex;
         public void Starter(VehicleBase vehicleBase)
         {
-            VehicleController = vehicleBase.VehicleController;
+            VehicleController = vehicleBase.vehicleController;
             
             _stopLayer += 1 << 7; //add car layer
             _stopLayer += 1 << 10; //add stop line layer
@@ -31,7 +31,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
         }
         public bool CheckForCollision()
         {
-            Ray ray = new Ray(BasicCar.RayStartPoint.position, VehicleController.CarTransform.forward);
+            Ray ray = new Ray(ReferenceController.rayStartPoint.position, VehicleController.CarTransform.forward);
 
             if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _stopLayer)) // hit to stop or car
             {
@@ -113,26 +113,28 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             VehicleLightController.CarLightState == LightState.Red;
 
         protected bool AreTheyFromAnotherSpawner(VehicleBase hitVehicle) =>
-            hitVehicle.VehicleController.VehicleCollisionController.spawnIndex != spawnIndex;
+            hitVehicle.vehicleController.VehicleCollisionController.spawnIndex != spawnIndex;
 
         protected bool AreTheyUsingDifferentPath(VehicleBase hitVehicle)
         {
-            return hitVehicle.VehicleController.VehicleLightController.LightPlaceSave !=
+            return hitVehicle.vehicleController.VehicleLightController.LightPlaceSave !=
                    VehicleLightController.LightPlaceSave;
         }
-
         protected bool AreTheyInIntersection(VehicleBase hitVehicle)
         {
-            return hitVehicle.VehicleController.VehicleLightController.LightPlaceSave != LightPlace.None &&
+            return hitVehicle.vehicleController.VehicleLightController.LightPlaceSave != LightPlace.None &&
                    VehicleLightController.LightPlaceSave != LightPlace.None;
         }
         protected void PlayFx(FxTypes fxTypes) =>
-            PlayFx(fxTypes, BasicCar.emojiFxSpawnPoint, new Vector3(5,5,5)); // sorry for static values :D
+            PlayFx(fxTypes, ReferenceController.emojiFxSpawnPoint, new Vector3(5,5,5)); // sorry for static values :D
 
         public void PlayFx(FxTypes fxTypes, Transform spawnPoint, Vector3 localScale = default) =>
             GameManager.fxManager.PlayFx(fxTypes, spawnPoint, localScale);
         protected BasicCar BasicCar => VehicleController.VehicleBase;
-        protected VehicleLightController VehicleLightController => BasicCar.VehicleController.VehicleLightController;
+        protected VehicleLightController VehicleLightController => BasicCar.vehicleController.VehicleLightController;
+
+        protected VehicleReferenceController ReferenceController =>
+            BasicCar.vehicleController.vehicleReferenceController;
         protected GameManager GameManager => BasicCar.CarManager.GameManager;
     }
 }

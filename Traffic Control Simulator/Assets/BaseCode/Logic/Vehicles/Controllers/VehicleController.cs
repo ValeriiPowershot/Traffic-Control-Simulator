@@ -1,3 +1,4 @@
+using System;
 using BaseCode.Interfaces;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Controllers.Collision;
@@ -10,6 +11,7 @@ using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles.Controllers
 {
+    [Serializable]
     public class VehicleController 
     {
         private VehicleScriptableObject VehicleSo { get; set; }
@@ -20,7 +22,8 @@ namespace BaseCode.Logic.Vehicles.Controllers
         public VehiclePathController VehiclePathController;
         public VehicleScoreController VehicleScoreController;
         public VehicleLightController VehicleLightController;
-        
+        public VehicleReferenceController vehicleReferenceController;
+        public VehicleTurnLights vehicleTurnLights;
         public void Starter(BasicCar basicCar)
         {
             VehicleBase = basicCar;
@@ -30,17 +33,18 @@ namespace BaseCode.Logic.Vehicles.Controllers
             VehiclePathController = new VehiclePathController(this);
             VehicleScoreController = new VehicleScoreController(this);
             VehicleLightController = new VehicleLightController(this);
-            
             VehicleBase.AssignCollisionController();
-            
+                
             StartEngine();
         }
         private void StartEngine() =>
             SetState<VehicleMovementGoState>(); // Start in the stopped state
 
-        public void Update() =>
+        public void Update()
+        {
             VehicleStateController.Update();
-
+            vehicleTurnLights.CheckTurnLightState();
+        }
         public void RestartControllers(bool isDied = false)
         {
             VehicleStateController.RestartVehicleMovementStateController();

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using BaseCode.Infrastructure;
 using BaseCode.Logic.ScriptableObject;
+using BaseCode.Logic.Vehicles.Controllers;
 using BaseCode.Logic.Vehicles.Controllers.Score;
 using BaseCode.Logic.Vehicles.Vehicles;
 using UnityEditor;
@@ -502,9 +503,10 @@ namespace BaseCode.Editor.CarCreation
             {
                 Type selectedCarType = _carTypes[_selectedTypeIndex];
                 BasicCar basicCar = (BasicCar)vehicleObject.AddComponent(selectedCarType);
-                
-                basicCar.RayStartPoint = _frontRayStartPoint.transform;
-                basicCar.ArrowIndicatorEndPoint = _arrow.transform;
+
+                VehicleReferenceController referenceController = basicCar.vehicleController.vehicleReferenceController;
+                referenceController.rayStartPoint = _frontRayStartPoint.transform;
+                referenceController.arrowIndicatorEndPoint = _arrow.transform;
             }
 
             if (vehicleObject.GetComponent<CarScoreCalculatorBase>() == null)

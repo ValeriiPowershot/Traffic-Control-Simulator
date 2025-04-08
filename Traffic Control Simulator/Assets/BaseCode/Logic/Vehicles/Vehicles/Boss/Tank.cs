@@ -8,8 +8,8 @@ namespace BaseCode.Logic.Vehicles.Vehicles.Boss
     {
         public override void AssignCollisionController()
         {
-            VehicleController.VehicleCollisionController = new TankVehicleCollisionController();
-            VehicleController.VehicleCollisionController.Starter(this);
+            vehicleController.VehicleCollisionController = new TankVehicleCollisionController();
+            vehicleController.VehicleCollisionController.Starter(this);
         }
     }
 }
