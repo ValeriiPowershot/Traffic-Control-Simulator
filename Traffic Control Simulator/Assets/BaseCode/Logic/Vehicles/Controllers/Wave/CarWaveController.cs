@@ -32,9 +32,9 @@ namespace BaseCode.Logic.Vehicles.Controllers.Wave
 
         public void OnCarReachedDestination(VehicleBase vehicleBase)
         {
-            GetCurrentWave().onBoardGameCars.Remove(vehicleBase);
+            GetCurrentWave().OnBoardGameCars.Remove(vehicleBase);
             
-            if (GetCurrentWave().onBoardGameCars.Count> 0) return;
+            if (GetCurrentWave().OnBoardGameCars.Count> 0) return;
             
             CheckForEndGame();
         }

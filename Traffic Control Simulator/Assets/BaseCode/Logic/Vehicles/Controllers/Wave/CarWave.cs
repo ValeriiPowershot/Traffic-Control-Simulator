@@ -14,13 +14,12 @@ namespace BaseCode.Logic.Vehicles.Controllers.Wave
     {
         private CarManager _carManager;
         private CarObjectPools _carObjectPools;
+
         public int currentIndex;
         public WaveRank waveRank = WaveRank.Easy;
         
         public List<CarSpawnObject> carSpawnObjects = new();
-        public List<VehicleBase> onBoardGameCars = new List<VehicleBase>();
-        public List<CarDetector> createdCarDetectors = new List<CarDetector>();
-
+        
         public void Initialize(CarManager carManagerInScene,CarObjectPools carObjectPools)
         {
             _carManager = carManagerInScene;
@@ -51,10 +50,10 @@ namespace BaseCode.Logic.Vehicles.Controllers.Wave
             foreach (CarSpawnObject carSpawnObject in carSpawnObjects)
                 carSpawnObject.ResetCarSpawnObject();
             
-            foreach (CarDetector carDetector in createdCarDetectors)
+            foreach (CarDetector carDetector in CreatedCarDetectors)
                 carDetector.ResetDetector();
             
-            foreach (VehicleBase vehicleBase in new List<VehicleBase>(onBoardGameCars))
+            foreach (VehicleBase vehicleBase in new List<VehicleBase>(OnBoardGameCars))
                 vehicleBase.DestinationReached(true);
         }
         public bool IsCurrentIndexWaveFinished()
@@ -62,6 +61,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Wave
             var result = currentIndex >= carSpawnObjects.Count; 
             return result;
         }
-
+        public List<VehicleBase> OnBoardGameCars { get; } = new List<VehicleBase>();
+        public List<CarDetector> CreatedCarDetectors { get; } = new List<CarDetector>();
     }
 }

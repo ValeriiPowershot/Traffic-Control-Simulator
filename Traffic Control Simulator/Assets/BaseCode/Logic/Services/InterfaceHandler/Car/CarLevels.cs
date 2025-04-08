@@ -24,11 +24,10 @@ namespace BaseCode.Logic.Services.InterfaceHandler.Car
                 
         public List<CarWave> waves = new();
         public List<TripleRoadIntersection> roads = new List<TripleRoadIntersection>();
-        public List<LightBase> createdLights = new List<LightBase>();
+        private List<LightBase> _createdLights = new List<LightBase>();
 
-        public int currentWaveIndex;
         private int _spawnedCarIndex;
-        
+        public int currentWaveIndex;
         public void InitializeLevel(CarManager carManager)
         {
             _carManager = carManager;
@@ -51,7 +50,7 @@ namespace BaseCode.Logic.Services.InterfaceHandler.Car
         {
             foreach (var road in roads)
             {
-                createdLights.AddRange(road.basicLights);
+                _createdLights.AddRange(road.basicLights);
             }
         }
         public void ResetLevel()
@@ -59,7 +58,7 @@ namespace BaseCode.Logic.Services.InterfaceHandler.Car
             foreach (CarWave wave in waves) 
                 wave.ResetWave();
             
-            foreach (var lightBase in createdLights)
+            foreach (var lightBase in _createdLights)
                 lightBase.RemoveAllVehicle();
         }
         private void InitializePools()
@@ -77,7 +76,7 @@ namespace BaseCode.Logic.Services.InterfaceHandler.Car
             {
                 Transform firstElement = container.roadPoints[0].point.transform;
                 CarDetector carDetectorObject =  Object.Instantiate(AllWaysContainer.carDetectorPrefab, firstElement.position, firstElement.rotation, firstElement);
-                GetCurrentWave().createdCarDetectors.Add(carDetectorObject);
+                GetCurrentWave().CreatedCarDetectors.Add(carDetectorObject);
                 
                 carDetectorObject.carDetectorSpawnIndex = _spawnedCarIndex;
                 _spawnedCarIndex++;
