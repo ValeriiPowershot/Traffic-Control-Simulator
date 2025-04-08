@@ -2,6 +2,7 @@ using System;
 using BaseCode.Logic.Lights;
 using BaseCode.Logic.Vehicles.States.Movement;
 using BaseCode.Logic.Vehicles.Vehicles;
+using UnityEngine;
 
 namespace BaseCode.Logic.Vehicles.Controllers.Lights
 {

@@ -14,8 +14,9 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             if (hit.collider.TryGetComponent(out VehicleBase hitVehicle))
             {
                 PlayFx(FxTypes.DiabolicalLaugh);
-                PressCar(hitVehicle);
+                CarCrashed(hitVehicle);
             }
+            
             return false;
         }
 

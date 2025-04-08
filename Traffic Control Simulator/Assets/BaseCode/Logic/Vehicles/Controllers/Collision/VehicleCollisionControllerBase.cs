@@ -77,9 +77,9 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             PlayFx(FxTypes.Angry);  
             PlayFx(FxTypes.Smoke, VehicleController.VehicleBase.transform, new Vector3(2.7f,2.7f,2.7f));
             
-            PressCar(hitVehicle);
+            CarCrashed(hitVehicle);
         }
-        protected virtual void PressCar(VehicleBase hitVehicle)
+        protected virtual void CarCrashed(VehicleBase hitVehicle)
         {
             hitVehicle.DisableVehicle();
             BasicCar.CarManager.StartCoroutine(PressEffect(hitVehicle));

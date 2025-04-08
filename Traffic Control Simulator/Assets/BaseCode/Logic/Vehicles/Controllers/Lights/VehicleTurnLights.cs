@@ -35,7 +35,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Lights
                 SetLightState(rotationY);
             }
         }
-
+    
         private void SetLightState(float rotationY)
         {
             switch (rotationY)
