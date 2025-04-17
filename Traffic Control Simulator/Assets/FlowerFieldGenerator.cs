@@ -10,6 +10,7 @@ public class FlowerFieldGenerator : MonoBehaviour
     public float length = 10f;
 
     [Header("Flowers")]
+    [SerializeField] private Camera _camera;
     public GameObject[] flowerPrefabs;
 
     [Header("Generation Settings")]
@@ -30,7 +31,7 @@ public class FlowerFieldGenerator : MonoBehaviour
             return;
         }
 
-        Camera sceneCamera = SceneView.lastActiveSceneView?.camera;
+        Camera sceneCamera = _camera;
         if (faceCamera && sceneCamera == null)
         {
             Debug.LogWarning("No SceneView camera found. Cannot orient flowers toward camera.");
