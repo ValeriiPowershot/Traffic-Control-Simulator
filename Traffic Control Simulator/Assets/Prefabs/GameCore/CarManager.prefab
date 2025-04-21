@@ -1,0 +1,86 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &866838337435161240
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1023201221964073}
+  - component: {fileID: 2949789870730396245}
+  m_Layer: 0
+  m_Name: CarManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1023201221964073
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866838337435161240}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2949789870730396245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866838337435161240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c9ae29beafdba34dac556b46c0c331a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allWaysContainer: {fileID: 0}
+  carSpawnServiceHandler:
+    wavesRankSo: {fileID: 11400000, guid: a070ebcb16c6ea685af46f2adba59a5a, type: 2}
+    carLevels:
+    - cameraPosition: {fileID: 0}
+      waves:
+      - currentIndex: 0
+        waveRank: 0
+        carSpawnObjects:
+        - carSoObjects: {fileID: 11400000, guid: 2ff5dd313f3990c41b7b1397fc9cc177,
+            type: 2}
+          size: 2
+          timeToSpawn: 0.1
+        - carSoObjects: {fileID: 11400000, guid: 708ed9a484856737685f3137058f874d,
+            type: 2}
+          size: 2
+          timeToSpawn: 0.1
+        - carSoObjects: {fileID: 11400000, guid: 963bf679c27b19c2995857b7e22598f0,
+            type: 2}
+          size: 2
+          timeToSpawn: 0.1
+        - carSoObjects: {fileID: 11400000, guid: 08bc1a2c5b539e1439bbdd15e9d71615,
+            type: 2}
+          size: 2
+          timeToSpawn: 0.1
+      roads:
+      - {fileID: 0}
+      currentWaveIndex: 0
+    - cameraPosition: {fileID: 0}
+      waves:
+      - currentIndex: 0
+        waveRank: 0
+        carSpawnObjects:
+        - carSoObjects: {fileID: 11400000, guid: 2ff5dd313f3990c41b7b1397fc9cc177,
+            type: 2}
+          size: 4
+          timeToSpawn: 0.1
+      roads:
+      - {fileID: 0}
+      currentWaveIndex: 0

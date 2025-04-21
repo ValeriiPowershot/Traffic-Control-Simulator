@@ -1,29 +1,22 @@
-using System;
 using BaseCode.Extensions;
 using BaseCode.Extensions.UI;
 using BaseCode.Logic.Managers;
 using BaseCode.Logic.PopUps.PopUp_Base;
 using BaseCode.Logic.ScriptableObject;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.PopUps
 {
     public class PopUpMainMenu : PopUpGameBase
     {
-        public ButtonExtension openSettingsButton;
-        public ButtonExtension levelsButton;
-        public ButtonExtension continueButton;
-        public ButtonExtension exitButton;
+        [SerializeField] private ButtonExtension _tapToStartButton;
+        [SerializeField] private GameObject _tapToStartText;
 
-        private readonly IteratorRefExtension<float> _lastMusicTime = new IteratorRefExtension<float>(); // move to fx manager?
-        private void Start()
-        {
-            openSettingsButton.onClick.AddListener(OnOpenSettingsButtonClicked);
-            exitButton.onClick.AddListener(OnOpenExitButtonClicked);
-            levelsButton.onClick.AddListener(OnOpenLevelsButtonClicked);
-        }
+        private readonly IteratorRefExtension<float> _lastMusicTime = new(); // move to fx manager?
+        
+        private void Start() =>
+            _tapToStartButton.onClick.AddListener(OnTapToStartButtonClicked);
 
         public override void OnStartShow()
         {
@@ -35,20 +28,12 @@ namespace BaseCode.Logic.PopUps
             base.OnStartHidden();
             GameManager.StartCoroutine(GameManager.vfxManager.FadeOutMusic(_lastMusicTime));
         }
-        private void OnOpenLevelsButtonClicked()
+        private void OnTapToStartButtonClicked()
         {
-            GameManager.StartCoroutine(GameManager.vfxManager.FadeOutMusic(_lastMusicTime));
-            SceneLoadManager.LoadSceneNormal(SceneID.Levels);
-        }
-
-        private void OnOpenExitButtonClicked()
-        {
-            PopUpManager.ShowPopUp<PopUpExitMenu>();
-        }
-
-        private void OnOpenSettingsButtonClicked()
-        {
-            PopUpManager.ShowPopUpFromBase(PopUpManager.GetPopUp<PopUpSettingMenu>());
+            //GameManager.StartCoroutine(GameManager.vfxManager.FadeOutMusic(_lastMusicTime));
+            PopUpManager.ShowPopUpFromBase(PopUpManager.GetPopUp<PopUpLevelsMenu>());
+            PopUpManager.HidePopUp(PopUpManager.GetPopUp<PopUpMainMenu>());
+            //SceneLoadManager.LoadSceneNormal(SceneID.Levels);
         }
 
         private SceneLoadManager SceneLoadManager => GameManager.sceneLoadManager;

@@ -47,7 +47,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Wave
             CarManager.GameManager.saveManager.sceneSo.UnlockScene(CurrentLevelIndex);
         }
         private bool IsLastWave() => GetCurrentLevel().currentWaveIndex >= GetCurrentLevel().waves.Count - 1;
-        public CarLevels GetCurrentLevel() =>CarLevels[CurrentLevelIndex];
+        public CarLevels GetCurrentLevel() => CarLevels[CurrentLevelIndex];
         public CarWave GetCurrentWave() => GetCurrentLevel().GetCurrentWave();
         public int CurrentLevelIndex
         {
