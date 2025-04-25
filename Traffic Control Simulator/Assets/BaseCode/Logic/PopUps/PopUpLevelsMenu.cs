@@ -3,11 +3,8 @@ using BaseCode.Extensions.UI;
 using BaseCode.Logic.Managers;
 using BaseCode.Logic.PopUps.PopUp_Base;
 using BaseCode.Logic.ScriptableObject;
-using BaseCode.Utilities;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.SceneManagement;
 
 namespace BaseCode.Logic.PopUps
 {
@@ -26,6 +23,18 @@ namespace BaseCode.Logic.PopUps
         public List<Transform> stars;
 
         private SceneIDData _scenes;
+        
+        private SceneLoadManager SceneLoadManager => GameManager.sceneLoadManager;
+        private CarManager CarManager => GameManager.carManager;
+        private ScoringManager ScoreManager => GameManager.scoringManager;
+        public SceneSo SceneSo => GameManager.saveManager.sceneSo;
+        
+        private int CurrentLevelIndex
+        {
+            get => CarManager.CarSpawnServiceHandler.CarWaveController.CurrentLevelIndex;
+            set => CarManager.CarSpawnServiceHandler.CarWaveController.CurrentLevelIndex = value;
+        }
+        
         private void Start()
         {
             openMainMenuButton.onClick.AddListener(OnOpenMainMenuButtonClicked);
@@ -46,12 +55,16 @@ namespace BaseCode.Logic.PopUps
             {
                 if (CurrentLevelIndex >= _scenes.sceneNames.Count - 1) return;
                 
+                Debug.Log("Opening next level");
+                
                 CurrentLevelIndex++;
                 SetStarAmountUI();
             });
             openPreviousLevelButton.onClick.AddListener(() =>
             {
                 if (CurrentLevelIndex <= 0) return;
+                
+                Debug.Log("Opening previous level");
                 
                 CurrentLevelIndex--;
                 SetStarAmountUI();
@@ -123,16 +136,9 @@ namespace BaseCode.Logic.PopUps
             return totalStar;
         }
 
-        private int CurrentLevelIndex
-        {
-            get => CarManager.CarSpawnServiceHandler.CarWaveController.CurrentLevelIndex;
-            set => CarManager.CarSpawnServiceHandler.CarWaveController.CurrentLevelIndex = value;
-        }
+       
 
-        private SceneLoadManager SceneLoadManager => GameManager.sceneLoadManager;
-        private CarManager CarManager => GameManager.carManager;
-        private ScoringManager ScoreManager => GameManager.scoringManager;
-        public SceneSo SceneSo => GameManager.saveManager.sceneSo;
+       
         
     }
 }

@@ -17,7 +17,7 @@ namespace BaseCode.Logic.PopUps.PopUp_Base
         public virtual void OnStartDoTween()
         {
             transform.SetSiblingIndex(transform.parent.childCount - 1);
-            transform.DoPopUp(0.5f).OnComplete(OnStartShow);
+            transform.DoPopUp(0.3f).OnComplete(OnStartShow);
         }
     }
 }

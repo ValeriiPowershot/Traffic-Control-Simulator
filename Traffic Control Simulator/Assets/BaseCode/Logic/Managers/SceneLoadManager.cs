@@ -9,7 +9,7 @@ namespace BaseCode.Logic.Managers
     {
         public void LoadSceneNormal(SceneID id, UnityAction beforeLoad = null,UnityAction afterLoad = null)
         {
-            var sceneName = SceneSo.GetScenesFromId(id);
+            SceneIDData sceneName = SceneSo.GetScenesFromId(id);
             StartCoroutine(LoadSceneNormally(sceneName.sceneAsset.name, beforeLoad, afterLoad));
         }
         private IEnumerator LoadSceneNormally(string sceneName, UnityAction beforeLoad = null,UnityAction afterLoad = null)
