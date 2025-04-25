@@ -13,9 +13,7 @@ namespace BaseCode.Logic.ScriptableObject
         public List<RoadBase> roadPrefabs = new();
         public List<NpcScriptableObject> npcPrefabs = new();
         
-        
         public bool canOpenWindow;
-        public float offset = 10f;
         
         public List<Tuple<Vector3, string>> directions =
             new() 
@@ -28,7 +26,7 @@ namespace BaseCode.Logic.ScriptableObject
         
         [Header("Transparent Road Creater Settings")]
         public Color gizmoColor = new(0, 1, 0, 0.3f); // Transparent green
-        public float offsetDistance = 2f; // Offset distance for each direction
+        // public float offsetDistance = 2f; // Offset distance for each direction
         
         [Header("On Road Component's Gizmo Settings")]
         public bool canDrawRoadGizmo;

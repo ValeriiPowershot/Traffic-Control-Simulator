@@ -23,6 +23,7 @@ namespace BaseCode.Logic.Roads
         public GameObject ClickedSelectedObject{ get; set; } // Selected by double-click
         public RoadBase SelectedRoad{ get; set; } // Currently selected road
         
+        
         public SceneRoadGenerationController(AllWaysContainer allWaysContainer)
         {
             AllWaysContainer = allWaysContainer;
@@ -102,7 +103,8 @@ namespace BaseCode.Logic.Roads
         }
         private Vector3 CalculateOffsetPosition(Vector3 direction)
         {
-            return ClickedSelectedObject.transform.position + direction.normalized * RoadsSo.offsetDistance;
+            var boxCollider = ClickedSelectedObject.GetComponent<BoxCollider>();
+            return ClickedSelectedObject.transform.position + direction.normalized * (SelectedRoad.boxCollider.size.z + boxCollider.size.z)/2;
         }
 
         private float CalculateScreenDistance(Vector3 worldPosition, Vector2 mousePosition)
@@ -176,7 +178,9 @@ namespace BaseCode.Logic.Roads
             GameObject prefab = (GameObject)PrefabUtility.InstantiatePrefab(roadBase.gameObject, transform);
 
             prefab.SetActive(true);
-            prefab.transform.position = ClickedSelectedObject.transform.position + CurrentDirection * RoadsSo.offset;
+            
+            var boxCollider = ClickedSelectedObject.GetComponent<BoxCollider>();
+            prefab.transform.position = ClickedSelectedObject.transform.position + CurrentDirection * (SelectedRoad.boxCollider.size.z + boxCollider.size.z)/2;
             prefab.transform.rotation = Quaternion.LookRotation(CurrentDirection);
 
             RegisterSpawnedObject(prefab);

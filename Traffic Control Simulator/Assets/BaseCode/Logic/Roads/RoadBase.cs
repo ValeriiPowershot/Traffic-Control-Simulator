@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BaseCode.Logic.ScriptableObject;
@@ -25,7 +26,9 @@ namespace BaseCode.Logic.Roads
         public List<Transform> onRightPathPoints;
         public float pointDistance = 2f; // Adjust based on how far roads can be
 
-
+        public int multiplySize = 100;
+        public BoxCollider boxCollider;
+        
         public virtual void ConnectPath(RoadBase nextBase)
         {
             path.Clear(); 
@@ -204,6 +207,8 @@ namespace BaseCode.Logic.Roads
 
         protected virtual void DrawArrowDirection()
         {
+            if(onLeftPathPoints.Count == 0 || onRightPathPoints.Count == 0) return;
+            
             Vector3 startPosition = onLeftPathPoints[0].position;
             Vector3 startPosition2 = onRightPathPoints[0].position;
 

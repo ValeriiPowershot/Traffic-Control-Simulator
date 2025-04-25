@@ -1,1 +1,5 @@
-- Update UI animations
+- rounds object - half is done
+- rotation will be assigned automatically
+- ui should not pass ui behind
+- ui responsiveness
+- sounds update

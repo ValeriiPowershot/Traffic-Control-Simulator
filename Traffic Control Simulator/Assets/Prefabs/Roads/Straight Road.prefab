@@ -55,6 +55,8 @@ MonoBehaviour:
   path: []
   decelerationPoints: []
   accelerationPoints: []
+  startPoint: {fileID: 0}
+  endPoint: {fileID: 0}
   onLeftPathPoints:
   - {fileID: 7805144130763357685}
   - {fileID: 2502680933055340120}
@@ -62,8 +64,8 @@ MonoBehaviour:
   - {fileID: 251374543434579646}
   - {fileID: 5159539520821801347}
   pointDistance: 15
-  startPoint: {fileID: 0}
-  endPoint: {fileID: 0}
+  multiplySize: 100
+  boxCollider: {fileID: 7015378455485162711}
 --- !u!65 &7015378455485162711
 BoxCollider:
   m_ObjectHideFlags: 0
