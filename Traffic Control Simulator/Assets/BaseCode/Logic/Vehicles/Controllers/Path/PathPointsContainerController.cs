@@ -52,6 +52,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Path
         
         public bool HasWaypoints() =>
             _waypoints.Count > 0;
+        
         public void SetCurrentToEndPosition()
         {
             _currentWaypointIndex = _waypoints.Count-1;

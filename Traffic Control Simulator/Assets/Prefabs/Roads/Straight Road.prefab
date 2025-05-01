@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
   m_LocalPosition: {x: 40, y: 0, z: 20}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4551625313930918185}
@@ -55,6 +55,8 @@ MonoBehaviour:
   path: []
   decelerationPoints: []
   accelerationPoints: []
+  startPoint: {fileID: 0}
+  endPoint: {fileID: 0}
   onLeftPathPoints:
   - {fileID: 7805144130763357685}
   - {fileID: 2502680933055340120}
@@ -62,8 +64,6 @@ MonoBehaviour:
   - {fileID: 251374543434579646}
   - {fileID: 5159539520821801347}
   pointDistance: 15
-  startPoint: {fileID: 0}
-  endPoint: {fileID: 0}
 --- !u!65 &7015378455485162711
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -180,7 +180,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 3.5, y: 0, z: 5.499996}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5430435774869311838}
@@ -363,7 +363,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -3.5, y: 0, z: 5.499996}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5430435774869311838}
@@ -569,7 +569,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
   m_LocalPosition: {x: -3.5, y: 0, z: -5.5}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5430435774869311838}
@@ -674,7 +674,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
   m_LocalPosition: {x: 3.5, y: 0, z: -5.5}
-  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5430435774869311838}

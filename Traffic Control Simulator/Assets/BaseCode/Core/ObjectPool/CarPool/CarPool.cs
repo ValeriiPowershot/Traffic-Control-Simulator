@@ -2,6 +2,7 @@ using System;
 using BaseCode.Core.ObjectPool.Base;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.InterfaceHandler.Car;
+using BaseCode.Logic.Services.Interfaces.Car;
 using BaseCode.Logic.Vehicles.Vehicles;
 
 namespace BaseCode.Core.ObjectPool.CarPool
