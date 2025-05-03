@@ -34,6 +34,8 @@ namespace BaseCode.Logic.Vehicles.States.Movement
             if (PathPointController.IsAtFinalWaypoint()) return;
             if (VehicleCollisionController.CheckForCollision()) return;
 
+            Debug.Log("Movement Enter");
+            
             AdjustSpeed();
             MoveTowardsWaypoint();
             RotateTowardsWaypoint();

@@ -22,8 +22,11 @@ namespace BaseCode.Logic.Vehicles.Controllers.Wave
                 carLevel.InitializeLevel(CarManager);
             }
         }
-        public void Update() => GetCurrentWave().Update();
-        
+        public void Update()
+        {
+            GetCurrentWave().Update();
+        }
+
         public void AdvanceToNextWave()
         {
             GetCurrentLevel().currentWaveIndex++;
@@ -47,6 +50,8 @@ namespace BaseCode.Logic.Vehicles.Controllers.Wave
             CarManager.GameManager.saveManager.sceneSo.UnlockScene(CurrentLevelIndex);
         }
         private bool IsLastWave() => GetCurrentLevel().currentWaveIndex >= GetCurrentLevel().waves.Count - 1;
+        public List<CarLevels> CarLevels => _carSpawnServiceHandler.carLevels;
+
         public CarLevels GetCurrentLevel() => CarLevels[CurrentLevelIndex];
         public CarWave GetCurrentWave() => GetCurrentLevel().GetCurrentWave();
         public int CurrentLevelIndex
@@ -61,7 +66,6 @@ namespace BaseCode.Logic.Vehicles.Controllers.Wave
         }
         public CarManager CarManager => _carSpawnServiceHandler.CarManager;
         public CarWaveUIController CarWaveUIController => _carSpawnServiceHandler.CarWaveUIController;
-        public List<CarLevels> CarLevels => _carSpawnServiceHandler.carLevels;
 
 
     }

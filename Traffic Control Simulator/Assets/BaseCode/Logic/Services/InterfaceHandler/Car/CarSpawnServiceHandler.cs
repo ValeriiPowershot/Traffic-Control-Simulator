@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BaseCode.Core.ObjectPool.CarPool;
 using BaseCode.Logic.Managers;
 using BaseCode.Logic.ScriptableObject;
+using BaseCode.Logic.Services.Interfaces.Car;
 using BaseCode.Logic.Vehicles.Controllers.Wave;
 using BaseCode.Logic.Vehicles.Vehicles;
 using BaseCode.Logic.Ways;
