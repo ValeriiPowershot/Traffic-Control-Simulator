@@ -68,6 +68,11 @@ namespace BaseCode.Logic.Roads
             accelerationPoints.AddRange(path.Skip(halfPathLength));
             
             // get its end
+
+            if (path.Count == 0)
+            {
+                Debug.Log("Check Your Triple Roads, No Path Found!");
+            }
             endPoint = path[^1];
             
             // find next start point
