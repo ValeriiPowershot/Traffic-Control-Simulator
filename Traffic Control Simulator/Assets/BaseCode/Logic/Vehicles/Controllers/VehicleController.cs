@@ -24,6 +24,11 @@ namespace BaseCode.Logic.Vehicles.Controllers
         public VehicleLightController VehicleLightController;
         public VehicleReferenceController vehicleReferenceController;
         public VehicleTurnLights vehicleTurnLights;
+        
+        
+        
+        private IVehicleMovementState _currentMovementState;
+        
         public void Starter(BasicCar basicCar)
         {
             VehicleBase = basicCar;
@@ -52,6 +57,16 @@ namespace BaseCode.Logic.Vehicles.Controllers
             VehicleScoreController.RestartVehicleScore(isDied);
             VehicleLightController.RestartVehicleLightController();
         }
+
+        public T GetCurrentState<T>() where T : class, IVehicleMovementState
+        {
+            if (_currentMovementState is T typedState)
+                return typedState;
+
+            Debug.LogWarning($"Current state is not of type {typeof(T).Name}");
+            return null;
+        }
+        
         public void SetState<T>() where T : IVehicleMovementState =>
             VehicleStateController.SetState<T>(); // Start in the stopped state
         

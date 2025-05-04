@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using BaseCode.Extensions.UI;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Vehicles.Controllers;
@@ -17,6 +19,15 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         private float _defaultSpeed;
         private float _slowDownSpeed;
         private float _accelerationSpeed;
+
+        private bool _isSlowingDown;
+
+        private float _startSpeed;
+        private float _preSlowdownSpeed;
+        private float _targetSpeed;
+        private float _transitionDuration = 1.0f;
+        private float _transitionTimer = 0f;
+
         
         public VehicleMovementGoState(VehicleController vehicleController)
         {
@@ -53,16 +64,31 @@ namespace BaseCode.Logic.Vehicles.States.Movement
                 VehiclePathController.ProceedToNextWaypoint();
         }
         
+        public void SmoothSlowdownByAmount(float amount, float duration)
+        {
+            _isSlowingDown = true;
+            
+            _currentSpeed = Mathf.Lerp(_currentSpeed, _currentSpeed - amount, duration);
+        }
+        
+        public void SmoothRestoreSpeed()
+        {
+            _isSlowingDown = false;
+        }
+        
         private void AdjustSpeed()
         {
-            RoadPoint roadPoint = PathPointController.GetCurrentWaypoint();
-
-            _currentSpeed = roadPoint.roadPointType switch
+            if (!_isSlowingDown)
             {
-                RoadPointType.Slowdown => _slowDownSpeed,
-                RoadPointType.Acceleration => _accelerationSpeed,
-                _ => _defaultSpeed
-            };
+                RoadPoint roadPoint = PathPointController.GetCurrentWaypoint();
+                _currentSpeed = roadPoint.roadPointType switch
+                {
+                    RoadPointType.Slowdown => _slowDownSpeed,
+                    RoadPointType.Acceleration => _accelerationSpeed,
+                    _ => _defaultSpeed
+                };
+            }
+            
         }
 
         private void MoveTowardsWaypoint()
@@ -74,6 +100,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
                 _currentSpeed * Time.deltaTime
             );
         }
+        
         private void RotateTowardsWaypoint()
         {
             Transform targetWaypoint = PathPointController.GetCurrentWaypoint().point;

@@ -15,12 +15,10 @@ namespace BaseCode.Logic.Vehicles.Vehicles
         {
             vehicleController.Update(); 
         }
-        
+
         public override void AssignNewPathContainer()
         {
             vehicleController.VehiclePathController.InitializeNewPath();
         }
-
-      
     }
 }
