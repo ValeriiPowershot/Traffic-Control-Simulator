@@ -42,9 +42,11 @@ namespace BaseCode.Logic.Vehicles.States.Movement
         
         private IEnumerator WaitForSeconds()
         {
+            yield return new WaitForSeconds(0.5f);
+            
             VehicleController.SetState<VehicleMovementGoState>();
             
-            IVehicleMovementState state = VehicleController.GetStateCurrentState();
+            /*IVehicleMovementState state = VehicleController.GetStateCurrentState();
 
             if (state is VehicleMovementGoState goState)
             {
@@ -53,7 +55,7 @@ namespace BaseCode.Logic.Vehicles.States.Movement
                 goState.SmoothSlowdownByAmount(5f, 1f);
                 yield return new WaitForSeconds(1f);
                 goState.SmoothRestoreSpeed();
-            }
+            }*/
         }
 
 

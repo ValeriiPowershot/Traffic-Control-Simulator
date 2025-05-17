@@ -14,7 +14,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
         public readonly List<Tuple<Vector3, VehicleBase>> LoadedVehicleBases = new List<Tuple<Vector3, VehicleBase>>();
         public VehicleBase CurrentVehicle;
         
-        protected override bool IsGameOver(RaycastHit hit)
+        /*protected override bool IsGameOver(RaycastHit hit)
         {
             if (hit.collider.TryGetComponent(out VehicleBase hitVehicle))
             {
@@ -34,7 +34,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             hitVehicle.GetComponent<BoxCollider>().enabled = false;
             hitVehicle.enabled = false;
             Truck.truckAnimator.SetTrigger(IsHandSlapper);
-        }
+        }*/
 
         public void ReleaseLoad()
         {

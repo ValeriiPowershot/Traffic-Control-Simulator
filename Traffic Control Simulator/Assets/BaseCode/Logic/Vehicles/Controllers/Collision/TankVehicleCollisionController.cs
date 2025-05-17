@@ -9,7 +9,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
 {
     public class TankVehicleCollisionController : AggressiveVehicleCollisionController
     {
-        protected override bool IsGameOver(RaycastHit hit)
+        /*protected override bool IsGameOver(RaycastHit hit)
         {
             if (hit.collider.TryGetComponent(out VehicleBase hitVehicle))
             {
@@ -18,7 +18,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             }
             
             return false;
-        }
+        }*/
 
     }
 }
