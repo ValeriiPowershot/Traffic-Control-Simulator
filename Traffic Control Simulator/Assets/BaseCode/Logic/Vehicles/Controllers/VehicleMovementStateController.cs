@@ -7,11 +7,12 @@ namespace BaseCode.Logic.Vehicles.Controllers
 {
     public class VehicleMovementStateController
     {
-        private readonly Dictionary<Type, IVehicleMovementState> _states = new Dictionary<Type, IVehicleMovementState>();
+        private readonly Dictionary<Type, IVehicleMovementState> _states = new();
         private IVehicleMovementState _currentMovementMovementState;
         public VehicleMovementStateController(VehicleController vehicleController)
         {
             _states[typeof(VehicleMovementGoState)] = new VehicleMovementGoState(vehicleController);
+            _states[typeof(VehicleMovementCrashState)] = new VehicleMovementCrashState(vehicleController);
             _states[typeof(VehicleMovementStopState)] = new VehicleMovementStopState(vehicleController);
         }
         

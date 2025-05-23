@@ -5,6 +5,9 @@ namespace BaseCode.Logic.Entity.Birds
 {
     public class AnimalWalk : MonoBehaviour
     {
+        [SerializeField] private Animator _animator;
+        [SerializeField] private float _animatorSpeed;
+        
         [SerializeField] private float _speed = 1f; 
         [SerializeField] private float _distance = 5f;
         [SerializeField] private float _pauseDuration = 1f;
@@ -15,6 +18,7 @@ namespace BaseCode.Logic.Entity.Birds
         private void Start()
         {
             _startPosition = transform.position;
+            _animator.speed = _animatorSpeed;
             Move();
         }
 
@@ -28,6 +32,7 @@ namespace BaseCode.Logic.Entity.Birds
                 .SetEase(Ease.Linear)
                 .OnComplete(() => 
                 {
+                    _animator.SetBool("IsPaused", true);
                     DOVirtual.DelayedCall(_pauseDuration, TurnAround);
                 });
         }
@@ -38,6 +43,7 @@ namespace BaseCode.Logic.Entity.Birds
                 .OnComplete(() =>
                 {
                     _movingForward = !_movingForward;
+                    _animator.SetBool("IsPaused", false);
                     Move();
                 });
         }

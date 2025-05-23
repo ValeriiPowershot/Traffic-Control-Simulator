@@ -122,6 +122,7 @@ namespace BaseCode.Logic.PopUps
             
             starAmountText.text = totalStar + "/" + totalMaxStar;
         }
+        
         private int GetTotalEarnedStar()
         {
             int totalStar = 0;
@@ -135,10 +136,5 @@ namespace BaseCode.Logic.PopUps
 
             return totalStar;
         }
-
-       
-
-       
-        
     }
 }

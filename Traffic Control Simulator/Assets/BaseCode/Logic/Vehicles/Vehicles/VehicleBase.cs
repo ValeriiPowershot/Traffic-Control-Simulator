@@ -4,18 +4,16 @@ using BaseCode.Logic.ScriptableObject;
 using BaseCode.Logic.Services.InterfaceHandler.Car;
 using BaseCode.Logic.Vehicles.Controllers;
 using BaseCode.Logic.Vehicles.Controllers.Collision;
-using BaseCode.Logic.Vehicles.Controllers.Lights;
-using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace BaseCode.Logic.Vehicles.Vehicles
 {
     public class VehicleBase : PoolObjectBase
     {
-        private CarManager _carManager;
-        
         public VehicleController vehicleController;
         public VehicleScriptableObject VehicleScriptableObject { get; private set; }
+        public CarCrashTrigger CarCrashTrigger;
+        
+        private CarManager _carManager;
 
         public virtual void Starter(CarManager manager, VehicleScriptableObject currentCar)
         {

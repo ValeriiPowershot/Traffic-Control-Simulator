@@ -5,7 +5,7 @@ namespace BaseCode.Utilities
 {
     public class TimerBase : ITimeUsable
     {
-        public float Timer { get; set; } = 0;
+        public float Timer { get; set; }
         
         public void AddDelay(float delay)
         {
