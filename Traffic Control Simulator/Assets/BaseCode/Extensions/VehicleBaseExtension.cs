@@ -44,37 +44,98 @@ namespace BaseCode.Extensions
         
         public static IEnumerator FadeOutAndRemove(this VehicleBase vehicle)
         {
-            Renderer renderers = vehicle.GetComponent<Renderer>();
-            float duration = 2.5f;
-            float elapsed = 0f;
+            Renderer[] renderers = vehicle.GetComponentsInChildren<Renderer>();
+            float duration = 2.5f;       
+            float delayBeforeFade = 1.0f; 
 
             List<Material> fadeMaterials = new List<Material>();
-                
-            foreach (var mat in renderers.materials)
+            
+            fadeMaterials.Add(vehicle.vehicleController.vehicleTurnLights._leftFrontTurnLight.material);
+            fadeMaterials.Add(vehicle.vehicleController.vehicleTurnLights._leftRearTurnLight.material);
+            fadeMaterials.Add(vehicle.vehicleController.vehicleTurnLights._rightFrontTurnLight.material);
+            fadeMaterials.Add(vehicle.vehicleController.vehicleTurnLights._rightRearTurnLight.material);
+            
+            foreach (Renderer renderer in renderers)
             {
-                fadeMaterials.Add(mat);
+                foreach (Material mat in renderer.materials)
+                {
+                    SetMaterialToTransparent(mat);
+                    fadeMaterials.Add(mat);
+                }
             }
             
-            while (elapsed < duration)
+            foreach (Material mat in fadeMaterials)
             {
-                float alpha = Mathf.Lerp(1f, 0f, elapsed / duration);
-
-                foreach (var mat in fadeMaterials)
+                if (mat.HasProperty("_Color"))
                 {
                     Color c = mat.color;
-                    c.a = alpha;
+                    c.a = 1f;
                     mat.color = c;
+                }
+            }
+
+            // Ждём перед началом затухания
+            float waitElapsed = 0f;
+            while (waitElapsed < delayBeforeFade)
+            {
+                waitElapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                float t = elapsed / duration;
+                float alpha = Mathf.Lerp(1f, 0f, t); 
+
+                foreach (Material mat in fadeMaterials)
+                {
+                    if (mat.HasProperty("_Color"))
+                    {
+                        Color c = mat.color;
+                        c.a = alpha;
+                        mat.color = c;
+                    }
                 }
 
                 elapsed += Time.deltaTime;
                 yield return null;
             }
-            foreach (var mat in fadeMaterials)
+
+            foreach (Material mat in fadeMaterials)
             {
-                Color c = mat.color;
-                c.a = 1;
-                mat.color = c;
+                if (mat.HasProperty("_Color"))
+                {
+                    Color c = mat.color;
+                    c.a = 0f;
+                    mat.color = c;
+                }
+                SetMaterialToOpaque(mat);
             }
+        }
+
+        private static void SetMaterialToTransparent(Material mat)
+        {
+            mat.SetFloat("_Mode", 3); // 3 = Transparent
+            mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            mat.SetInt("_ZWrite", 0);
+            mat.DisableKeyword("_ALPHATEST_ON");
+            mat.EnableKeyword("_ALPHABLEND_ON");
+            mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+        }
+
+        private static void SetMaterialToOpaque(Material mat)
+        {
+            mat.SetFloat("_Mode", 0); // 0 = Opaque
+            mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.One);
+            mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.Zero);
+            mat.SetInt("_ZWrite", 1);
+            mat.DisableKeyword("_ALPHATEST_ON");
+            mat.DisableKeyword("_ALPHABLEND_ON");
+            mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            mat.renderQueue = -1;
         }
     }
 }

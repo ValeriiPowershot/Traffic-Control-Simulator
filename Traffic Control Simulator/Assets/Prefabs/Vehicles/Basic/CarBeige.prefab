@@ -203,6 +203,7 @@ GameObject:
   - component: {fileID: 9032819420728217216}
   - component: {fileID: 6743352091285126650}
   - component: {fileID: 7818362556444605836}
+  - component: {fileID: -1267982211772703861}
   m_Layer: 7
   m_Name: CarBeige
   m_TagString: Untagged
@@ -258,11 +259,11 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1565639850086100834, guid: 8db2c5ec534c53d49983a83000447c0b, type: 3}
-  - {fileID: -8199595658989480634, guid: 8db2c5ec534c53d49983a83000447c0b, type: 3}
+  - {fileID: 2100000, guid: 0eaf03d99ffa2644d877c614eebb1010, type: 2}
+  - {fileID: 2100000, guid: a53f071f33ce39f45bc487e0127ce97d, type: 2}
   - {fileID: -8569140190892233447, guid: 8db2c5ec534c53d49983a83000447c0b, type: 3}
-  - {fileID: 7039595129018381877, guid: 8db2c5ec534c53d49983a83000447c0b, type: 3}
-  - {fileID: -6324965628615627315, guid: 8db2c5ec534c53d49983a83000447c0b, type: 3}
+  - {fileID: 2100000, guid: c3406676428ab2246b467bec71bbc0ce, type: 2}
+  - {fileID: 2100000, guid: c3406676428ab2246b467bec71bbc0ce, type: 2}
   - {fileID: 2100000, guid: e1c362821482d011a88c1c05bc80bcd7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -359,6 +360,7 @@ MonoBehaviour:
       _turnMaterial: {fileID: 2100000, guid: 9eccd14c7af898e4498e176f85e2c496, type: 2}
       _defaultMaterial: {fileID: 2100000, guid: 96cb5f2ca7b3c6744a104d8a968faa80,
         type: 2}
+  CarCrashTrigger: {fileID: -1267982211772703861}
 --- !u!114 &7818362556444605836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -376,6 +378,18 @@ MonoBehaviour:
     good: {r: 0.16470589, g: 1, b: 0, a: 1}
     bad: {r: 0.9607843, g: 0, b: 0, a: 1}
     neutral: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &-1267982211772703861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2068819878279463700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 425fba3bee1bdfd44acaf72c90d6891d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2296885665482467812
 GameObject:
   m_ObjectHideFlags: 0
@@ -5850,15 +5864,13 @@ ParticleSystemRenderer:
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
+  m_UseCustomVertexStreams: 0
   m_EnableGPUInstancing: 0
   m_ApplyActiveColorSpace: 1
   m_AllowRoll: 1
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
-  m_UseCustomVertexStreams: 0
   m_VertexStreams: 0001030405
-  m_UseCustomTrailVertexStreams: 0
-  m_TrailVertexStreams: 00010304
   m_Mesh: {fileID: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
@@ -10705,15 +10717,13 @@ ParticleSystemRenderer:
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0, y: 0, z: 0}
+  m_UseCustomVertexStreams: 0
   m_EnableGPUInstancing: 0
   m_ApplyActiveColorSpace: 1
   m_AllowRoll: 1
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
-  m_UseCustomVertexStreams: 0
   m_VertexStreams: 0001030405
-  m_UseCustomTrailVertexStreams: 0
-  m_TrailVertexStreams: 00010304
   m_Mesh: {fileID: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}

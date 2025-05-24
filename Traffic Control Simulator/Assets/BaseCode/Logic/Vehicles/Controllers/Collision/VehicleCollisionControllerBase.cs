@@ -72,10 +72,10 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             return true;
         }
 
-        private void SetCarCrashed(bool b, VehicleBase hitVehicle)
+        private void SetCarCrashed(bool value, VehicleBase hitVehicle)
         {
-            isCrashed = b;
-            hitVehicle.vehicleController.VehicleCollisionController.isCrashed = b;
+            isCrashed = value;
+            hitVehicle.vehicleController.VehicleCollisionController.isCrashed = value;
         }
 
         private void OnCrash(VehicleBase hitVehicle)
@@ -98,6 +98,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
         
         private IEnumerator CrashedVehicle(VehicleBase hitVehicle) // this should change!
         {
+            hitVehicle.vehicleController.vehicleTurnLights.LightsBlinking();
             GameManager.cameraManager.CameraShake();
             hitVehicle.DisableVehicle();
             // PlayFx(FxTypes.StarCarCrash, hitVehicle.transform, new Vector3(10,10,10));
@@ -109,6 +110,7 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             hitVehicle.EnableVehicle();
             SetCarCrashed(false, hitVehicle);
         }
+        
         protected virtual bool IsItRedLight() =>
             VehicleLightController.CarLightState == LightState.Red;
 

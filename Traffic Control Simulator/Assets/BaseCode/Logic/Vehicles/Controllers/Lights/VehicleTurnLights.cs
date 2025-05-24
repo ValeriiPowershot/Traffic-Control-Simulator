@@ -70,6 +70,12 @@ namespace BaseCode.Logic.Vehicles.Controllers.Lights
             }
         }
 
+        public void LightsBlinking()
+        {
+            vehicleBase.StartCoroutine(TurnMeshLoop(_leftFrontTurnLight, _leftRearTurnLight));
+            vehicleBase.StartCoroutine(TurnMeshLoop(_rightFrontTurnLight, _rightRearTurnLight));
+        }
+        
         private void LeftTurn()
         {
             StopRightTurn();

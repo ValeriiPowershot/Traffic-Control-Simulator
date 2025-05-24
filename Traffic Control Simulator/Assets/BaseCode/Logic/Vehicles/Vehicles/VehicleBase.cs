@@ -11,7 +11,6 @@ namespace BaseCode.Logic.Vehicles.Vehicles
     {
         public VehicleController vehicleController;
         public VehicleScriptableObject VehicleScriptableObject { get; private set; }
-        public CarCrashTrigger CarCrashTrigger;
         
         private CarManager _carManager;
 
