@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using BaseCode.Extensions;
@@ -7,6 +8,7 @@ using BaseCode.Logic.PopUps.PopUp_Base;
 using BaseCode.Logic.ScriptableObject;
 using BaseCode.Utilities;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -44,7 +46,7 @@ namespace BaseCode.Logic.PopUps
             score.AnimateScore(ScoringManager.PlayerScore, 1f, this);            
         }
 
-        public override void OnStartDoTween()
+        public override void OnStartDoTween(Action action = null)
         {
             stars.SetLocalScales(Vector3.zero);
             base.OnStartDoTween();

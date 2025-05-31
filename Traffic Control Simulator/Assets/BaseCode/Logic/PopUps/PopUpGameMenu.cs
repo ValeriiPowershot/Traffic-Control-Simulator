@@ -4,6 +4,7 @@ using BaseCode.Logic.Managers;
 using BaseCode.Logic.PopUps.PopUp_Base;
 using BaseCode.Logic.ScriptableObject;
 using TMPro;
+using UnityEngine;
 
 namespace BaseCode.Logic.PopUps
 {
@@ -18,14 +19,14 @@ namespace BaseCode.Logic.PopUps
             pauseButtonExtension.onClick.AddListener(
                 () =>
                 {
-                    PopUpManager.ShowPopUpFromBase(PopUpManager.GetPopUp<PopUpPauseMenu>());
+                    PopUpManager.ShowPopUpFromBase(PopUpManager.GetPopUp<PopUpPauseMenu>(), ()=> Time.timeScale = 0);
                 });
         }
 
         public override void OnStartShow()
         {
             base.OnStartShow();
-            var createdVfx = VfxManager.PlayVfx(VfxTypes.GameMenuPopUpVfx);
+            AudioSource createdVfx = VfxManager.PlayVfx(VfxTypes.GameMenuPopUpVfx);
         }
         
         public VfxManager VfxManager => GameManager.vfxManager;

@@ -58,14 +58,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.9490196}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0c4ddabd7d50049e7be24c97227ef361, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -371,6 +371,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8752433061575210246}
   - component: {fileID: 310421857266075186}
+  - component: {fileID: 7812763455370404719}
   m_Layer: 5
   m_Name: InformationPopUp
   m_TagString: Untagged
@@ -411,8 +412,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a75c956898145f4847c298f0d85e889, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
+  CanvasGroup: {fileID: 7812763455370404719}
   closeThisPopUp: {fileID: 326701209279044722}
+--- !u!225 &7812763455370404719
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3444322234616963126}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3450924868106202299
 GameObject:
   m_ObjectHideFlags: 0

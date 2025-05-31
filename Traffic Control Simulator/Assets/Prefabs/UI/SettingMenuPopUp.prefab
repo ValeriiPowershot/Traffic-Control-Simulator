@@ -318,6 +318,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6371135875320867404}
   - component: {fileID: 8992308050263320160}
+  - component: {fileID: 1943330470490780280}
   m_Layer: 5
   m_Name: SettingMenuPopUp
   m_TagString: Untagged
@@ -358,12 +359,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 591cf5df931b4e0aa106e4709066e218, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
+  CanvasGroup: {fileID: 1943330470490780280}
   openMainMenu: {fileID: 6587323848196489299}
   helpButton: {fileID: 6319380045765637129}
   toggleExtension: {fileID: 8738275406595070124}
   musicSlider: {fileID: 7684018335513777342}
   soundSlider: {fileID: 8379284156439745344}
+--- !u!225 &1943330470490780280
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1177866174500099194}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1779453276341746477
 GameObject:
   m_ObjectHideFlags: 0
@@ -1978,14 +1991,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.9490196}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0c4ddabd7d50049e7be24c97227ef361, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1

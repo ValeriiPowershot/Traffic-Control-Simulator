@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4765679104648252431}
   - component: {fileID: 3407698604136311036}
   - component: {fileID: 8890665075573364813}
+  - component: {fileID: 3652327173708231582}
   m_Layer: 5
   m_Name: LevelsPopUp
   m_TagString: Untagged
@@ -90,20 +91,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4881e6810d5a46edbabdca9fa0f54aae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CanvasGroup: {fileID: 3652327173708231582}
   openMainMenuButton: {fileID: 1590696216712375035}
   openNextLevelButton: {fileID: 5218458798445562142}
   openPreviousLevelButton: {fileID: 6151516968560249205}
   startGameButton: {fileID: 8769711405135898940}
   settingsGameButton: {fileID: 8834887019247167908}
   tapToStartGameButton: {fileID: 8769711405135898940}
-  reloadSpawnerButton: {fileID: 3796227958747850771}
   starAmountText: {fileID: 2981654609724349947}
   currentLevelText: {fileID: 7758377368919556444}
   stars:
   - {fileID: 1862271040056185822}
   - {fileID: 5462201936927139153}
   - {fileID: 8815559038384500629}
-  currentLevelIndex: 0
+--- !u!225 &3652327173708231582
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 689309957142686886}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1308649937508532375
 GameObject:
   m_ObjectHideFlags: 0
@@ -1562,8 +1574,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Tap To Play
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: a9b507a2395d4438fa1f717db1fbaa1e, type: 2}
-  m_sharedMaterial: {fileID: 4489022025781274634, guid: a9b507a2395d4438fa1f717db1fbaa1e,
+  m_fontAsset: {fileID: 11400000, guid: 74f0980e3e00c3e4aa2798443029f260, type: 2}
+  m_sharedMaterial: {fileID: -4468429953515050002, guid: 74f0980e3e00c3e4aa2798443029f260,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}

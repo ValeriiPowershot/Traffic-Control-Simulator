@@ -1,11 +1,6 @@
-using System.Collections.Generic;
 using BaseCode.Extensions.UI;
 using BaseCode.Logic.PopUps.PopUp_Base;
-using BaseCode.Logic.ScriptableObject;
-using BaseCode.Utilities;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace BaseCode.Logic.PopUps
 {
@@ -14,7 +9,7 @@ namespace BaseCode.Logic.PopUps
         public ButtonExtension resume;
         public ButtonExtension settings;
         public ButtonExtension exit;
-        
+
         private void Start()
         {
             exit.onClick.AddListener(OnOpenExitMenuButtonClicked);
@@ -22,8 +17,15 @@ namespace BaseCode.Logic.PopUps
             resume.onClick.AddListener(OnOpenResumeMenuButtonClicked);
         }
 
+        public override void OnStartShow() =>
+            Time.timeScale = 0;
+
+        public override void OnStartHidden() =>
+            Time.timeScale = 1;
+
         private void OnOpenResumeMenuButtonClicked()
         {
+            Time.timeScale = 1;
             PopUpManager.HidePopUp(this);
         }
 

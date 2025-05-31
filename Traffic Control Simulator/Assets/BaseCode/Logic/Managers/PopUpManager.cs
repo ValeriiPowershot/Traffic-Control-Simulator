@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using BaseCode.Extensions.UI;
 using BaseCode.Logic.PopUps.PopUp_Base;
@@ -47,14 +48,14 @@ namespace BaseCode.Logic.Managers
             if (popUpBase == null)
                 return;
             
-            popUpBase.transform.ReverseDoPopUp(0.5f).OnCompleteCloseActiveness();
+            popUpBase.UIHide(() => popUpBase.gameObject.SetActive(false));
             popUpBase.OnStartHidden();
         }
         
-        public void ShowPopUpFromBase(PopUpBase popUpBase)
+        public void ShowPopUpFromBase(PopUpBase popUpBase, Action onHide = null)
         {
             popUpBase?.gameObject.SetActive(true);
-            popUpBase?.OnStartDoTween(); 
+            popUpBase?.OnStartDoTween(onHide); 
         }
 
         private void ShowPopUpFromObject(PopUpBase popUpBase)

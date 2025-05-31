@@ -402,14 +402,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.9490196}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0c4ddabd7d50049e7be24c97227ef361, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -429,6 +429,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4287647478804686914}
   - component: {fileID: 8035420271777494627}
+  - component: {fileID: 3772362301577857318}
   m_Layer: 5
   m_Name: LosePopUp
   m_TagString: Untagged
@@ -470,7 +471,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99d2532c85b2430f8a0407fad8bcb977, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
+  CanvasGroup: {fileID: 3772362301577857318}
   home: {fileID: 76305596687580625}
   reload: {fileID: 4863567783596199171}
   nextLevel: {fileID: 8864194144789957208}
@@ -478,6 +479,18 @@ MonoBehaviour:
   combo: {fileID: 553601651612781067}
   coin: {fileID: 1698313242508193830}
   stars: []
+--- !u!225 &3772362301577857318
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1610285735649300843}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2069418054726008447
 GameObject:
   m_ObjectHideFlags: 0
