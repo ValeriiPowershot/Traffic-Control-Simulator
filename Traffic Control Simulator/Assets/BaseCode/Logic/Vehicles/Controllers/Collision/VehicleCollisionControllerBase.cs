@@ -78,13 +78,22 @@ namespace BaseCode.Logic.Vehicles.Controllers.Collision
             hitVehicle.vehicleController.VehicleCollisionController.isCrashed = value;
         }
 
+        private static float _collisionIntensity = 0f; // Tracks global intensity
+
         private void OnCrash(VehicleBase hitVehicle)
         {
             if (IsVehicleCrashed(hitVehicle) == false)
             {
                 SetCarCrashed(true, hitVehicle);
                 PlayerFirstCrasherFx();
-                
+
+                // Increase intensity by 10 and set global FMOD parameter
+                _collisionIntensity += 10f;
+                FMODUnity.RuntimeManager.StudioSystem.setParameterByName(AudioHelper.ParameterName.Intensity, _collisionIntensity);
+
+                // Call FMOD collision event using AudioHelper
+                AudioHelper.Play3DSFXAtPosition(AudioHelper.EventPath.SFX_Collision, BasicCar.transform.position);
+
                 CarCrashed(hitVehicle);
                 CarCrashed(BasicCar);
             }
