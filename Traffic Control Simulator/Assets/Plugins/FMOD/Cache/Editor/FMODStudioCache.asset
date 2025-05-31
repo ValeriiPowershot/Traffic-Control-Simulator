@@ -1,6 +1,28 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7960629385031052922
+--- !u!114 &-8510192236698312606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.strings.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Audio/Banks/Desktop/Master.strings.bank
+  Name: Master.strings
+  StudioPath: bank:/Master.strings
+  lastModified: 638843040955021325
+  FileSizes:
+  - Name: Desktop
+    Value: 1120
+  - Name: Mobile
+    Value: 1120
+  Exists: 1
+--- !u!114 &-3191571206242222415
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10,23 +32,45 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Base
+  m_Name: event:/SFX/SFX_TrafficLight
   m_EditorClassIdentifier: 
-  Path: event:/Base
+  Path: event:/SFX/SFX_TrafficLight
   Guid:
-    Data1: -2034399275
-    Data2: 1085446531
-    Data3: 1371759763
-    Data4: -1526489682
+    Data1: 1494623866
+    Data2: 1337937593
+    Data3: -1274902370
+    Data4: -499470507
   Banks:
-  - {fileID: 2487358156632891818}
+  - {fileID: 2080352877218414757}
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 0
+  Length: 2000
+--- !u!114 &-295084717306888807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Audio/Banks/Desktop/Master.bank
+  Name: Master
+  StudioPath: bank:/Master
+  lastModified: 638843040955001204
+  FileSizes:
+  - Name: Desktop
+    Value: 1222
+  - Name: Mobile
+    Value: 1222
+  Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40,44 +84,36 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: 8505195642889318106}
-  - {fileID: 2487358156632891818}
+  - {fileID: -8510192236698312606}
+  - {fileID: -295084717306888807}
+  - {fileID: 4308710759334480141}
+  - {fileID: 2080352877218414757}
   EditorEvents:
-  - {fileID: 2958625493660128155}
-  - {fileID: -7960629385031052922}
-  EditorParameters: []
+  - {fileID: 597763225765404646}
+  - {fileID: 2064925949163924940}
+  - {fileID: 236035967148578156}
+  - {fileID: -3191571206242222415}
+  - {fileID: 2453029430013767150}
+  EditorParameters:
+  - {fileID: 1729217620681797283}
   MasterBanks:
-  - {fileID: 2487358156632891818}
+  - {fileID: -295084717306888807}
   StringsBanks:
-  - {fileID: 8505195642889318106}
+  - {fileID: -8510192236698312606}
   cacheVersion: 131847
-  cacheTime: 638842955818603440
+  cacheTime: 638843041900049026
   SerializableEventsDict:
-  - key: event:/MenuMusic
+  - key: event:/Music/MX_GameMusic
     index: 0
-  - key: event:/Base
+  - key: event:/Music/MX_MainTheme
     index: 1
---- !u!114 &2487358156632891818
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.bank
-  m_EditorClassIdentifier: 
-  Path: ../../../Traffic-Control-Simulator/TrafficControlSimulatorAudio/Audio/Build/Desktop/Master.bank
-  Name: Master
-  StudioPath: bank:/Master
-  lastModified: 638842955818592419
-  FileSizes:
-  - Name: Desktop
-    Value: 971200
-  Exists: 1
---- !u!114 &2958625493660128155
+  - key: event:/SFX/SFX_PlaceHolder
+    index: 2
+  - key: event:/SFX/SFX_TrafficLight
+    index: 3
+  - key: event:/SFX/SFX_Collision
+    index: 4
+--- !u!114 &236035967148578156
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -87,24 +123,127 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/MenuMusic
+  m_Name: event:/SFX/SFX_PlaceHolder
   m_EditorClassIdentifier: 
-  Path: event:/MenuMusic
+  Path: event:/SFX/SFX_PlaceHolder
   Guid:
-    Data1: -1573525188
-    Data2: 1251203405
-    Data3: -147657824
-    Data4: 221205350
+    Data1: 752910970
+    Data2: 1125604584
+    Data3: -1531171913
+    Data4: 473480563
   Banks:
-  - {fileID: 2487358156632891818}
-  IsStream: 1
+  - {fileID: 2080352877218414757}
+  IsStream: 0
   Is3D: 0
-  IsOneShot: 0
+  IsOneShot: 1
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 80065
---- !u!114 &8505195642889318106
+  Length: 192
+--- !u!114 &597763225765404646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/MX_GameMusic
+  m_EditorClassIdentifier: 
+  Path: event:/Music/MX_GameMusic
+  Guid:
+    Data1: 302487981
+    Data2: 1315613751
+    Data3: 881461667
+    Data4: -1387144199
+  Banks:
+  - {fileID: 4308710759334480141}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 796641416737672092}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 18285
+--- !u!114 &796641416737672092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/MX_GameMusic/Intensity
+  m_EditorClassIdentifier: 
+  Name: Intensity
+  StudioPath: 
+  Min: 0
+  Max: 100
+  Default: 0
+  ID:
+    data1: 483490769
+    data2: 254511575
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
+--- !u!114 &1729217620681797283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Intensity
+  m_EditorClassIdentifier: 
+  Name: Intensity
+  StudioPath: parameter:/Intensity
+  Min: 0
+  Max: 100
+  Default: 0
+  ID:
+    data1: 483490769
+    data2: 254511575
+  Type: 0
+  IsGlobal: 1
+  Labels: []
+  Exists: 1
+--- !u!114 &2064925949163924940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/MX_MainTheme
+  m_EditorClassIdentifier: 
+  Path: event:/Music/MX_MainTheme
+  Guid:
+    Data1: 898242788
+    Data2: 1299603767
+    Data3: 1824978310
+    Data4: 1105350546
+  Banks:
+  - {fileID: 4308710759334480141}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 91428
+--- !u!114 &2080352877218414757
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -114,13 +253,64 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Master.strings.bank
+  m_Name: bank:/SFX.bank
   m_EditorClassIdentifier: 
-  Path: ../../../Traffic-Control-Simulator/TrafficControlSimulatorAudio/Audio/Build/Desktop/Master.strings.bank
-  Name: Master.strings
-  StudioPath: bank:/Master.strings
-  lastModified: 638842955818603440
+  Path: Assets/Audio/Banks/Desktop/SFX.bank
+  Name: SFX
+  StudioPath: bank:/SFX
+  lastModified: 638843041900049026
   FileSizes:
   - Name: Desktop
-    Value: 806
+    Value: 128832
+  - Name: Mobile
+    Value: 278592
+  Exists: 1
+--- !u!114 &2453029430013767150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/SFX_Collision
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/SFX_Collision
+  Guid:
+    Data1: 1053616784
+    Data2: 1340456175
+    Data3: 740102794
+    Data4: -784388620
+  Banks:
+  - {fileID: 2080352877218414757}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 4000
+--- !u!114 &4308710759334480141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Music.bank
+  m_EditorClassIdentifier: 
+  Path: Assets/Audio/Banks/Desktop/Music.bank
+  Name: Music
+  StudioPath: bank:/Music
+  lastModified: 638843041899793957
+  FileSizes:
+  - Name: Desktop
+    Value: 1991168
+  - Name: Mobile
+    Value: 4326528
   Exists: 1

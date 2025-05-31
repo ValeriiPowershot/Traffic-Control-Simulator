@@ -20,6 +20,10 @@ namespace BaseCode.Logic.Lights.Controllers
             if(_interactCalled && IsTimerUp())
             {
                 _interactCalled = false;
+
+                // Play SFX for traffic light switch
+                AudioHelper.Play3DSFXAtPosition(AudioHelper.EventPath.SFX_TrafficLight, _light.transform.position);
+
                 _light.ChangeLight();
             }
         }
