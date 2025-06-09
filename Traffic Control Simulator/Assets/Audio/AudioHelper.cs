@@ -68,14 +68,16 @@ public static void Play3DSFXAtPosition(EventReference eventReference, Vector3 po
         instance.start();
         instance.release();
     }
-
-
     public static class EventPath
     {
         public const string MX_GameMusic = "event:/Music/MX_GameMusic";
         public const string MX_MainTheme = "event:/Music/MX_MainTheme";
         public const string SFX_Collision = "event:/SFX/SFX_Collision";
-        public const string SFX_TrafficLight = "event:/SFX/SFX_TrafficLight"; // <-- Add this line
+        public const string SFX_TrafficLight = "event:/SFX/SFX_TrafficLight";
+        public const string SFX_CarDrive = "event:/SFX/SFX_CarDrive";
+        public const string SFX_CarHorn = "event:/SFX/SFX_CarHorn";
+        public const string UI_Click = "event:/UI/UI_Click";
+        public const string UI_Star = "event:/UI/UI_Star";
     }
 
     public static class ParameterName
