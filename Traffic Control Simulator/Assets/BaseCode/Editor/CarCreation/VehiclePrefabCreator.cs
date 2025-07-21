@@ -38,9 +38,9 @@ namespace BaseCode.Editor.CarCreation
 
         private PreviewRenderUtility _previewRenderUtility;
         private float _distance = 30f; // Camera distance from origin
-        private Vector2 _orbitAngles = new Vector2(90, 8); // (Yaw, Pitch)
+        private Vector2 _orbitAngles = new(90, 8); // (Yaw, Pitch)
         private Vector2 _previousMousePos;
-        private bool _isDragging = false;
+        private bool _isDragging;
         private Bounds _combinedBounds = default;
 
         private List<Type> _carTypes = new List<Type>();

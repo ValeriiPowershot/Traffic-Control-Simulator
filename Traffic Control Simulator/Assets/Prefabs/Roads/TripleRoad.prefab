@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 400000}
   - component: {fileID: 2246779615628856269}
-  - component: {fileID: 7795140994106493444}
   m_Layer: 8
   m_Name: TripleRoad
   m_TagString: Untagged
@@ -66,7 +65,7 @@ MonoBehaviour:
   onRightPathPoints: []
   pointDistance: 10
   multiplySize: 100
-  boxCollider: {fileID: 7795140994106493444}
+  boxCollider: {fileID: 0}
   onForwardPathA:
   - {fileID: 5495848753199117647}
   - {fileID: 2107049899689813151}
@@ -188,27 +187,6 @@ MonoBehaviour:
   - {fileID: 7988666377806944660}
   - {fileID: 1541886240758333502}
   - {fileID: 5921734107066617895}
---- !u!65 &7795140994106493444
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 20, y: 5.7083006, z: 20}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &57633257946520254
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,7 +388,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2500553067598360146
 Transform:
   m_ObjectHideFlags: 0
@@ -446,7 +424,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2173594697409936265
 Transform:
   m_ObjectHideFlags: 0
@@ -863,7 +841,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5781399236512336004
 Transform:
   m_ObjectHideFlags: 0
@@ -1732,7 +1710,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2014245794509581665
 Transform:
   m_ObjectHideFlags: 0
@@ -2702,7 +2680,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5451260590409522632
 Transform:
   m_ObjectHideFlags: 0
@@ -3101,7 +3079,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1746562132211839601
 Transform:
   m_ObjectHideFlags: 0
@@ -5341,6 +5319,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Road_tile (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 946b2a21c895f47418181c15ba7f53ff,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6192,6 +6175,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Light (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 4103077061827872911, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4114134594622115936, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5528649351395624294, guid: 09669a953c3edd6ab89c2ea9cc0f6a03,
         type: 3}
       propertyPath: m_Name
@@ -6463,6 +6456,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Road_tile (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 946b2a21c895f47418181c15ba7f53ff,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
