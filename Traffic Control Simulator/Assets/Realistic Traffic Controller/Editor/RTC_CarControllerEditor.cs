@@ -328,6 +328,8 @@ public class RTC_CarControllerEditor : Editor {
             EditorGUILayout.LabelField("Raycasts", EditorStyles.centeredGreyMiniLabel);
             EditorGUILayout.Space();
 
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("CarSpawnIndex"), new GUIContent("CarSpawnIndex", "Car Index."), false);
+            
             EditorGUILayout.PropertyField(serializedObject.FindProperty("useRaycasts"), new GUIContent("Use Raycast", "Raycast will be used to detect obstacles at front of the vehicle."), false);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("raycastLayermask"), new GUIContent("Raycast Layermask", "Raycast will use these layers to detect obstacles."), false);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("raycastDistance"), new GUIContent("Raycast Distance", "Raycast distance."), false);
@@ -401,6 +403,7 @@ public class RTC_CarControllerEditor : Editor {
             EditorGUILayout.Space();
 
             EditorGUI.indentLevel++;
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("turnSignalsSystem"), new GUIContent("", ""), false);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("lights"), new GUIContent("Lights", "All lights of the vehicle. Select lights, and set their types."), true);
             EditorGUI.indentLevel--;
 

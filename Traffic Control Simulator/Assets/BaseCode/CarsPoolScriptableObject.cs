@@ -2,7 +2,7 @@
 
 namespace BaseCode
 {
-    [CreateAssetMenu(fileName = "NewCarSpawnPool", menuName = "Spawning/Unified Car Spawn Pool")]
+    [CreateAssetMenu(fileName = "NewCarSpawnPool", menuName = "Spawning/Car Spawn Pool")]
     public class CarPoolScriptableObject : ScriptableObject
     {
         [System.Serializable]
@@ -14,13 +14,6 @@ namespace BaseCode
             public float initialDelay = 0f;
         }
 
-        [System.Serializable]
-        public class SpawnerEntry
-        {
-            public Vector3 spawnPoint;
-            public CarSpawnData[] carsToSpawn;
-        }
-
-        public SpawnerEntry[] spawners;
+        public CarSpawnData[] carsToSpawn;
     }
 }

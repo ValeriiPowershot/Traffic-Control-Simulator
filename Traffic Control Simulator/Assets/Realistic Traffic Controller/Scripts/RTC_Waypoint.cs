@@ -1,7 +1,7 @@
 //----------------------------------------------
 //        Realistic Traffic Controller
 //
-// Copyright © 2014 - 2024 BoneCracker Games
+// Copyright ï¿½ 2014 - 2024 BoneCracker Games
 // http://www.bonecrackergames.com
 //
 //----------------------------------------------
@@ -70,6 +70,9 @@ public class RTC_Waypoint : MonoBehaviour {
     /// Target wait time.
     /// </summary>
     [Range(0f, 100f)] public float wait = 0f;
+
+    public bool LeftTurnSignal;
+    public bool RightTurnSignal;
 
     /// <summary>
     /// Desired speed for next waypoint.

@@ -1,57 +1,84 @@
 using System.Collections;
-using BaseCode;
 using UnityEngine;
 
-[DisallowMultipleComponent]
-public class CarSpawnerSystem : MonoBehaviour
+namespace BaseCode
 {
-    [Tooltip("Link to ScriptableObject with spawn config.")]
-    public CarPoolScriptableObject config;
-
-    private void Start()
+    [DisallowMultipleComponent]
+    public class CarSpawnerSystem : MonoBehaviour
     {
-        if (config != null)
+        [System.Serializable]
+        public class SpawnerConfig
         {
-            foreach (var spawner in config.spawners)
+            public Transform SpawnPoint;
+            public CarPoolScriptableObject Config;
+            public RTC_Waypoint StartWaypoint;
+            public int SpawnPointIndex;
+        }
+
+        public SpawnerConfig[] spawners;
+
+        [SerializeField] private int _maxSpawnedCarsOnScene;
+
+        private void Start()
+        {
+            foreach (SpawnerConfig spawner in spawners)
             {
-                if (spawner.spawnPoint != null)
+                if (spawner.Config == null)
                 {
-                    StartCoroutine(RunSpawner(spawner));
+                    Debug.LogWarning("SpawnerConfig: не назначен конфиг!", this);
+                    continue;
                 }
-                else
+
+                if (spawner.SpawnPoint == null)
                 {
-                    Debug.LogWarning("Spawner has no assigned spawn point!", this);
+                    Debug.LogWarning("SpawnerConfig: не назначена точка спавна!", this);
+                    continue;
                 }
+
+                StartCoroutine(RunSpawner(spawner));
             }
         }
-        else
-        {
-            Debug.LogError("CarSpawnerSystem: No config assigned!", this);
-        }
-    }
 
-    private IEnumerator RunSpawner(CarPoolScriptableObject.SpawnerEntry spawner)
-    {
-        foreach (var carData in spawner.carsToSpawn)
+        private IEnumerator RunSpawner(SpawnerConfig spawner)
         {
-            yield return new WaitForSeconds(carData.initialDelay);
-
-            for (int i = 0; i < carData.count; i++)
+            foreach (CarPoolScriptableObject.CarSpawnData carData in spawner.Config.carsToSpawn)
             {
-                if (carData.car != null && carData.car.Prefab != null)
-                {
-                    Instantiate(
-                        carData.car.Prefab,
-                        spawner.spawnPoint,
-                        Quaternion.identity
-                    );
-                }
-                else
-                {
-                    Debug.LogWarning("Car or its prefab is missing in config!", this);
-                }
+                yield return new WaitForSeconds(carData.initialDelay);
 
-                yield return new WaitForSeconds(carData.delayBetweenSpawns);
+                for (int i = 0; i < carData.count; i++)
+                {
+                    while (transform.childCount >= _maxSpawnedCarsOnScene)
+                    {
+                        yield return null;
+                    }
+
+                    if (carData.car != null && carData.car.Prefab != null)
+                    {
+                        GameObject car = Instantiate(
+                            carData.car.Prefab,
+                            spawner.SpawnPoint.position,
+                            spawner.SpawnPoint.rotation,
+                            transform
+                        );
+
+                        RTC_CarController controller = car.GetComponent<RTC_CarController>();
+                        if (controller != null)
+                        {
+                            controller.nextWaypoint = spawner.StartWaypoint;
+                            controller.CarSpawnIndex = spawner.SpawnPointIndex;
+                        }
+                        else
+                        {
+                            Debug.LogWarning("У заспавненной машины нет RTC_CarController!", car);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Car или его Prefab отсутствует в конфиге!", this);
+                    }
+
+                    yield return new WaitForSeconds(carData.delayBetweenSpawns);
+                }
             }
         }
     }

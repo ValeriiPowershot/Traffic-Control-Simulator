@@ -1,7 +1,7 @@
 //----------------------------------------------
 //        Realistic Traffic Controller
 //
-// Copyright © 2014 - 2024 BoneCracker Games
+// Copyright Â© 2014 - 2024 BoneCracker Games
 // http://www.bonecrackergames.com
 //
 //----------------------------------------------

@@ -83,6 +83,11 @@ public class RTC_WaypointEditor : Editor {
 
         EditorGUILayout.Space();
 
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("LeftTurnSignal"), new GUIContent("Left Turn Signal", "Left Turn Signal"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("RightTurnSignal"), new GUIContent("Right Turn Signal", "Right Turn Signal"));
+        
+        EditorGUILayout.Space();
+        
         EditorGUILayout.PropertyField(serializedObject.FindProperty("radius"), new GUIContent("Radius", "Radius"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("targetSpeed"), new GUIContent("Target Speed", "Target speed"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("wait"), new GUIContent("Wait", "Wait at this waypoint for x seconds."));

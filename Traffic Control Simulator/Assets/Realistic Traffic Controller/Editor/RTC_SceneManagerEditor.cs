@@ -1,7 +1,7 @@
 //----------------------------------------------
 //        Realistic Traffic Controller
 //
-// Copyright © 2014 - 2024 BoneCracker Games
+// Copyright ï¿½ 2014 - 2024 BoneCracker Games
 // http://www.bonecrackergames.com
 //
 //----------------------------------------------
@@ -13,6 +13,7 @@ using UnityEditor;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
+using Realistic_Traffic_Controller.Scripts;
 
 [CustomEditor(typeof(RTC_SceneManager))]
 public class RTC_SceneManagerEditor : Editor {

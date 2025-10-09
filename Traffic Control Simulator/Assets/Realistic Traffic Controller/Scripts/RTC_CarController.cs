@@ -1,7 +1,7 @@
 //----------------------------------------------
 //        Realistic Traffic Controller
 //
-// Copyright � 2014 - 2024 BoneCracker Games
+// Copyright � 2014 - 2024 BoneCracker Games
 // http://www.bonecrackergames.com
 //
 //----------------------------------------------
@@ -317,6 +317,8 @@ public class RTC_CarController : RTC_Core {
     /// </summary>
     public RTC_Waypoint pastWaypoint;
 
+    public TurnSignalsSystem turnSignalsSystem;
+    
     [Range(.01f, 1f)] public float lookAhead = .125f;
 
     /// <summary>
@@ -631,6 +633,8 @@ public class RTC_CarController : RTC_Core {
     /// </summary>
     public float maxAudioPitch = 1.2f;
 
+    public int CarSpawnIndex;
+    
     [System.Serializable]
     public class Paint {
 
@@ -640,6 +644,10 @@ public class RTC_CarController : RTC_Core {
 
     }
 
+    private bool mustStopAtTrafficLight = false;
+    private Transform currentStopLine;
+    private float stopBuffer = 2f;
+    
     /// <summary>
     /// Paints.
     /// </summary>
@@ -676,6 +684,8 @@ public class RTC_CarController : RTC_Core {
     public RTC_Event_Output outputEvent_OnCollision = new RTC_Event_Output();
     public RTC_Output outputOnCollision = new RTC_Output();
 
+    private bool _isTurnSignalWorking;
+    
     private void Awake() {
 
         //  Car controller component.
@@ -750,7 +760,6 @@ public class RTC_CarController : RTC_Core {
     }
 
     private void Update() {
-
         Inputs();
         ClampInputs();
         Navigation();
@@ -761,6 +770,8 @@ public class RTC_CarController : RTC_Core {
         Audio();
         Takeover();
         Others();
+        
+        
 
         //  Setting timer for last shifting.
         if (lastTimeShifted > 0)
@@ -768,7 +779,6 @@ public class RTC_CarController : RTC_Core {
 
         //  Clamping timer.
         lastTimeShifted = Mathf.Clamp(lastTimeShifted, 0f, 10f);
-
     }
 
     private void FixedUpdate() {
@@ -810,13 +820,9 @@ public class RTC_CarController : RTC_Core {
                     //  If distance is below 15 meters, and other traffic vehicle is at front side, add it to the list.
                     if (Vector3.Distance(transform.position, RTCSceneManager.allVehicles[i].transform.position) < 15f && RTCSceneManager.allVehicles[i] != this && RTCSceneManager.allVehicles[i].gameObject.activeSelf && Vector3.Dot((RTCSceneManager.allVehicles[i].transform.position - transform.position).normalized, transform.forward) > 0)
                         closerVehicles.Add(RTCSceneManager.allVehicles[i]);
-
                 }
-
             }
-
         }
-
     }
 
     /// <summary>
@@ -837,7 +843,6 @@ public class RTC_CarController : RTC_Core {
         bounds.down = -boundsSize.y;
 
         transform.rotation = rot;
-
     }
 
     /// <summary>
@@ -858,7 +863,6 @@ public class RTC_CarController : RTC_Core {
                 hornSource.Stop();
 
             return;
-
         }
 
         //  If engine sound on is selected, adjust volume and pitch based on throttle / speed.
@@ -878,7 +882,6 @@ public class RTC_CarController : RTC_Core {
 
             if (engineSoundOnSource.isActiveAndEnabled && !engineSoundOnSource.isPlaying)
                 engineSoundOnSource.Play();
-
         }
 
         //  If engine sound off is selected, adjust volume and pitch based on throttle / speed.
@@ -937,8 +940,8 @@ public class RTC_CarController : RTC_Core {
 
             if (!stoppedForReason)
                 stoppedTime += Time.deltaTime;
-
-        } else {
+        } 
+        else {
 
             stoppedTime = 0f;
 
@@ -1052,8 +1055,10 @@ public class RTC_CarController : RTC_Core {
     /// <summary>
     /// Raycasting and getting hit info.
     /// </summary>
-    private void Raycasts() {
-
+    private void Raycasts()
+    {
+        TrafficLight trafficLight = null;
+        
         //  If raycasting is disabled, return.
         if (!useRaycasts || useSideRaycasts || crashed) {
 
@@ -1104,16 +1109,16 @@ public class RTC_CarController : RTC_Core {
 
                 closestHit = hit[i].distance;
                 firstHit = hit[i];
-
             }
-
         }
 
         if (firstHit.point != Vector3.zero) {
 
             //  If raycasted object is another traffic vehicle, take it.
             if (!raycastedVehicle)
+            {
                 raycastedVehicle = firstHit.transform.gameObject.GetComponentInParent<RTC_CarController>();
+            }
 
             //  Setting hit distance.
             raycastHitDistance = firstHit.distance;
@@ -1124,9 +1129,27 @@ public class RTC_CarController : RTC_Core {
 
             //  If raycasted, but raycasted object's layer is traffic light, set stopped for reason to true. Otherwise to false.
             if (firstHit.transform.gameObject.layer == LayerMask.NameToLayer("RTC_TrafficLight"))
-                stoppedForReason = true;
+            {
+                // Сначала ищем у root
+                trafficLight = firstHit.transform.root.GetComponent<TrafficLight>();
+
+                // Если не нашли — ищем у детей root-а
+                if (trafficLight == null)
+                    trafficLight = firstHit.transform.root.GetComponentInChildren<TrafficLight>();
+
+                if (trafficLight != null &&
+                    trafficLight.LightIndex == CarSpawnIndex &&
+                    trafficLight.IsRedLight)
+                {
+                    print(trafficLight.name);
+                    StopAtTrafficLight(trafficLight, trafficLight.StopLine);
+                }
+            }
             else
+            {
+                mustStopAtTrafficLight = false;
                 stoppedForReason = false;
+            }
 
             //  Drawing hit ray.
             if (raycastHitDistance != 0)
@@ -1144,21 +1167,24 @@ public class RTC_CarController : RTC_Core {
             }
 
         }
-
-        if (raycastedVehicle) {
-
-            //  If raycasted object is another traffic vehicle, but it stopped for a reason, don't try to takeover.
-            if (raycastedVehicle.stoppedForReason)
-                stoppedForReason = true;
-
-            //  If raycasted object is another traffic vehicle, but it still moving, don't try to takeover.
-            if (raycastedVehicle.currentSpeed >= 2f)
-                stoppedForReason = true;
-
-            //  If raycasted object is another traffic vehicle, but it's waiting at the waypoint, don't try to takeover.
-            if (raycastedVehicle.waitingAtWaypoint > 0f)
-                stoppedForReason = true;
-
+        
+        if (raycastedVehicle)
+        {
+            FollowVehicle(raycastedVehicle);
+        }
+        else
+        {
+            // Если тормоз был очень сильный → быстро убираем
+            brakeInput = Mathf.Lerp(brakeInput, 0f, Time.deltaTime * 1f); // быстрее, чем раньше
+            engineRunning = true;
+            stoppedForReason = false;
+        
+            // Дополнительно: если машина почти стоит, подталкиваем движение
+            if (currentSpeed < 2f)
+            {
+                // Можно сделать плавное восстановление управления движением
+                // Например, включить флаг resumeCruising
+            }
         }
 
         //  Clearing the hit list.
@@ -1166,7 +1192,145 @@ public class RTC_CarController : RTC_Core {
             hit.Clear();
 
     }
+    
+    private void FollowVehicle(RTC_CarController targetVehicle)
+    {
+        if (!targetVehicle) return;
 
+        float distanceToTarget = raycastHitDistance;
+        float mySpeed = currentSpeed;
+        float targetSpeed = targetVehicle.currentSpeed;
+
+        // --- параметры поведения ---
+        float stopDistance = 3f;       // зазор при полной остановке
+        float reactionZone = 15f;      // зона, с которой начинаем реагировать
+        float maxBrake = 1000f;        // максимальный тормоз, как в StopAtTrafficLight
+
+        if (distanceToTarget > reactionZone) return;
+
+        stoppedForReason = true;
+        engineRunning = true; // двигатель работает, но машина тормозит
+
+        // --- расчёт силы торможения ---
+        float brakeFactor = 1f - Mathf.InverseLerp(stopDistance, reactionZone, distanceToTarget);
+        float speedFactor = Mathf.Clamp01((mySpeed - targetSpeed) / 5f);
+
+        float targetBrake = Mathf.Lerp(0f, maxBrake, brakeFactor * (0.5f + speedFactor * 0.5f));
+        brakeInput = Mathf.Lerp(brakeInput, targetBrake, Time.deltaTime * 3f);
+
+        // --- логика полной остановки ---
+        bool targetStopped = targetSpeed < 0.5f;
+        bool tooClose = distanceToTarget <= stopDistance + 0.5f;
+
+        if (tooClose && targetStopped)
+        {
+            brakeInput = maxBrake;
+            rigid.velocity = Vector3.zero;
+            currentSpeed = 0f;
+            mustStopAtTrafficLight = true; // можно переиспользовать этот флаг, если он общий
+        }
+    }
+
+
+
+
+    private void StopAtTrafficLight(TrafficLight trafficLight, Transform stopLine)
+    {
+        if (!trafficLight.IsRedLight) return;
+
+        float distanceToStop = Vector3.Distance(transform.position, stopLine.position);
+        float speed = rigid.velocity.magnitude;
+
+        float reactionZone = 15f;
+
+        if (distanceToStop > reactionZone) return;
+
+        stoppedForReason = true;
+        engineRunning = false; 
+
+        // 🔸 Мягче формула торможения
+        float brakeFactor = 1f - Mathf.InverseLerp(2f, reactionZone, distanceToStop);
+        float speedFactor = Mathf.Clamp01(speed / 5f);
+
+        // 🔸 Уменьшаем силу тормоза в 2 раза
+        float targetBrake = Mathf.Lerp(0f, 500f, brakeFactor * (0.5f + speedFactor * 0.8f));
+
+        // 🔸 Делаем отклик плавнее (было *3f, стало *1.5f)
+        brakeInput = Mathf.Lerp(brakeInput, targetBrake, Time.deltaTime * 1.5f);
+
+        // 🔸 Плавная полная остановка
+        if (distanceToStop <= 1.5f)
+        {
+            brakeInput = Mathf.Lerp(brakeInput, 1000f, Time.deltaTime * 2f);
+            rigid.velocity = Vector3.Lerp(rigid.velocity, Vector3.zero, Time.deltaTime * 3f);
+            mustStopAtTrafficLight = true;
+        }
+    }
+
+
+    private void HandleDrivingAI(TrafficLight trafficLight, RTC_CarController targetVehicle)
+    {
+        bool mustStop = false;
+
+        if (trafficLight && trafficLight.IsRedLight)
+        {
+            float distanceToStop = Vector3.Distance(transform.position, trafficLight.StopLine.position);
+            float stopThreshold = 1.5f;
+
+            if (distanceToStop > stopThreshold)
+            {
+                // Плавное торможение к стоп-линии
+                float brakeFactor = 1f - Mathf.InverseLerp(stopThreshold, 10f, distanceToStop);
+                brakeInput = Mathf.Lerp(brakeInput, 1000f * brakeFactor, Time.deltaTime * 3f);
+            }
+            else
+            {
+                brakeInput = 1000f;
+            }
+
+            engineRunning = false;
+            stoppedForReason = true;
+            mustStop = true;
+        }
+
+        if (!mustStop && targetVehicle)
+        {
+            float distanceToTarget = raycastHitDistance;
+            float mySpeed = currentSpeed;
+            float safeDistance = Mathf.Max(7f, mySpeed * 0.8f);
+            float minDistance = 5f;
+
+            if (distanceToTarget <= minDistance)
+            {
+                brakeInput = Mathf.Lerp(brakeInput, 1000f, Time.deltaTime * 5f);
+                engineRunning = false;
+                stoppedForReason = true;
+                mustStop = true;
+            }
+            else if (distanceToTarget < safeDistance)
+            {
+                float brakeFactor = 1f - Mathf.InverseLerp(minDistance, safeDistance, distanceToTarget);
+                float targetBrake = Mathf.Lerp(0f, 1000f, brakeFactor);
+
+                brakeInput = Mathf.Lerp(brakeInput, targetBrake, Time.deltaTime * 3f);
+                engineRunning = true;
+                stoppedForReason = true;
+                mustStop = true;
+            }
+        }
+
+        if (!mustStop)
+        {
+            brakeInput = Mathf.Lerp(brakeInput, 0f, Time.deltaTime * 3f);
+            engineRunning = true;
+            stoppedForReason = false;
+        }
+    }
+
+
+
+
+    
     /// <summary>
     /// Sideraycasts will be used to takeover. Only for a few seconds.
     /// </summary>
@@ -1763,6 +1927,22 @@ public class RTC_CarController : RTC_Core {
             desiredSpeed = currentWaypoint.desiredSpeedForNextWaypoint;
         else
             desiredSpeed = currentWaypoint.desiredSpeedForInterConnectionWaypoint;
+        
+        if (currentWaypoint.LeftTurnSignal && !_isTurnSignalWorking)
+        {
+            _isTurnSignalWorking = true;
+            turnSignalsSystem.TurnOnLeftTurnSignal();
+        }
+        if(currentWaypoint.RightTurnSignal && !_isTurnSignalWorking)
+        {
+            _isTurnSignalWorking = true;
+            turnSignalsSystem.TurnOnRightTurnSignal();
+        }
+        if(!currentWaypoint.LeftTurnSignal && !currentWaypoint.RightTurnSignal)
+        {
+            _isTurnSignalWorking = false;
+            turnSignalsSystem.TurnOffAllSignals();
+        }
 
         //  If desired speed is not 0, multiply desired speed from .75f - 1.25f related to distance to the waypoint.
         if (Vector3.Distance(navigatorPoint.position, currentWaypoint.transform.position) > 60f) {
