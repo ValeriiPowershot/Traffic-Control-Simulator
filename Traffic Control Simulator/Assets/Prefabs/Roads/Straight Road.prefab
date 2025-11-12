@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 400000}
-  - component: {fileID: 4443975114715807089}
   m_Layer: 8
   m_Name: Straight Road
   m_TagString: Untagged
@@ -34,37 +33,6 @@ Transform:
   - {fileID: 5430435774869311838}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
---- !u!114 &4443975114715807089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54750b7945897d93694f434024a91e21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  roadSo: {fileID: 11400000, guid: 8b723b76ceedd9accac243fd5c757e34, type: 2}
-  roadMesh: {fileID: 4300000, guid: e3c71c50de390ec4190b877211ba0717, type: 3}
-  pointMask:
-    serializedVersion: 2
-    m_Bits: 512
-  path: []
-  decelerationPoints: []
-  accelerationPoints: []
-  startPoint: {fileID: 0}
-  endPoint: {fileID: 0}
-  onLeftPathPoints:
-  - {fileID: 7805144130763357685}
-  - {fileID: 2502680933055340120}
-  onRightPathPoints:
-  - {fileID: 251374543434579646}
-  - {fileID: 5159539520821801347}
-  pointDistance: 15
-  multiplySize: 100
-  boxCollider: {fileID: 0}
 --- !u!1 &815745894159657029
 GameObject:
   m_ObjectHideFlags: 0

@@ -1667,7 +1667,7 @@ Transform:
   m_GameObject: {fileID: 6010508636078996251}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.6378, z: -0.439}
+  m_LocalPosition: {x: -0, y: -0.641, z: -1.639}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2610,12 +2610,12 @@ MonoBehaviour:
   wheels:
   - wheelModel: {fileID: 2723058843770353940}
     wheelCollider: {fileID: 3653380481499054306}
-    isTraction: 0
+    isTraction: 1
     isSteering: 1
     isBraking: 1
   - wheelModel: {fileID: 4666292983503214630}
     wheelCollider: {fileID: 7256740243352843}
-    isTraction: 0
+    isTraction: 1
     isSteering: 1
     isBraking: 1
   - wheelModel: {fileID: 1826344565761036756}
@@ -2650,27 +2650,27 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 800
-      value: 208
-      inSlope: 0.041675016
-      outSlope: 0.041675016
+      value: 98
+      inSlope: 0.018252933
+      outSlope: 0.018252933
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 5791
-      value: 416
-      inSlope: -0.03651016
-      outSlope: -0.03651016
+      time: 6169
+      value: 196
+      inSlope: -0.030183598
+      outSlope: -0.030183598
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 7000
-      value: 277.33334
-      inSlope: -0.11469533
-      outSlope: -0.11469533
+      value: 130.66667
+      inSlope: -0.07862013
+      outSlope: -0.07862013
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
@@ -2679,7 +2679,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   autoGenerateEngineRPMCurve: 1
-  maxEngineTorqueAtRPM: 5791
+  maxEngineTorqueAtRPM: 6169
   wantedEngineRPMRaw: 0
   engageClutchRPM: 600
   currentEngineRPM: 0
@@ -2704,10 +2704,10 @@ MonoBehaviour:
   dontGearShiftTimer: 1
   lastTimeShifted: 0
   differentialRatio: 3.6
-  engineTorque: 416
+  engineTorque: 196
   maximumSpeed: 60
   desiredSpeed: 0
-  brakeTorque: 200
+  brakeTorque: 32067
   steerAngle: 30
   direction: 1
   currentSpeed: 0
@@ -2744,7 +2744,7 @@ MonoBehaviour:
   raycastLayermask:
     serializedVersion: 2
     m_Bits: 4294967295
-  raycastDistance: 6
+  raycastDistance: 3
   raycastDistanceRate: 20
   raycastHitDistance: 0
   raycastOrigin: {x: 0, y: 0, z: 0}
