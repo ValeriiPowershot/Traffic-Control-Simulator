@@ -1573,6 +1573,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   carController: {fileID: 0}
+  rigid: {fileID: 0}
+  vehicleType: 4
   COM: {fileID: 4240333080430032631}
   wheels:
   - wheelModel: {fileID: 5426425545716997895}
@@ -1595,7 +1597,6 @@ MonoBehaviour:
     isTraction: 1
     isSteering: 0
     isBraking: 1
-  vehicleType: 4
   bounds:
     front: 2.0473619
     rear: -2.0473619
@@ -1603,14 +1604,6 @@ MonoBehaviour:
     right: 0.84416443
     up: 0.72591954
     down: -0.72591954
-  throttleInput: 0
-  brakeInput: 0
-  steerInput: 0
-  clutchInput: 1
-  throttleInputRaw: 0
-  brakeInputRaw: 0
-  steerInputRaw: 0
-  clutchInputRaw: 1
   engineRunning: 1
   engineTorqueCurve:
     serializedVersion: 2
@@ -1646,15 +1639,20 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   autoGenerateEngineRPMCurve: 1
-  maxEngineTorqueAtRPM: 4000
-  wantedEngineRPMRaw: 0
-  engageClutchRPM: 600
-  currentEngineRPM: 0
   minEngineRPM: 800
   maxEngineRPM: 7000
+  maxEngineTorqueAtRPM: 4000
+  engageClutchRPM: 600
+  currentEngineRPM: 0
+  wantedEngineRPMRaw: 0
   tractionWheelRPM2EngineRPM: 0
-  wheelRPM2Speed: 0
-  targetWheelSpeedForCurrentGear: 0
+  engineTorque: 200
+  maximumSpeed: 160
+  differentialRatio: 3.6
+  gearShiftThreshold: 0.85
+  gearShiftUpRPM: 5000
+  gearShiftDownRPM: 3250
+  gearShiftingTime: 0.2
   gearRatios:
   - 4.35
   - 2.5
@@ -1663,59 +1661,33 @@ MonoBehaviour:
   - 1
   - 0.85
   currentGear: 0
-  gearShiftThreshold: 0.85
-  gearShiftUpRPM: 5000
-  gearShiftDownRPM: 3250
-  gearShiftingTime: 0.2
   gearShiftingNow: 0
   dontGearShiftTimer: 1
   lastTimeShifted: 0
-  differentialRatio: 3.6
-  engineTorque: 200
-  maximumSpeed: 160
-  desiredSpeed: 0
-  brakeTorque: 1000
-  steerAngle: 40
-  direction: 1
-  currentSpeed: 0
-  waitingAtWaypoint: 0
-  stopNow: 0
+  throttleInput: 0
+  brakeInput: 0
+  steerInput: 0
+  clutchInput: 1
+  throttleInputRaw: 0
+  brakeInputRaw: 0
+  steerInputRaw: 0
+  clutchInputRaw: 1
+  smoothInputs: 1
+  ignoreInputs: 0
   currentWaypoint: {fileID: 0}
   nextWaypoint: {fileID: 0}
   pastWaypoint: {fileID: 0}
-  turnSignalsSystem: {fileID: 0}
-  lookAhead: 0.125
+  currentSpeed: 0
+  desiredSpeed: 0
+  waitingAtWaypoint: 0
+  stopNow: 0
   interconnecting: 0
   willTurnLeft: 0
   willTurnRight: 0
+  lookAhead: 0.125
+  turnSignalsSystem: {fileID: 0}
+  lighting: 1
   isNight: 0
-  checkUpsideDown: 1
-  m_checkUpsideDown: 0
-  canCrash: 0
-  crashImpact: 3
-  disableAfterCrash: 0
-  m_disableAfterCrash: 0
-  crashed: 0
-  canTakeover: 0
-  stoppedForReason: 0
-  stoppedTime: 0
-  timeNeededToTakeover: 3
-  passingObstacle: 0
-  ignoreInputs: 0
-  useSideRaycasts: 0
-  overtakingTimer: 0
-  waitForHorn: 0
-  smoothInputs: 1
-  useRaycasts: 1
-  raycastOrder: 0
-  raycastLayermask:
-    serializedVersion: 2
-    m_Bits: 2147483647
-  raycastDistance: 3
-  raycastDistanceRate: 20
-  raycastHitDistance: 0
-  raycastOrigin: {x: 0, y: 0, z: 0}
-  raycastedVehicle: {fileID: 0}
   lights:
   - light: {fileID: 4584264617682213535}
     lightType: 0
@@ -1759,11 +1731,6 @@ MonoBehaviour:
     meshRenderer: {fileID: 1258119363616813473}
     shaderKeyword: _EmissionColor
     materialIndex: 0
-  spawnPositionOffset: {x: 0, y: 0.5, z: 0}
-  optimization: 1
-  distanceForLOD: 100
-  wheelAligning: 1
-  lighting: 1
   sounding: 1
   engineSoundOnSource: {fileID: 0}
   engineSoundOffSource: {fileID: 0}
@@ -1777,9 +1744,27 @@ MonoBehaviour:
   maxAudioVolume: 0.5
   minAudioPitch: 0.55
   maxAudioPitch: 1.2
-  CarSpawnIndex: 0
+  useRaycasts: 1
+  useSideRaycasts: 0
+  raycastOrder: 0
+  raycastLayermask:
+    serializedVersion: 2
+    m_Bits: 2147483647
+  raycastDistance: 3
+  raycastDistanceRate: 20
+  raycastHitDistance: 0
+  raycastOrigin: {x: 0, y: 0, z: 0}
+  raycastedVehicle: {fileID: 0}
+  canCrash: 0
+  crashImpact: 3
+  disableAfterCrash: 0
+  m_disableAfterCrash: 0
+  crashed: 0
+  checkUpsideDown: 1
+  m_checkUpsideDown: 0
   paints: []
-  closerVehicles: []
+  spawnPositionOffset: {x: 0, y: 0.5, z: 0}
+  CarSpawnIndex: 0
   outputEvent_OnEnable:
     m_PersistentCalls:
       m_Calls: []
@@ -1789,6 +1774,22 @@ MonoBehaviour:
   outputEvent_OnCollision:
     m_PersistentCalls:
       m_Calls: []
+  optimization: 1
+  distanceForLOD: 100
+  wheelAligning: 1
+  wheelRPM2Speed: 0
+  targetWheelSpeedForCurrentGear: 0
+  brakeTorque: 1000
+  steerAngle: 40
+  direction: 1
+  canTakeover: 0
+  stoppedForReason: 0
+  stoppedTime: 0
+  timeNeededToTakeover: 3
+  passingObstacle: 0
+  overtakingTimer: 0
+  waitForHorn: 0
+  closerVehicles: []
 --- !u!1 &8451409993390299294
 GameObject:
   m_ObjectHideFlags: 0
