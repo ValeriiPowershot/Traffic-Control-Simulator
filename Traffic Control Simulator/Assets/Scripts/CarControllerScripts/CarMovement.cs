@@ -26,6 +26,11 @@ public class CarMovement : MonoBehaviour
 
     public void UpdateMovement()
     {
+        if (rb.velocity.magnitude > maxSpeed)
+        {
+            SetBrake(maxBrakeForce / 2);
+        }
+
         // Плавное применение тормозов
         frontLeft.brakeTorque = currentBrake;
         frontRight.brakeTorque = currentBrake;
@@ -40,6 +45,16 @@ public class CarMovement : MonoBehaviour
         else
         {
             ApplyMotor();
+        }
+    }
+
+    public void ApplyBrakePriority(float targetBrake)
+    {
+        // Если новый тормоз сильнее текущего — применяем его
+        if (targetBrake > currentBrake)
+        {
+            currentBrake = targetBrake;
+            IsBraking = currentBrake > 0f;
         }
     }
 

@@ -8,11 +8,6 @@ public class WaypointSystem : MonoBehaviour
 
     public Transform CurrentTarget => currentIndex < waypoints.Length ? waypoints[currentIndex] : null;
 
-    /// <summary>
-    /// Обновление waypoint и управление торможением
-    /// </summary>
-    /// <param name="carTransform">Transform машины</param>
-    /// <param name="movement">CarMovement компонент</param>
     public void UpdateWaypoints(Transform carTransform, CarMovement movement)
     {
         if (CurrentTarget == null) return;
@@ -21,74 +16,101 @@ public class WaypointSystem : MonoBehaviour
         float speed = movement.rb.velocity.magnitude;
 
         Waypoint wp = CurrentTarget.GetComponent<Waypoint>();
-        TrafficLightNew light = CurrentTarget.GetComponent<TrafficLightNew>();
+        TrafficLightStopWaypoint light = CurrentTarget.GetComponent<TrafficLightStopWaypoint>();
 
         float desiredBrake = 0f;
 
-        // --- StopHere торможение ---
+        // =========================================================
+        // 🔹 1. Проверяем СЛЕДУЮЩУЮ точку (если она светофор)
+        // =========================================================
+
+        if (currentIndex + 1 < waypoints.Length)
+        {
+            Transform nextPoint = waypoints[currentIndex + 1];
+            TrafficLightStopWaypoint nextLight = nextPoint.GetComponent<TrafficLightStopWaypoint>();
+
+            if (nextLight != null)
+            {
+                float distanceToNext = Vector3.Distance(carTransform.position, nextPoint.position);
+
+                if (distanceToNext <= nextLight.brakeDistance)
+                {
+                    // Если красный — тормозим до нуля
+                    // Если зелёный — замедляемся до разрешённой скорости
+                    float targetSpeed = nextLight.isRed ? 0f : 5f; // ← можешь менять
+
+                    float speedDiff = speed - targetSpeed;
+
+                    if (speedDiff > 0f)
+                    {
+                        float ratio = speedDiff / movement.maxSpeed;
+                        float brake = Mathf.Clamp(ratio * movement.maxBrakeForce, 0f, movement.maxBrakeForce);
+                        desiredBrake = Mathf.Max(desiredBrake, brake);
+                    }
+                }
+            }
+        }
+
+        // =========================================================
+        // 🔹 2. Обычный StopHere
+        // =========================================================
+
         if (wp != null && wp.stopHere)
         {
-            float stoppingDistance = (speed * speed) / (2f * movement.maxBrakeForce);
-            float brakeDist = Mathf.Max(stoppingDistance, wp.brakeDistance);
-
-            if (distance <= brakeDist)
+            if (distance <= wp.brakeDistance)
             {
-                float ratio = Mathf.Clamp01(1f - distance / Mathf.Max(brakeDist, 0.1f));
-                desiredBrake = ratio * movement.maxBrakeForce;
+                float ratio = Mathf.Clamp01(1f - distance / Mathf.Max(wp.brakeDistance, 0.1f));
+                desiredBrake = Mathf.Max(desiredBrake, ratio * movement.maxBrakeForce);
             }
         }
 
-        // --- TrafficLight торможение ---
+        // =========================================================
+        // 🔹 3. Текущий светофор
+        // =========================================================
+
         if (light != null)
         {
-            float stoppingDistance = (speed * speed) / (2f * movement.maxBrakeForce);
-            float brakeDist = Mathf.Max(stoppingDistance, light.brakeDistance);
-
-            if (light.isRed && distance <= brakeDist)
+            if (distance <= light.brakeDistance)
             {
-                float ratio = Mathf.Clamp01(1f - distance / Mathf.Max(brakeDist, 0.1f));
-                desiredBrake = Mathf.Max(desiredBrake, ratio * movement.maxBrakeForce);
+                float targetSpeed = light.isRed ? 0f : 5f;
 
-            }
-            else if (!light.isRed)
-            {
-                // Зеленый свет → мгновенно снимаем тормоз
-                desiredBrake = 0f;
+                float speedDiff = speed - targetSpeed;
+
+                if (speedDiff > 0f)
+                {
+                    float ratio = speedDiff / movement.maxSpeed;
+                    float brake = Mathf.Clamp(ratio * movement.maxBrakeForce, 0f, movement.maxBrakeForce);
+                    desiredBrake = Mathf.Max(desiredBrake, brake);
+                }
+
+                if (!light.isRed)
+                {
+                    movement.SetBrake(0f);
+                }
             }
         }
 
-        // Применяем торможение
-        movement.SetBrake(desiredBrake);
+        // =========================================================
+        // 🔹 Применяем тормоз
+        // =========================================================
 
-        // --- Достижение точки с учётом TrafficLight ---
+        movement.ApplyBrakePriority(desiredBrake);
+
+        // =========================================================
+        // 🔹 Переключение waypoint
+        // =========================================================
+
         bool reached = false;
 
-// Обычный waypoint
         if (wp != null && distance <= wp.radius)
             reached = true;
 
-// TrafficLight
-        if (light != null && distance <= light.radius)
-        {
-            if (!light.isRed)
-            {
-                // Зеленый свет → можно засчитать
-                reached = true;
-            }
-            else
-            {
-                // Красный свет → не засчитываем, пока свет красный
-                reached = false;
-            }
-        }
+        if (light != null && distance <= light.radius && !light.isRed)
+            reached = true;
 
         if (reached)
         {
-            // Переходим к следующей точке
             currentIndex = Mathf.Min(currentIndex + 1, waypoints.Length - 1);
-
-            // Сбрасываем тормоза после прохождения точки
-            movement.SetBrake(0f);
         }
     }
 }

@@ -330,7 +330,7 @@ namespace Realistic_Traffic_Controller.Scripts
             get {
                 if (currentWaypoint && currentWaypoint.connectedLane)
                     return currentWaypoint.connectedLane;
-                
+
                 return null;
             }
         }
@@ -349,7 +349,7 @@ namespace Realistic_Traffic_Controller.Scripts
         }
 
         #endregion
-        
+
         #region Traffic and Behavior
 
         /// <summary>
@@ -393,7 +393,7 @@ namespace Realistic_Traffic_Controller.Scripts
         public List<RTC_CarController> closerVehicles = new List<RTC_CarController>();
 
         #endregion
-        
+
         #region Indicators and Signals
 
         /// <summary>
@@ -589,7 +589,7 @@ namespace Realistic_Traffic_Controller.Scripts
         }
 
         #endregion
-        
+
         #region Initialization
 
         private void InitializeCarController()
@@ -816,7 +816,7 @@ namespace Realistic_Traffic_Controller.Scripts
         }
 
         #endregion
-        
+
         /// <summary>
         /// Others.
         /// </summary>
@@ -858,7 +858,7 @@ namespace Realistic_Traffic_Controller.Scripts
             }
 
         }
-        
+
         #region Input
 
         /// <summary>
@@ -915,7 +915,7 @@ namespace Realistic_Traffic_Controller.Scripts
         }
 
         #endregion
-        
+
         #region Raycast
 
         private void Raycasts()
@@ -1037,19 +1037,19 @@ namespace Realistic_Traffic_Controller.Scripts
             var trafficLight = hit.transform.root.GetComponent<TrafficLight>()
                 ?? hit.transform.root.GetComponentInChildren<TrafficLight>();
 
-            if (trafficLight != null &&
-                trafficLight.LightIndex == CarSpawnIndex &&
-                trafficLight.IsRedLight)
-            {
-                Debug.Log(trafficLight.name);
-                StopAtTrafficLight(trafficLight, trafficLight.StopLine);
-            }
-            else
-            {
-                stoppedForReason = false;
-                engineRunning = true;
-                brakeInput = 0;
-            }
+            // //if (trafficLight != null &&
+            //     //trafficLight.LightIndex == CarSpawnIndex &&
+            //     //trafficLight.IsRedLight)
+            // {
+            //     Debug.Log(trafficLight.name);
+            //     StopAtTrafficLight(trafficLight, trafficLight.StopLine);
+            // }
+            // else
+            // {
+            //     stoppedForReason = false;
+            //     engineRunning = true;
+            //     brakeInput = 0;
+            // }
         }
 
         private void ResetTrafficLightFlags()
@@ -1092,7 +1092,7 @@ namespace Realistic_Traffic_Controller.Scripts
                 color
             );
         }
-        
+
         private void SideRaycasts()
         {
 
@@ -1222,7 +1222,7 @@ namespace Realistic_Traffic_Controller.Scripts
 
         private void StopAtTrafficLight(TrafficLight trafficLight, Transform stopLine)
         {
-            if (!trafficLight.IsRedLight) return;
+            //if (!trafficLight.IsRedLight) return;
 
             float distanceToStop = Vector3.Distance(transform.position, stopLine.position);
 
@@ -1361,7 +1361,7 @@ namespace Realistic_Traffic_Controller.Scripts
 
             }
         }
-        
+
         /// <summary>
         /// Adjusting clutch input based on engine rpm and speed.
         /// </summary>
@@ -1397,7 +1397,7 @@ namespace Realistic_Traffic_Controller.Scripts
 
         }
 
-        
+
         /// <summary>
         /// Shift to specific gear.
         /// </summary>
@@ -1439,10 +1439,10 @@ namespace Realistic_Traffic_Controller.Scripts
 
         }
 
-        
+
         #endregion
-        
-        
+
+
         /// <summary>
         /// Calculating throttle input clamped 0f - 1f.
         /// </summary>
@@ -1682,7 +1682,7 @@ namespace Realistic_Traffic_Controller.Scripts
 
             UpdateProjection();
         }
-        
+
         private bool HandleCrashedOrNoWaypoint()
         {
             if (crashed || !currentWaypoint)
@@ -1707,7 +1707,7 @@ namespace Realistic_Traffic_Controller.Scripts
 
             return false;
         }
-        
+
         private void HandleOvertaking()
         {
             if (overtakingTimer > 0)
@@ -1749,13 +1749,13 @@ namespace Realistic_Traffic_Controller.Scripts
                     currentWaypoint.transform.position - pastWaypoint.transform.position,
                     transform.position);
 
-                navigatorPoint.position += 
+                navigatorPoint.position +=
                     (currentWaypoint.transform.position - pastWaypoint.transform.position).normalized *
                     ((currentSpeed + 10f) * lookAhead);
 
                 navigatorPoint.position = RTC.ClampVector(
-                    navigatorPoint.position, 
-                    currentWaypoint.transform.position, 
+                    navigatorPoint.position,
+                    currentWaypoint.transform.position,
                     pastWaypoint.transform.position);
             }
             else
@@ -1763,7 +1763,7 @@ namespace Realistic_Traffic_Controller.Scripts
                 navigatorPoint.position = transform.position;
             }
         }
-        
+
         private void AimNavigator()
         {
             if (pastWaypoint)
@@ -1802,7 +1802,7 @@ namespace Realistic_Traffic_Controller.Scripts
             }
             else if (desiredSpeed != 0)
             {
-                desiredSpeed *= Mathf.Lerp(.75f, 1.25f, 
+                desiredSpeed *= Mathf.Lerp(.75f, 1.25f,
                     Mathf.InverseLerp(0f, 60f, Vector3.Distance(navigatorPoint.position, currentWaypoint.transform.position)));
             }
         }
@@ -1813,7 +1813,7 @@ namespace Realistic_Traffic_Controller.Scripts
             projection.center = new Vector3(0f, 0f, currentSpeed / 8f);
             projection.transform.localRotation = Quaternion.identity * Quaternion.Euler(0f, steerAngle * steerInput, 0f);
         }
-        
+
         /// <summary>
         /// Passes to the next waypoint, or to the interconnection waypoint.
         /// </summary>
@@ -1958,9 +1958,9 @@ namespace Realistic_Traffic_Controller.Scripts
             nextWaypoint = currentWaypoint;
 
         }
-        
+
         #endregion
-        
+
         /// <summary>
         /// Operating vehicle lights based on steer input and brake input.
         /// </summary>
@@ -2123,7 +2123,7 @@ namespace Realistic_Traffic_Controller.Scripts
             }
 
         }
-        
+
         /// <summary>
         /// On collision enter.
         /// </summary>
@@ -2228,13 +2228,13 @@ namespace Realistic_Traffic_Controller.Scripts
                 Gizmos.DrawSphere(transform.position + transform.up * bounds.down, .15f);
             }
         }
-        
+
         //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        
+
         ///Code That`s useless now, but in the future can work with other stuff!
         /// Why like that, it`s not a shit code because it`s base of car controller, that I dont wanna use now
 
-        
+
         // /// <summary>
         // /// Going reverse for 1 second.
         // /// </summary>
@@ -2256,7 +2256,7 @@ namespace Realistic_Traffic_Controller.Scripts
         //     direction = 1;
         //
         // }
-        
+
         // /// <summary>
         // /// Paints the body with randomized color.
         // /// </summary>
@@ -2270,7 +2270,7 @@ namespace Realistic_Traffic_Controller.Scripts
         //             paints[i].meshRenderer.materials[paints[i].materialIndex].SetColor(paints[i].colorString, randomColor);
         //     }
         // }
-        
+
         // /// <summary>
         // /// Takeover.
         // /// </summary>

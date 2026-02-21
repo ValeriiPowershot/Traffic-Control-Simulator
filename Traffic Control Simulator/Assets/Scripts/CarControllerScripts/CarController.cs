@@ -15,14 +15,17 @@ namespace CarControllerScripts
 
         void FixedUpdate()
         {
-            // Обновляем waypoint и тормоз/движение
+            // 1. Обновляем waypoint и тормоз/движение
             waypointSystem.UpdateWaypoints(transform, movement);
 
-            // Обновляем рулевое управление
+            // 2. Обновляем рулевое управление
             steering.UpdateSteering(transform, waypointSystem.CurrentTarget, movement.IsBraking);
 
-            // Применяем движение
+            // 3. Применяем движение
             movement.UpdateMovement();
+
+            // 4. Если впереди есть объект, CarDetection уже вызвала SetBrake
+            //    — просто оставляем торможение как есть, не блокируем остальные функции
         }
     }
 }
