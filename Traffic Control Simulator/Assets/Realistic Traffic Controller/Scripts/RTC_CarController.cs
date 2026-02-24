@@ -320,6 +320,11 @@ namespace Realistic_Traffic_Controller.Scripts
 
         #endregion
 
+        [Header("Vehicle Following")]
+        [SerializeField] private float slowDownDistance = 25f;
+        [SerializeField] private float stopDistance = 8f;
+        [SerializeField] private float followBrakeStrength = 1f;
+
         #region Navigation and Lanes
 
         /// <summary>
@@ -393,6 +398,11 @@ namespace Realistic_Traffic_Controller.Scripts
         public List<RTC_CarController> closerVehicles = new List<RTC_CarController>();
 
         #endregion
+
+        private bool stoppedForVehicle;
+        private bool stoppedForTrafficLight;
+        [SerializeField] private float brakeSmoothSpeed = 1f;
+        private float targetBrake;
 
         #region Indicators and Signals
 
@@ -918,6 +928,9 @@ namespace Realistic_Traffic_Controller.Scripts
 
         #region Raycast
 
+
+
+
         private void Raycasts()
         {
             if (!CanPerformRaycast()) return;
@@ -936,6 +949,28 @@ namespace Realistic_Traffic_Controller.Scripts
             HandleVehicleFollowing(); // 👈 extracted from your commented-out block
 
             ClearHitListIfNeeded(); // 👈 extracted from the bottom
+
+            ResolveBrakingState();
+            SmoothBrake();
+        }
+
+        private void ResolveBrakingState()
+        {
+            if (!stoppedForVehicle && !stoppedForTrafficLight)
+                targetBrake = 0f;
+        }
+
+        private void SmoothBrake()
+        {
+            float dynamicBrakeSpeed = brakeSmoothSpeed * Mathf.Clamp01(currentSpeed / 50f);
+
+            brakeInput = Mathf.MoveTowards(
+                brakeInput,
+                targetBrake,
+                dynamicBrakeSpeed * Time.deltaTime
+            );
+
+            stoppedForReason = brakeInput > 0.05f;
         }
 
         private bool CanPerformRaycast()
@@ -1037,19 +1072,15 @@ namespace Realistic_Traffic_Controller.Scripts
             var trafficLight = hit.transform.root.GetComponent<TrafficLight>()
                 ?? hit.transform.root.GetComponentInChildren<TrafficLight>();
 
-            // //if (trafficLight != null &&
-            //     //trafficLight.LightIndex == CarSpawnIndex &&
-            //     //trafficLight.IsRedLight)
+            // if (trafficLight != null &&
+            //     trafficLight.LightIndex == CarSpawnIndex &&
+            //     trafficLight.IsRedLight)
             // {
-            //     Debug.Log(trafficLight.name);
-            //     StopAtTrafficLight(trafficLight, trafficLight.StopLine);
+            //
             // }
-            // else
-            // {
-            //     stoppedForReason = false;
-            //     engineRunning = true;
-            //     brakeInput = 0;
-            // }
+
+            stoppedForTrafficLight = true;
+            targetBrake = 1f;
         }
 
         private void ResetTrafficLightFlags()
@@ -1060,20 +1091,43 @@ namespace Realistic_Traffic_Controller.Scripts
 
         private void HandleVehicleFollowing()
         {
+            // --- НАСТРОЙКИ ---
+            float baseStopDistance = 10f;      // дистанция полной остановки
+            float baseSlowDistance = 30f;      // дистанция начала торможения
+            float speedStopMultiplier = 0.5f;  // влияние скорости на стоп-дистанцию
+            float speedSlowMultiplier = 0.7f;  // влияние скорости на slow-дистанцию
+            // ------------------
+
+            float desiredBrake = 0f;
+
+            // 🚗 Если есть машина впереди
             if (raycastedVehicle)
             {
-                FollowVehicle(raycastedVehicle);
-                return;
+                float distance = raycastHitDistance;
+
+                float dynamicStopDistance = baseStopDistance + currentSpeed * speedStopMultiplier;
+                float dynamicSlowDistance = baseSlowDistance + currentSpeed * speedSlowMultiplier;
+
+                if (distance <= dynamicStopDistance)
+                {
+                    desiredBrake = 1f; // полный стоп
+                }
+                else if (distance <= dynamicSlowDistance)
+                {
+                    desiredBrake = 0.5f; // частичное торможение
+                }
             }
 
-            // Если никого не видим — отпускаем тормоза
-            //brakeTorque = Mathf.Lerp(brakeInput, 0f, Time.deltaTime * 1f);
-            stoppedForReason = false;
-
-            if (currentSpeed < 2f)
+            // 🚦 Если красный свет — приоритет
+            if (stoppedForTrafficLight)
             {
-                // Здесь можно добавить, например, resumeCruising = true;
+                desiredBrake = 1f;
             }
+
+            // 🔥 Прямое применение (без сглаживания)
+            brakeInput = desiredBrake;
+
+            stoppedForReason = brakeInput > 0f;
         }
 
         private void ClearHitListIfNeeded()

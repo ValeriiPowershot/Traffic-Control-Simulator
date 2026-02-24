@@ -23,6 +23,7 @@ public class TrafficLight : MonoBehaviour
 
     [Header("Logic")]
     [SerializeField] private TrafficLightStopWaypoint stopWaypoint;
+    [SerializeField] private GameObject _stopCollider;
 
     [Header("Timings")]
     [SerializeField] private float yellowDuration = 2f;
@@ -71,6 +72,7 @@ public class TrafficLight : MonoBehaviour
             case TrafficLightState.Red:
                 trafficLightSwitcher.ChangeToRed();
                 lightUI.color = trafficLightMaterials.RedColor;
+                _stopCollider.SetActive(true);
                 if (stopWaypoint != null) stopWaypoint.SetRed();
                 break;
 
@@ -82,6 +84,7 @@ public class TrafficLight : MonoBehaviour
             case TrafficLightState.Green:
                 trafficLightSwitcher.ChangeToGreen();
                 lightUI.color = trafficLightMaterials.GreenColor;
+                _stopCollider.SetActive(false);
                 if (stopWaypoint != null) stopWaypoint.SetGreen();
                 break;
         }

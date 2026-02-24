@@ -1782,6 +1782,9 @@ MonoBehaviour:
   brakeTorque: 1000
   steerAngle: 40
   direction: 1
+  slowDownDistance: 25
+  stopDistance: 8
+  followBrakeStrength: 1
   canTakeover: 0
   stoppedForReason: 0
   stoppedTime: 0
@@ -1790,6 +1793,7 @@ MonoBehaviour:
   overtakingTimer: 0
   waitForHorn: 0
   closerVehicles: []
+  brakeSmoothSpeed: 3
 --- !u!1 &8451409993390299294
 GameObject:
   m_ObjectHideFlags: 0

@@ -203,7 +203,7 @@ public class RTC_TrafficLight : MonoBehaviour {
                 triggerCollider.enabled = false;
 
         }
-
     }
+    
 
 }
