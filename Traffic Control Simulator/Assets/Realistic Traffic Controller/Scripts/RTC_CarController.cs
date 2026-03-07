@@ -8,6 +8,8 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using CarControllerScripts;
 using UnityEngine;
 
 namespace Realistic_Traffic_Controller.Scripts
@@ -188,13 +190,14 @@ namespace Realistic_Traffic_Controller.Scripts
         public int raycastOrder = -1;
         public LayerMask raycastLayermask = -1;
 
-        private float raycastDistanceOrg = 3f;
-        public float raycastDistance = 3f;
-        public float raycastDistanceRate = 20f;
+        private float raycastDistanceOrg = 0.1f;
+        public float raycastDistance;
+        public float raycastDistanceRate = 1f;
         public float raycastHitDistance = 0f;
         public Vector3 raycastOrigin = Vector3.zero;
 
         public RTC_CarController raycastedVehicle = null;
+        public List<GameObject> raycast = new();
 
         #endregion
 
@@ -304,7 +307,7 @@ namespace Realistic_Traffic_Controller.Scripts
         /// Maximum brake torque.
         /// </summary>
         [Range(0f, 50000f)]
-        public float brakeTorque = 1000f;
+        public float brakeTorque;
 
         /// <summary>
         /// Maximum steering angle (in degrees).
@@ -399,8 +402,16 @@ namespace Realistic_Traffic_Controller.Scripts
 
         #endregion
 
-        private bool stoppedForVehicle;
-        private bool stoppedForTrafficLight;
+        [SerializeField] private float startBoostDuration = 1f;
+        [SerializeField] private float startBoostPower = 0.6f;
+
+        private float startBoostTimer = 1;
+        public bool startBoostActive = false;
+
+        public GameObject firstObject;
+        public bool stoppedForVehicle;
+        public bool stoppedForPoint;
+        public bool stoppedForTrafficLight;
         [SerializeField] private float brakeSmoothSpeed = 1f;
         private float targetBrake;
 
@@ -448,6 +459,10 @@ namespace Realistic_Traffic_Controller.Scripts
             Audio();
             Others();
 
+            if (startBoostActive)
+            {
+                throttleInput = 1;
+            }
 
             //  Setting timer for last shifting.
             if (lastTimeShifted > 0)
@@ -468,8 +483,33 @@ namespace Realistic_Traffic_Controller.Scripts
             Gearbox();
             Steering();
             Raycasts();
+            CheckForCar();
             SideRaycasts();
             WheelColliders();
+
+            // int targetLayer = LayerMask.NameToLayer("RTC_TrafficVehicle");
+            //
+            // bool hasTargetLayer = raycast.Any(obj => obj.gameObject.layer == targetLayer);
+            //
+            // if (hasTargetLayer || raycast.Count == 0)
+            // {
+            //     raycastedVehicle = null;
+            //     stoppedForVehicle = false;
+            // }
+
+            if (currentSpeed > desiredSpeed)
+            {
+                stoppedForPoint = true;
+            }
+            else
+            {
+                stoppedForPoint = false;
+            }
+
+            if (stoppedForPoint)
+            {
+                targetBrake = 1;
+            }
         }
 
         #region OnValidate
@@ -769,10 +809,8 @@ namespace Realistic_Traffic_Controller.Scripts
 
                 if (engineRunning)
                 {
-
                     engineSoundOnSource.volume = Mathf.Lerp(minAudioVolume, maxAudioVolume, throttleInput);
                     engineSoundOnSource.pitch = Mathf.Lerp(minAudioPitch, maxAudioPitch, currentEngineRPM / maxEngineRPM);
-
                 }
                 else
                 {
@@ -846,27 +884,20 @@ namespace Realistic_Traffic_Controller.Scripts
 
             if (checkUpsideDown)
             {
-
                 if (Vector3.Dot(transform.up, Vector3.down) > -.1f)
                 {
-
                     m_checkUpsideDown += Time.deltaTime;
 
                     if (m_checkUpsideDown >= 3f)
                     {
-
                         m_checkUpsideDown = 0f;
 
                         Vector3 fwd = transform.forward;
                         transform.rotation = Quaternion.identity;
                         transform.forward = fwd;
-
                     }
-
                 }
-
             }
-
         }
 
         #region Input
@@ -881,8 +912,8 @@ namespace Realistic_Traffic_Controller.Scripts
 
             if (crashed)
             {
-                throttleInput = 0f;
-                brakeInput = 1f;
+                //throttleInput = 0f;
+                //brakeInput = 1f;
                 return;
             }
 
@@ -906,7 +937,6 @@ namespace Realistic_Traffic_Controller.Scripts
                 throttleInput = 0f;
                 brakeInput = 1f;
             }
-
         }
 
         /// <summary>
@@ -921,15 +951,10 @@ namespace Realistic_Traffic_Controller.Scripts
             throttleInputRaw = Mathf.Clamp01(throttleInputRaw);
             brakeInputRaw = Mathf.Clamp01(brakeInputRaw);
             steerInputRaw = Mathf.Clamp(steerInputRaw, -1f, 1f);
-
         }
-
         #endregion
 
         #region Raycast
-
-
-
 
         private void Raycasts()
         {
@@ -951,26 +976,57 @@ namespace Realistic_Traffic_Controller.Scripts
             ClearHitListIfNeeded(); // 👈 extracted from the bottom
 
             ResolveBrakingState();
+
             SmoothBrake();
+        }
+
+        private void CheckForCar()
+        {
+            if (raycast.Count == 0)
+            {
+                stoppedForVehicle = false;
+                raycastedVehicle = null;
+                return;
+            }
+
+            foreach (GameObject obj in raycast)
+            {
+                CarController car = obj.GetComponent<CarController>();
+
+                if (car == null)
+                {
+                    stoppedForVehicle = false;
+                    raycastedVehicle = null;
+                }
+            }
         }
 
         private void ResolveBrakingState()
         {
-            if (!stoppedForVehicle && !stoppedForTrafficLight)
-                targetBrake = 0f;
+            if (startBoostActive)
+            {
+                startBoostTimer -= Time.deltaTime;
+
+                if (startBoostTimer <= 0f)
+                {
+                    startBoostActive = false;
+                }
+            }
         }
 
         private void SmoothBrake()
         {
-            float dynamicBrakeSpeed = brakeSmoothSpeed * Mathf.Clamp01(currentSpeed / 50f);
+            if (stoppedForTrafficLight || stoppedForVehicle || stoppedForPoint)
+            {
+                float dynamicBrakeSpeed = brakeSmoothSpeed * Mathf.Clamp01(currentSpeed / 50f);
 
-            brakeInput = Mathf.MoveTowards(
-                brakeInput,
-                targetBrake,
-                dynamicBrakeSpeed * Time.deltaTime
-            );
-
-            stoppedForReason = brakeInput > 0.05f;
+                brakeInput = Mathf.MoveTowards(
+                    brakeInput,
+                    targetBrake,
+                    dynamicBrakeSpeed * Time.deltaTime
+                );
+                //stoppedForReason = brakeInput > 0.05f;
+            }
         }
 
         private bool CanPerformRaycast()
@@ -986,14 +1042,15 @@ namespace Realistic_Traffic_Controller.Scripts
 
         private void UpdateRaycastDistance()
         {
-            float target = raycastDistanceOrg * (currentSpeed / 100f) * raycastDistanceRate;
-            raycastDistance = Mathf.Lerp(raycastDistance, target, Time.fixedDeltaTime * 5f);
-            raycastDistance = Mathf.Max(raycastDistance, raycastDistanceOrg);
+            // float target = raycastDistanceOrg * (currentSpeed / 100f) * raycastDistanceRate;
+            // raycastDistance = Mathf.Lerp(raycastDistance, target, Time.fixedDeltaTime * 5f);
+            // raycastDistance = Mathf.Max(raycastDistance, raycastDistanceOrg);
+            raycastDistance = 15;
         }
 
         private Vector3 GetRayOrigin()
         {
-            return new Vector3(bounds.right * .85f * Mathf.Clamp(raycastOrder, -1, 1), 0f, 0f);
+            return new Vector3(bounds.right * .85f * Mathf.Clamp(raycastOrder, -1, 1), -1f, 5f);
         }
 
         private Vector3 GetRayDirection()
@@ -1005,24 +1062,41 @@ namespace Realistic_Traffic_Controller.Scripts
         {
             hit.Clear();
 
-            var hits = Physics.RaycastAll(
+            RaycastHit[] hits = Physics.RaycastAll(
                 transform.position + transform.TransformDirection(new Vector3(0f, 0f, bounds.front) + raycastOrigin + origin),
                 direction,
                 raycastDistance,
                 raycastLayermask
             );
 
+            raycast.Clear();
+
+            foreach (RaycastHit hit in hits) //Debug
+            {
+                raycast.Add(hit.transform.gameObject);
+            }
+
             hit.AddRange(hits);
 
             float closest = raycastDistance;
             RaycastHit? firstHit = null;
 
-            foreach (var h in hit)
+            foreach (RaycastHit h in hit)
             {
-                if (h.transform.IsChildOf(transform)) continue;
+                if (h.transform.IsChildOf(transform) || h.transform == transform) continue;
+
+                if (h.transform.TryGetComponent(out RTC_CarController car))
+                {
+                    if (car.CarSpawnIndex == CarSpawnIndex)
+                    {
+                        firstObject = h.transform.gameObject;
+                        return h;
+                    }
+                }
                 if (h.distance < closest)
                 {
                     closest = h.distance;
+                    firstObject = h.transform.gameObject;
                     firstHit = h;
                 }
             }
@@ -1053,9 +1127,26 @@ namespace Realistic_Traffic_Controller.Scripts
                 return;
             }
 
+            if (hit.transform.GetComponent<RTC_CarController>() == null)
+            {
+                stoppedForVehicle = false;
+                raycastedVehicle = null;
+            }
+
             // Сохраняем найденную машину
             if (!raycastedVehicle)
-                raycastedVehicle = hit.transform.GetComponentInParent<RTC_CarController>();
+            {
+                if (hit.transform.TryGetComponent(out RTC_CarController car))
+                {
+                    if (car.CarSpawnIndex == CarSpawnIndex)
+                    {
+                        raycastedVehicle = car;
+                    }
+                }
+            }
+
+            if (hit.transform.gameObject.layer != LayerMask.NameToLayer("RTC_TrafficCar"))
+                stoppedForVehicle = false;
 
             // Проверяем, это ли светофор
             if (hit.transform.gameObject.layer == LayerMask.NameToLayer("RTC_TrafficLight"))
@@ -1069,18 +1160,19 @@ namespace Realistic_Traffic_Controller.Scripts
 
         private void HandleTrafficLightHit(RaycastHit hit)
         {
-            var trafficLight = hit.transform.root.GetComponent<TrafficLight>()
+            TrafficLight trafficLight = hit.transform.root.GetComponent<TrafficLight>()
                 ?? hit.transform.root.GetComponentInChildren<TrafficLight>();
 
-            // if (trafficLight != null &&
-            //     trafficLight.LightIndex == CarSpawnIndex &&
-            //     trafficLight.IsRedLight)
-            // {
-            //
-            // }
 
-            stoppedForTrafficLight = true;
-            targetBrake = 1f;
+            if (trafficLight.TrafficLightSpawnIndex == CarSpawnIndex && trafficLight.LightState == TrafficLightState.Red)
+            {
+                stoppedForTrafficLight = true;
+                trafficLight.AddCarToWaitingList(this);
+            }
+            if (trafficLight.TrafficLightSpawnIndex == CarSpawnIndex && trafficLight.LightState == TrafficLightState.Green)
+            {
+                Debug.Log("TYES");
+            }
         }
 
         private void ResetTrafficLightFlags()
@@ -1092,30 +1184,72 @@ namespace Realistic_Traffic_Controller.Scripts
         private void HandleVehicleFollowing()
         {
             // --- НАСТРОЙКИ ---
-            float baseStopDistance = 10f;      // дистанция полной остановки
-            float baseSlowDistance = 30f;      // дистанция начала торможения
-            float speedStopMultiplier = 0.5f;  // влияние скорости на стоп-дистанцию
-            float speedSlowMultiplier = 0.7f;  // влияние скорости на slow-дистанцию
+            float baseStopDistance = 0.1f;      // дистанция полной остановки
+            float baseSlowDistance = 0.1f;      // дистанция начала торможения
+            float speedStopMultiplier = 0f;  // влияние скорости на стоп-дистанцию
+            float speedSlowMultiplier = 0f;  // влияние скорости на slow-дистанцию
             // ------------------
 
             float desiredBrake = 0f;
 
             // 🚗 Если есть машина впереди
-            if (raycastedVehicle)
+            if (raycastedVehicle && raycastedVehicle.CarSpawnIndex == CarSpawnIndex)
             {
                 float distance = raycastHitDistance;
+                float targetSpeed = raycastedVehicle.currentSpeed;
+
+                stoppedForVehicle = true;
+
+                // Минимальная безопасная дистанция (если больше — ничего не делаем)
+                float safeDistance = 5f;
+
+                if (distance > safeDistance)
+                {
+                    desiredBrake = 0f;
+                    return;
+                }
 
                 float dynamicStopDistance = baseStopDistance + currentSpeed * speedStopMultiplier;
                 float dynamicSlowDistance = baseSlowDistance + currentSpeed * speedSlowMultiplier;
 
-                if (distance <= dynamicStopDistance)
+                float speedDifference = currentSpeed - targetSpeed;
+
+                // 🔴 Машина почти стоит
+                if (targetSpeed < 1f)
                 {
-                    desiredBrake = 1f; // полный стоп
+                    if (distance <= dynamicStopDistance)
+                        desiredBrake = 1f;     // полный стоп
+                    else
+                        desiredBrake = 0.6f;   // сильное торможение
                 }
-                else if (distance <= dynamicSlowDistance)
+                // 🟡 Машина едет медленно
+                else if (targetSpeed < currentSpeed * 0.5f)
                 {
-                    desiredBrake = 0.5f; // частичное торможение
+                    if (distance <= dynamicStopDistance)
+                        desiredBrake = 0.5f;
+                    else if (distance <= dynamicSlowDistance)
+                        desiredBrake = 0.5f;
+                    else
+                        desiredBrake = 0.2f;   // лёгкое подтормаживание
                 }
+                // 🟢 Машина едет почти с нашей скоростью
+                else if (speedDifference > 0)
+                {
+                    if (distance <= dynamicSlowDistance)
+                        desiredBrake = 0.3f;   // мягкое выравнивание скорости
+                    else
+                        desiredBrake = 0f;
+                }
+                else
+                {
+                    // Мы едем медленнее или с той же скоростью
+                    desiredBrake = 0f;
+                }
+            }
+            else
+            {
+                stoppedForVehicle = false;
+                desiredBrake = 0f;
             }
 
             // 🚦 Если красный свет — приоритет
@@ -1129,6 +1263,7 @@ namespace Realistic_Traffic_Controller.Scripts
 
             stoppedForReason = brakeInput > 0f;
         }
+
 
         private void ClearHitListIfNeeded()
         {
@@ -1169,7 +1304,6 @@ namespace Realistic_Traffic_Controller.Scripts
             //  Looping raycast hits, and make sure it's not child object of the vehicle. Finding first and closer hit.
             for (int i = 0; i < hit.Length; i++)
             {
-
                 if (!hit[i].transform.IsChildOf(transform) && hit[i].distance < closestHit && hit[i].transform.gameObject.layer != LayerMask.NameToLayer("Ignore Raycast"))
                 {
 
@@ -1177,16 +1311,13 @@ namespace Realistic_Traffic_Controller.Scripts
                     rightHit = hit[i];
 
                 }
-
             }
 
             //  If first hit, draw ray and calculate the hit distance.
             if (rightHit.point != Vector3.zero)
             {
-
                 overtakingTimer = 1f;
                 steerInputRaw = -(2f - Mathf.InverseLerp(0f, 10f, rightHit.distance));
-
             }
 
             //  Drawing hit ray.
@@ -1233,74 +1364,6 @@ namespace Realistic_Traffic_Controller.Scripts
         }
 
         #endregion
-
-        private void FollowVehicle(RTC_CarController targetVehicle)
-        {
-            // if (!targetVehicle) return;
-            //
-            // float distanceToTarget = raycastHitDistance;
-            // float mySpeed = currentSpeed;
-            // float targetSpeed = targetVehicle.currentSpeed;
-            //
-            // // --- параметры поведения ---
-            // float stopDistance = 3f;       // зазор при полной остановке
-            // float reactionZone = 15f;      // начинаем тормозить чуть раньше
-            // float maxBrake = 2000000f;     // усилен тормоз
-            //
-            // if (distanceToTarget > reactionZone) return;
-            //
-            // stoppedForReason = true;
-            // engineRunning = true;
-            //
-            // // --- расчёт силы торможения ---
-            // float brakeFactor = 1f - Mathf.InverseLerp(stopDistance, reactionZone, distanceToTarget);
-            // float speedFactor = Mathf.Clamp01((mySpeed - targetSpeed) / 3f); // быстрее реагируем на разницу скоростей
-            //
-            // float targetBrake = Mathf.Lerp(0f, maxBrake, brakeFactor * (0.7f + speedFactor * 0.3f));
-            //
-            // // 🚀 Резкий отклик
-            // brakeInput = Mathf.Lerp(brakeInput, targetBrake, Time.deltaTime * 8f);
-            //
-            // // --- логика полной остановки ---
-            // bool targetStopped = targetSpeed < 0.5f;
-            // bool tooClose = distanceToTarget <= stopDistance + 0.3f;
-            //
-            // if (tooClose && targetStopped)
-            // {
-            //     brakeInput = maxBrake;
-            //     rigid.velocity = Vector3.zero;
-            //     currentSpeed = 0f;
-            //     mustStopAtTrafficLight = true;
-            // }
-        }
-
-        private void StopAtTrafficLight(TrafficLight trafficLight, Transform stopLine)
-        {
-            //if (!trafficLight.IsRedLight) return;
-
-            float distanceToStop = Vector3.Distance(transform.position, stopLine.position);
-
-            float reactionZone = 20f;
-
-            if (distanceToStop > reactionZone) return;
-
-            stoppedForReason = true;
-            engineRunning = false;
-
-            float stopDistance = 2f;
-
-            float brakeFactor = Mathf.InverseLerp(reactionZone, stopDistance, distanceToStop);
-
-            brakeFactor = Mathf.Clamp01(brakeFactor);
-
-            Debug.Log($"Distance: {distanceToStop:F2}  BrakeFactor: {brakeFactor:F2}");
-
-            if (distanceToStop <= stopDistance)
-            {
-                brakeInput = 1f;
-                mustStopAtTrafficLight = true;
-            }
-        }
 
         #region Wheels
 
@@ -1437,9 +1500,7 @@ namespace Realistic_Traffic_Controller.Scripts
             }
             else
             {
-
                 clutchInputRaw = 0f;
-
             }
 
             //  If gearbox is shifting now, apply input.
@@ -1458,9 +1519,7 @@ namespace Realistic_Traffic_Controller.Scripts
         /// <param name="gear"></param>
         public void ShiftToGear(int gear)
         {
-
             StartCoroutine(ShiftTo(gear));
-
         }
 
         /// <summary>
@@ -1468,10 +1527,8 @@ namespace Realistic_Traffic_Controller.Scripts
         /// </summary>
         public void ShiftUp()
         {
-
             if (currentGear < gearRatios.Length - 1)
                 StartCoroutine(ShiftTo(currentGear + 1));
-
         }
 
         /// <summary>
@@ -1481,7 +1538,6 @@ namespace Realistic_Traffic_Controller.Scripts
         /// <returns></returns>
         private IEnumerator ShiftTo(int gear)
         {
-
             lastTimeShifted = 1f;
             gearShiftingNow = true;
 
@@ -1490,50 +1546,51 @@ namespace Realistic_Traffic_Controller.Scripts
             gear = Mathf.Clamp(gear, 0, gearRatios.Length - 1);
             currentGear = gear;
             gearShiftingNow = false;
-
         }
 
-
         #endregion
-
 
         /// <summary>
         /// Calculating throttle input clamped 0f - 1f.
         /// </summary>
         private void Throttle()
         {
-
             //  Make sure throttle input is set to 0 before calculation.
             throttleInputRaw = 0f;
 
-            //  If no current waypoint, throttle input would be 0 and vehicle will stop.
-            if (!currentWaypoint)
-                return;
-
-            //  Adjusting throttle input based on vehicle speed - desired speed relationship.
+            //  Базовый расчёт газа относительно desiredSpeed
             throttleInputRaw = 1f - Mathf.InverseLerp(0f, desiredSpeed, currentSpeed);
 
-            //  Decreasing throttle input related to steer input.
+            //  Уменьшаем газ при повороте
             throttleInputRaw -= (Mathf.Abs(steerInput) / 5f);
 
-            //  Make sure throttle input is not lower than 0.1f below 15 kmh.
-            if (currentSpeed < 15 && throttleInputRaw < .1f)
-                throttleInputRaw = .1f;
+            //  Минимальный газ на низкой скорости
+            if (currentSpeed < 15f && throttleInputRaw < 0.1f)
+                throttleInputRaw = 0.1f;
 
-            //  If current speed is above desired speed, set it to 0.
-            if (currentSpeed > desiredSpeed)
+            //  Если тормозим — газ отключаем
+            if (brakeInputRaw > 0.25f)
                 throttleInputRaw = 0f;
 
-            if (brakeInputRaw > .05f)
-                throttleInputRaw = 0f;
-
-            if (gearShiftingNow)
-                throttleInputRaw = 0f;
-
-            //  If there is a raycasted object at front of the vehicle, decrease throttle input based on raycast hit distance.
+            //  Если есть препятствие впереди — уменьшаем газ
             if (raycastHitDistance != 0)
-                throttleInputRaw -= (1f - Mathf.InverseLerp(0f, raycastDistance, raycastHitDistance));
+            {
+                throttleInputRaw -=
+                    (1f - Mathf.InverseLerp(0f, raycastDistance, raycastHitDistance));
+            }
 
+            // 🔥 Плавное нарастание газа при превышении desiredSpeed
+            if (currentSpeed < desiredSpeed)
+            {
+                throttleInputRaw = Mathf.MoveTowards(
+                    throttleInputRaw,
+                    1,
+                    5 * Time.deltaTime
+                );
+            }
+
+            //  Ограничиваем диапазон
+            throttleInputRaw = Mathf.Clamp01(throttleInputRaw);
         }
 
         /// <summary>
@@ -1548,26 +1605,25 @@ namespace Realistic_Traffic_Controller.Scripts
             //  If no current waypoint, brake input would be 1 and vehicle will stop.
             if (!currentWaypoint)
             {
-
-                brakeInputRaw = 1f;
                 return;
-
             }
 
             //  If current speed is above desired speed, set it to 1.
-            if (currentSpeed > desiredSpeed)
-                brakeInputRaw = 1f;
+            // if (currentSpeed > desiredSpeed)
+            // {
+            //     brakeInputRaw = 1f;
+            // }
 
-            //  Increase brake input related to steer input.
-            brakeInputRaw += (Mathf.Abs(steerInput) / 5f);
+            //Increase brake input related to steer input.
+            //brakeInputRaw += (Mathf.Abs(steerInput) / 5f);
 
             //  Make sure brake input is 0 if speed is below 15.
             if (currentSpeed < 15 && brakeInputRaw != 0f)
                 brakeInputRaw = 0f;
 
-            //  If there is a raycasted object at front of the vehicle, increase brake input based on raycast hit distance.
-            if (raycastHitDistance != 0f)
-                brakeInputRaw = (1f - Mathf.InverseLerp(0f, raycastDistance, raycastHitDistance));
+            //If there is a raycasted object at front of the vehicle, increase brake input based on raycast hit distance.
+            // if (raycastHitDistance != 0f)
+            //     brakeInputRaw = (1f - Mathf.InverseLerp(0f, raycastDistance, raycastHitDistance));
 
         }
 
@@ -2185,6 +2241,11 @@ namespace Realistic_Traffic_Controller.Scripts
         private void OnCollisionEnter(Collision collision)
         {
             outputEvent_OnCollision.Invoke(outputOnCollision);
+
+            if (collision.transform.gameObject.layer == LayerMask.NameToLayer("RTC_TrafficVehicle") && collision.gameObject.GetComponentInChildren<RTC_CarController>().CarSpawnIndex != CarSpawnIndex)
+            {
+                Debug.Log("Уебался");
+            }
 
             //  Return if canCrash is disabled.
             if (!canCrash)

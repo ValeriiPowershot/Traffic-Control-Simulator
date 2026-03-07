@@ -2002,6 +2002,8 @@ MonoBehaviour:
   raycastHitDistance: 0
   raycastOrigin: {x: 0, y: 0, z: 0}
   raycastedVehicle: {fileID: 0}
+  raycast:
+  - {fileID: 0}
   canCrash: 0
   crashImpact: 3
   disableAfterCrash: 0
@@ -2043,6 +2045,13 @@ MonoBehaviour:
   overtakingTimer: 0
   waitForHorn: 0
   closerVehicles: []
+  startBoostDuration: 1
+  startBoostPower: 0.6
+  startBoostActive: 0
+  firstObject: {fileID: 0}
+  stoppedForVehicle: 0
+  stoppedForPoint: 0
+  stoppedForTrafficLight: 0
   brakeSmoothSpeed: 3
 --- !u!1 &9037970803058293692
 GameObject:

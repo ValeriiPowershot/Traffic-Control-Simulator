@@ -330,13 +330,21 @@ public class RTC_CarControllerEditor : Editor {
             EditorGUILayout.Space();
 
             EditorGUILayout.PropertyField(serializedObject.FindProperty("CarSpawnIndex"), new GUIContent("CarSpawnIndex", "Car Index."), false);
-            
+
             EditorGUILayout.PropertyField(serializedObject.FindProperty("useRaycasts"), new GUIContent("Use Raycast", "Raycast will be used to detect obstacles at front of the vehicle."), false);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("raycastLayermask"), new GUIContent("Raycast Layermask", "Raycast will use these layers to detect obstacles."), false);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("raycastDistance"), new GUIContent("Raycast Distance", "Raycast distance."), false);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("raycastDistanceRate"), new GUIContent("Raycast Distance Rate", "Length of the raycast will be adjusted by speed of the vehicle."), false);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("raycastOrigin"), new GUIContent("Raycast Origin", "Origin point of the raycast."), false);
             EditorGUILayout.PropertyField(serializedObject.FindProperty("spawnPositionOffset"), new GUIContent("Spawn Position Offset", "Spawn position offset."), false);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("raycastedVehicle"), new GUIContent("RaycastedVehicle", "Raycast will be used to detect obstacles at front of the vehicle."), false);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("stoppedForTrafficLight"), new GUIContent("stoppedForTrafficLight", "Raycast will be used to detect obstacles at front of the vehicle."), false);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("stoppedForVehicle"), new GUIContent("RaycastedVehicle", "Raycast will be used to detect obstacles at front of the vehicle."), false);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("brakeInput"), new GUIContent("brakeInput", "Raycast will be used to detect obstacles at front of the vehicle."), false);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("desiredSpeed"), new GUIContent("desiredSpeed", "Raycast will be used to detect obstacles at front of the vehicle."), false);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("currentSpeed"), new GUIContent("currentSpeed", "Raycast will be used to detect obstacles at front of the vehicle."), false);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("firstObject"), new GUIContent("firstObject", "Raycast will be used to detect obstacles at front of the vehicle."), false);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("stoppedForPoint"), new GUIContent("stoppedForPoint", "Raycast will be used to detect obstacles at front of the vehicle."), false);
 
         }
 

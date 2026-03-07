@@ -1425,7 +1425,6 @@ GameObject:
   - component: {fileID: 7287637805172171468}
   - component: {fileID: 2982568208953633371}
   - component: {fileID: 2865114139372273879}
-  - component: {fileID: 4501594144008673952}
   m_Layer: 0
   m_Name: pCylinder87
   m_TagString: Untagged
@@ -1502,28 +1501,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4501594144008673952
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5346050882694760275}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4620155213636088089, guid: d1bdfb48b49e8f844a7cafe8b9d0eb1f, type: 3}
 --- !u!1 &5641671188560417236
 GameObject:
   m_ObjectHideFlags: 0
@@ -2538,6 +2515,9 @@ GameObject:
   - component: {fileID: 5698040872024661261}
   - component: {fileID: 4176089407798299370}
   - component: {fileID: 7172451170209246846}
+  - component: {fileID: 7275881013143123192}
+  - component: {fileID: 2585051483007204245}
+  - component: {fileID: -4632028734700769220}
   m_Layer: 15
   m_Name: DefaultCar
   m_TagString: Untagged
@@ -2553,7 +2533,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8450074198887965022}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071079, z: -0, w: 0.70710576}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 359.6, y: 23.86, z: 122.81}
   m_LocalScale: {x: 3.2, y: 3.2, z: 3.2}
   m_ConstrainProportionsScale: 0
@@ -2577,7 +2557,7 @@ Rigidbody:
   m_Mass: 2000
   m_Drag: 0
   m_AngularDrag: 0.1
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_CenterOfMass: {x: 0, y: -0.6, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
@@ -2586,7 +2566,7 @@ Rigidbody:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_ImplicitCom: 1
+  m_ImplicitCom: 0
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -2643,27 +2623,27 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 800
-      value: 98
-      inSlope: 0.018252933
-      outSlope: 0.018252933
+      value: 1019.5
+      inSlope: 0.18988639
+      outSlope: 0.18988639
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 6169
-      value: 196
-      inSlope: -0.030183598
-      outSlope: -0.030183598
+      value: 2039
+      inSlope: -0.31400183
+      outSlope: -0.31400183
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 7000
-      value: 130.66667
-      inSlope: -0.07862013
-      outSlope: -0.07862013
+      value: 1359.3334
+      inSlope: -0.81789005
+      outSlope: -0.81789005
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
@@ -2679,9 +2659,9 @@ MonoBehaviour:
   currentEngineRPM: 0
   wantedEngineRPMRaw: 0
   tractionWheelRPM2EngineRPM: 0
-  engineTorque: 196
+  engineTorque: 2039
   maximumSpeed: 60
-  differentialRatio: 3.6
+  differentialRatio: 1.42
   gearShiftThreshold: 0.85
   gearShiftUpRPM: 5000
   gearShiftDownRPM: 3250
@@ -2705,7 +2685,7 @@ MonoBehaviour:
   brakeInputRaw: 0
   steerInputRaw: 0
   clutchInputRaw: 1
-  smoothInputs: 1
+  smoothInputs: 0
   ignoreInputs: 0
   currentWaypoint: {fileID: 0}
   nextWaypoint: {fileID: 0}
@@ -2746,6 +2726,8 @@ MonoBehaviour:
   raycastHitDistance: 0
   raycastOrigin: {x: 0, y: 0, z: 0}
   raycastedVehicle: {fileID: 0}
+  raycast:
+  - {fileID: 0}
   canCrash: 0
   crashImpact: 3
   disableAfterCrash: 0
@@ -2773,9 +2755,12 @@ MonoBehaviour:
   wheelAligning: 1
   wheelRPM2Speed: 0
   targetWheelSpeedForCurrentGear: 0
-  brakeTorque: 32067
+  brakeTorque: 33938
   steerAngle: 30
   direction: 1
+  slowDownDistance: 25
+  stopDistance: 8
+  followBrakeStrength: 1
   canTakeover: 0
   stoppedForReason: 0
   stoppedTime: 0
@@ -2784,6 +2769,14 @@ MonoBehaviour:
   overtakingTimer: 0
   waitForHorn: 0
   closerVehicles: []
+  startBoostDuration: 1
+  startBoostPower: 0.6
+  startBoostActive: 0
+  firstObject: {fileID: 0}
+  stoppedForVehicle: 0
+  stoppedForPoint: 0
+  stoppedForTrafficLight: 0
+  brakeSmoothSpeed: 3
 --- !u!114 &5698040872024661261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2826,6 +2819,62 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _carController: {fileID: 5584290811105881087}
+--- !u!65 &7275881013143123192
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8450074198887965022}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.4881159, y: 0.49276352, z: 3.0525112}
+  m_Center: {x: -0.070942044, y: -0.33612907, z: -0.3188178}
+--- !u!65 &2585051483007204245
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8450074198887965022}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.4881159, y: 0.49276352, z: 3.0525112}
+  m_Center: {x: -0.070942044, y: -0.33612907, z: -0.3188178}
+--- !u!114 &-4632028734700769220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8450074198887965022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97220439b3742e7469deb0a85a598e20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _carController: {fileID: 5584290811105881087}
+  _allRaycastedObjects: []
 --- !u!1 &8834126173375461008
 GameObject:
   m_ObjectHideFlags: 0

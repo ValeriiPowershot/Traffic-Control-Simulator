@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using Realistic_Traffic_Controller.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +17,7 @@ public class TrafficLight : MonoBehaviour
     [Header("Start State")]
     [SerializeField] private TrafficLightState startLightState = TrafficLightState.Red;
     public TrafficLightState LightState { get; private set; }
+    public int TrafficLightSpawnIndex;
 
     [Header("Visuals")]
     [SerializeField] private TrafficLightColorSwitcher trafficLightSwitcher;
@@ -28,11 +31,17 @@ public class TrafficLight : MonoBehaviour
     [Header("Timings")]
     [SerializeField] private float yellowDuration = 2f;
 
+    private List<RTC_CarController> _waitingCars = new();
     private bool isSwitching = false;
 
     private void Start()
     {
         SetLightState(startLightState);
+    }
+
+    public void AddCarToWaitingList(RTC_CarController carController)
+    {
+        _waitingCars.Add(carController);
     }
 
     public void SwitchRedGreen()
@@ -61,6 +70,17 @@ public class TrafficLight : MonoBehaviour
         yield return new WaitForSeconds(yellowDuration);
         SetLightState(TrafficLightState.Green);
         isSwitching = false;
+        WaitingCarsAllowToGo();
+    }
+
+    private void WaitingCarsAllowToGo()
+    {
+        foreach (var car in _waitingCars)
+        {
+            //StartCoroutine(car.TimeThrottle(0.5f, 2));
+            car.stoppedForTrafficLight = false;
+            car.startBoostActive = true;
+        }
     }
 
     private void SetLightState(TrafficLightState newState)

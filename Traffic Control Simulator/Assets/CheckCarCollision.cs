@@ -14,13 +14,13 @@ public class CheckCarCollision : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        int carSpawnIndex = other.transform.GetComponent<RTC_CarController>().CarSpawnIndex;
-
-        Debug.Log(other.transform);
-        
-        if ( _carSpawnIndex != carSpawnIndex)
-        {
-            Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        }
+        // int carSpawnIndex = other.transform.GetComponent<RTC_CarController>().CarSpawnIndex;
+        //
+        // Debug.Log(other.transform);
+        //
+        // if ( _carSpawnIndex != carSpawnIndex)
+        // {
+        //     Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        // }
     }
 }
