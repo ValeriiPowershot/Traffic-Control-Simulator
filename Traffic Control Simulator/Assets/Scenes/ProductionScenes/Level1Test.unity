@@ -17363,6 +17363,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 572893044}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &576444096
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 576444097}
+  m_Layer: 0
+  m_Name: SpawnPoint2 (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &576444097
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576444096}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.70710576, z: -0, w: 0.7071078}
+  m_LocalPosition: {x: 151.52, y: 24.23, z: 122.59}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1001 &576987423
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18588,7 +18619,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f0379910c344f047ad51cbbb88bad2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointPosition: {x: 213.43005, y: 21.57, z: 131.38}
+  waypointPosition: {x: 213.43, y: 21.57, z: 131.76}
   connectedLane: {fileID: 39319540}
   nextWaypoint: {fileID: 1131700673}
   previousWaypoint: {fileID: 1400580242}
@@ -18597,15 +18628,15 @@ MonoBehaviour:
   firstWaypoint: 0
   lastWaypoint: 0
   radius: 1.5
-  targetSpeed: 30
+  targetSpeed: 60
   wait: 0
   LeftTurnSignal: 0
   RightTurnSignal: 0
-  desiredSpeedForNextWaypoint: 23.603481
-  desiredSpeedForInterConnectionWaypoint: 30
-  distanceToNextWaypoint: 4.927355
+  desiredSpeedForNextWaypoint: 49.601524
+  desiredSpeedForInterConnectionWaypoint: 60
+  distanceToNextWaypoint: 7.954803
   distanceToInterConnectionWaypoint: 0
-  angleToNextWaypoint: 38.37911
+  angleToNextWaypoint: 31.195425
   angleToInterConnectionWaypoint: 0
   ignoreGizmos: 0
 --- !u!4 &629288183
@@ -18616,8 +18647,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629288181}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.000008234986, y: 0.999984, z: -0.0015122907, w: 0.0054449127}
-  m_LocalPosition: {x: 213.43005, y: 21.57, z: 131.38}
+  m_LocalRotation: {x: 0.00000842615, y: 0.99998367, z: -0.0015298716, w: 0.0055072857}
+  m_LocalPosition: {x: 213.43, y: 21.57, z: 131.76}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -30660,7 +30691,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f0379910c344f047ad51cbbb88bad2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointPosition: {x: 229.48, y: 21.819237, z: 121.14}
+  waypointPosition: {x: 224.19, y: 21.819237, z: 121.14}
   connectedLane: {fileID: 39319540}
   nextWaypoint: {fileID: 914788436}
   previousWaypoint: {fileID: 1131700673}
@@ -30673,11 +30704,11 @@ MonoBehaviour:
   wait: 0
   LeftTurnSignal: 0
   RightTurnSignal: 0
-  desiredSpeedForNextWaypoint: 50.755447
+  desiredSpeedForNextWaypoint: 49.444702
   desiredSpeedForInterConnectionWaypoint: 60
-  distanceToNextWaypoint: 43.68335
+  distanceToNextWaypoint: 48.9719
   distanceToInterConnectionWaypoint: 0
-  angleToNextWaypoint: 27.733662
+  angleToNextWaypoint: 31.665888
   angleToInterConnectionWaypoint: 0
   ignoreGizmos: 0
 --- !u!4 &1009981670
@@ -30688,8 +30719,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1009981668}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.84951067, z: -0, w: 0.52757144}
-  m_LocalPosition: {x: 229.48, y: 21.819237, z: 121.14}
+  m_LocalRotation: {x: 0.002630695, y: 0.86774033, z: -0.0045931716, w: 0.49698964}
+  m_LocalPosition: {x: 224.19, y: 21.819237, z: 121.14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -34769,7 +34800,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f0379910c344f047ad51cbbb88bad2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointPosition: {x: 216.52, y: 21.819237, z: 127.55}
+  waypointPosition: {x: 217.61, y: 21.9, z: 125}
   connectedLane: {fileID: 39319540}
   nextWaypoint: {fileID: 1009981669}
   previousWaypoint: {fileID: 629288182}
@@ -34778,15 +34809,15 @@ MonoBehaviour:
   firstWaypoint: 0
   lastWaypoint: 0
   radius: 1.15
-  targetSpeed: 40
+  targetSpeed: 50
   wait: 0
   LeftTurnSignal: 0
   RightTurnSignal: 0
-  desiredSpeedForNextWaypoint: 34.456516
-  desiredSpeedForInterConnectionWaypoint: 40
-  distanceToNextWaypoint: 14.458545
+  desiredSpeedForNextWaypoint: 42.21516
+  desiredSpeedForInterConnectionWaypoint: 50
+  distanceToNextWaypoint: 7.62906
   distanceToInterConnectionWaypoint: 0
-  angleToNextWaypoint: 24.945679
+  angleToNextWaypoint: 28.025425
   angleToInterConnectionWaypoint: 0
   ignoreGizmos: 0
 --- !u!4 &1131700674
@@ -34797,8 +34828,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1131700672}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.008423366, y: 0.9426431, z: 0.023855802, w: 0.33284223}
-  m_LocalPosition: {x: 216.52, y: 21.819237, z: 127.55}
+  m_LocalRotation: {x: -0.005671613, y: 0.9617006, z: 0.019956356, w: 0.27331573}
+  m_LocalPosition: {x: 217.61, y: 21.9, z: 125}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -44312,11 +44343,11 @@ MonoBehaviour:
   wait: 0
   LeftTurnSignal: 0
   RightTurnSignal: 0
-  desiredSpeedForNextWaypoint: 44.7444
+  desiredSpeedForNextWaypoint: 44.74273
   desiredSpeedForInterConnectionWaypoint: 45
-  distanceToNextWaypoint: 33.06211
+  distanceToNextWaypoint: 32.682144
   distanceToInterConnectionWaypoint: 0
-  angleToNextWaypoint: 1.022399
+  angleToNextWaypoint: 1.0290759
   angleToInterConnectionWaypoint: 0
   ignoreGizmos: 0
 --- !u!4 &1400580243
@@ -71816,7 +71847,7 @@ PrefabInstance:
     - target: {fileID: 6158929013022139169, guid: 6ad8a4a6fff9ff34ca4e132f46118352,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 216.79999
+      value: 216.85
       objectReference: {fileID: 0}
     - target: {fileID: 6158929013022139169, guid: 6ad8a4a6fff9ff34ca4e132f46118352,
         type: 3}
@@ -71826,7 +71857,7 @@ PrefabInstance:
     - target: {fileID: 6158929013022139169, guid: 6ad8a4a6fff9ff34ca4e132f46118352,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 125.9
+      value: 125.93
       objectReference: {fileID: 0}
     - target: {fileID: 6158929013022139169, guid: 6ad8a4a6fff9ff34ca4e132f46118352,
         type: 3}
@@ -72246,6 +72277,7 @@ SceneRoots:
   - {fileID: 920255348}
   - {fileID: 585846048}
   - {fileID: 1309592684}
+  - {fileID: 576444097}
   - {fileID: 1745080715}
   - {fileID: 851917937}
   - {fileID: 1473090011}

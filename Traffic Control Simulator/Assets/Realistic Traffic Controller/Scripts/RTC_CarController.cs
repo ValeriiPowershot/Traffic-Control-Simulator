@@ -405,7 +405,7 @@ namespace Realistic_Traffic_Controller.Scripts
         [SerializeField] private float startBoostDuration = 1f;
         [SerializeField] private float startBoostPower = 0.6f;
 
-        private float startBoostTimer = 1.5f;
+        private float startBoostTimer = 1.6f;
         public bool startBoostActive = false;
 
         public GameObject firstObject;
@@ -461,7 +461,7 @@ namespace Realistic_Traffic_Controller.Scripts
 
             if (startBoostActive)
             {
-                throttleInput = 1;
+                throttleInput = 0.8f;
             }
 
             //  Setting timer for last shifting.
