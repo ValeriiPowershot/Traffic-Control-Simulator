@@ -4,10 +4,9 @@ using UnityEngine;
 public class TrafficLightClickAction : MonoBehaviour
 {
     [SerializeField] private TrafficLight _trafficLight;
-    
+
     private void OnMouseDown()
     {
-        Debug.Log("Объект кликнут!");
         DoSomething();
     }
 

@@ -49,8 +49,6 @@ public class CarDetection : MonoBehaviour
             }
 
             carMovement.SetBrake(targetBrake);
-
-            Debug.Log($"Объект впереди: {hit.collider.name}, расстояние: {distanceToObject:F2}, текущая скорость: {currentSpeed:F2}, цель: {targetSpeed:F2}, brake: {targetBrake:F0}");
         }
     }
 
