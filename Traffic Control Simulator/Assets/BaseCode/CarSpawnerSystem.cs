@@ -18,21 +18,19 @@ namespace BaseCode
 
         public SpawnerConfig[] spawners;
 
-        [SerializeField] private int _maxSpawnedCarsOnScene;
+        [Header("Systems")]
+        [SerializeField] private DifficultyController _difficulty;
+
+        [Header("Fallback")]
+        [SerializeField] private int _maxCarsFallback ;
 
         private void Start()
         {
             foreach (SpawnerConfig spawner in spawners)
             {
-                if (spawner.Config == null)
+                if (spawner.Config == null || spawner.SpawnPoint == null)
                 {
-                    Debug.LogWarning("SpawnerConfig: не назначен конфиг!", this);
-                    continue;
-                }
-
-                if (spawner.SpawnPoint == null)
-                {
-                    Debug.LogWarning("SpawnerConfig: не назначена точка спавна!", this);
+                    Debug.LogWarning("Spawner не настроен!", this);
                     continue;
                 }
 
@@ -42,44 +40,62 @@ namespace BaseCode
 
         private IEnumerator RunSpawner(SpawnerConfig spawner)
         {
-            foreach (CarPoolScriptableObject.CarSpawnData carData in spawner.Config.carsToSpawn)
+            while (true)
             {
-                yield return new WaitForSeconds(carData.initialDelay);
-
-                for (int i = 0; i < carData.count; i++)
+                foreach (CarPoolScriptableObject.CarSpawnData carData in spawner.Config.carsToSpawn)
                 {
-                    while (transform.childCount >= _maxSpawnedCarsOnScene)
-                    {
-                        yield return null;
-                    }
+                    yield return new WaitForSeconds(carData.initialDelay);
 
-                    if (carData.car != null && carData.car.Prefab != null)
+                    while (true)
                     {
-                        GameObject car = Instantiate(
-                            carData.car.Prefab,
-                            spawner.SpawnPoint.position,
-                            spawner.SpawnPoint.rotation,
-                            transform
-                        );
+                        Debug.Log("Starting CarSpawnerSystem");
 
-                        RTC_CarController controller = car.GetComponent<RTC_CarController>();
-                        if (controller != null)
+
+                        // 🔥 ограничение только по количеству машин на сцене
+                        while (IsMaxCarsReached())
                         {
-                            controller.nextWaypoint = spawner.StartWaypoint;
-                            controller.CarSpawnIndex = spawner.SpawnPointIndex;
+                            yield return null;
                         }
-                        else
-                        {
-                            Debug.LogWarning("У заспавненной машины нет RTC_CarController!", car);
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogWarning("Car или его Prefab отсутствует в конфиге!", this);
-                    }
 
-                    yield return new WaitForSeconds(carData.delayBetweenSpawns);
+                        SpawnCar(spawner, carData);
+
+                        yield return new WaitForSeconds(carData.delayBetweenSpawns);
+                    }
                 }
+            }
+        }
+
+        private bool IsMaxCarsReached()
+        {
+            int maxCars = _maxCarsFallback;
+
+            if (_difficulty != null)
+                maxCars = _difficulty.CurrentStage.MaxCarsOnScreen;
+
+            return transform.childCount >= maxCars;
+        }
+
+        private void SpawnCar(SpawnerConfig spawner, CarPoolScriptableObject.CarSpawnData carData)
+        {
+            if (carData.car == null || carData.car.Prefab == null)
+            {
+                Debug.LogWarning("Car или Prefab отсутствует!", this);
+                return;
+            }
+
+            GameObject car = Instantiate(
+                carData.car.Prefab,
+                spawner.SpawnPoint.position,
+                spawner.SpawnPoint.rotation,
+                transform
+            );
+
+            var controller = car.GetComponent<RTC_CarController>();
+
+            if (controller != null)
+            {
+                controller.nextWaypoint = spawner.StartWaypoint;
+                controller.CarSpawnIndex = spawner.SpawnPointIndex;
             }
         }
     }
