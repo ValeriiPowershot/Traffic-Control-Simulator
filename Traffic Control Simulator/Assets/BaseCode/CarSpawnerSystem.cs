@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Realistic_Traffic_Controller.Scripts;
 using UnityEngine;
 
@@ -10,28 +11,46 @@ namespace BaseCode
         [System.Serializable]
         public class SpawnerConfig
         {
+            [Header("Spawn Point")]
             public Transform SpawnPoint;
-            public CarPoolScriptableObject Config;
             public RTC_Waypoint StartWaypoint;
             public int SpawnPointIndex;
+
+            [Header("Cars")]
+            public CarScriptableObject[] Cars;
+
+            [Header("Spawn Settings")]
+            public float SpawnDelay = 2f;
+            public float RandomDelay = 1f;
+
+            [System.NonSerialized] public CarInARowCheck RowCheck;
         }
 
+        [Header("Spawners")]
         public SpawnerConfig[] spawners;
 
         [Header("Systems")]
         [SerializeField] private DifficultyController _difficulty;
 
         [Header("Fallback")]
-        [SerializeField] private int _maxCarsFallback ;
+        [SerializeField] private int _maxCarsFallback = 20;
 
         private void Start()
         {
-            foreach (SpawnerConfig spawner in spawners)
+            foreach (var spawner in spawners)
             {
-                if (spawner.Config == null || spawner.SpawnPoint == null)
+                if (spawner.SpawnPoint == null)
                 {
                     Debug.LogWarning("Spawner не настроен!", this);
                     continue;
+                }
+
+                // Кэшируем проверку ряда
+                spawner.RowCheck = spawner.SpawnPoint.GetComponent<CarInARowCheck>();
+
+                if (spawner.RowCheck == null)
+                {
+                    Debug.LogWarning($"No CarInARowCheck on {spawner.SpawnPoint.name}", this);
                 }
 
                 StartCoroutine(RunSpawner(spawner));
@@ -42,26 +61,14 @@ namespace BaseCode
         {
             while (true)
             {
-                foreach (CarPoolScriptableObject.CarSpawnData carData in spawner.Config.carsToSpawn)
-                {
-                    yield return new WaitForSeconds(carData.initialDelay);
+                // Ждём пока можно спавнить
+                while (IsMaxCarsReached() || IsRowFull(spawner))
+                    yield return null;
 
-                    while (true)
-                    {
-                        Debug.Log("Starting CarSpawnerSystem");
+                SpawnRandomCar(spawner);
 
-
-                        // 🔥 ограничение только по количеству машин на сцене
-                        while (IsMaxCarsReached())
-                        {
-                            yield return null;
-                        }
-
-                        SpawnCar(spawner, carData);
-
-                        yield return new WaitForSeconds(carData.delayBetweenSpawns);
-                    }
-                }
+                float delay = spawner.SpawnDelay + Random.Range(0f, spawner.RandomDelay);
+                yield return new WaitForSeconds(delay);
             }
         }
 
@@ -75,16 +82,29 @@ namespace BaseCode
             return transform.childCount >= maxCars;
         }
 
-        private void SpawnCar(SpawnerConfig spawner, CarPoolScriptableObject.CarSpawnData carData)
+        private bool IsRowFull(SpawnerConfig spawner)
         {
-            if (carData.car == null || carData.car.Prefab == null)
+            if (spawner.RowCheck == null)
+                return false;
+
+            return spawner.RowCheck.IsMaxCarsInRowReached();
+        }
+
+        private void SpawnRandomCar(SpawnerConfig spawner)
+        {
+            if (spawner.Cars == null || spawner.Cars.Length == 0)
+                return;
+
+            var carData = spawner.Cars[Random.Range(0, spawner.Cars.Length)];
+
+            if (carData == null || carData.Prefab == null)
             {
                 Debug.LogWarning("Car или Prefab отсутствует!", this);
                 return;
             }
 
             GameObject car = Instantiate(
-                carData.car.Prefab,
+                carData.Prefab,
                 spawner.SpawnPoint.position,
                 spawner.SpawnPoint.rotation,
                 transform
