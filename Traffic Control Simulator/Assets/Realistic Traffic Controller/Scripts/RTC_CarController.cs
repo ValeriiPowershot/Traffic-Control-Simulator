@@ -448,6 +448,7 @@ namespace Realistic_Traffic_Controller.Scripts
 
         private void Update()
         {
+
             Inputs();
             ClampInputs();
             Navigation();
@@ -1338,9 +1339,12 @@ namespace Realistic_Traffic_Controller.Scripts
 
                 if (!hit[i].transform.IsChildOf(transform) && hit[i].distance < closestHit)
                 {
+
                     closestHit = hit[i].distance;
                     leftHit = hit[i];
+
                 }
+
             }
 
             //  If first hit, draw ray and calculate the hit distance.
@@ -1355,6 +1359,8 @@ namespace Realistic_Traffic_Controller.Scripts
             //  Drawing hit ray.
             if (leftHit.point != Vector3.zero)
                 Debug.DrawRay(transform.position + transform.TransformDirection(new Vector3(bounds.left, 0f, bounds.rear)), leftDirection * leftHit.distance, Color.red);
+
+
         }
 
         #endregion
@@ -1918,21 +1924,6 @@ namespace Realistic_Traffic_Controller.Scripts
             projection.transform.localRotation = Quaternion.identity * Quaternion.Euler(0f, steerAngle * steerInput, 0f);
         }
 
-        private void TurnOnLight()
-        {
-            turnSignalsSystem.TurnOffAllSignals();
-
-            if (currentWaypoint.LeftTurnSignal)
-            {
-                turnSignalsSystem.TurnOnLeftTurnSignal();
-            }
-
-            if (currentWaypoint.RightTurnSignal)
-            {
-                turnSignalsSystem.TurnOnRightTurnSignal();
-            }
-        }
-
         /// <summary>
         /// Passes to the next waypoint, or to the interconnection waypoint.
         /// </summary>
@@ -1945,9 +1936,6 @@ namespace Realistic_Traffic_Controller.Scripts
             //  Current waypoint would be next waypoint.
             pastWaypoint = currentWaypoint;
             currentWaypoint = nextWaypoint;
-
-            //turn light
-            TurnOnLight();
 
             //  If next waypoint has interconnection waypoint...
             if (nextWaypoint && nextWaypoint.interConnectionWaypoint)
