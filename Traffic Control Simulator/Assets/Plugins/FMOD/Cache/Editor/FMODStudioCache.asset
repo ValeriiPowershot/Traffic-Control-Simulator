@@ -1,32 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8077408791547668910
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/MenuMusic
-  m_EditorClassIdentifier: 
-  Path: event:/MenuMusic
-  Guid:
-    Data1: -1573525188
-    Data2: 1251203405
-    Data3: -147657824
-    Data4: 221205350
-  Banks:
-  - {fileID: -751830616387848740}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 80065
 --- !u!114 &-6570401072207173821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54,6 +27,60 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-4879655140012173933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/MenuMusicTrackA
+  m_EditorClassIdentifier: 
+  Path: event:/MenuMusicTrackA
+  Guid:
+    Data1: -1573525188
+    Data2: 1251203405
+    Data3: -147657824
+    Data4: 221205350
+  Banks:
+  - {fileID: -751830616387848740}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 70068
+--- !u!114 &-3371485776036825008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/MenuMusicTrackB
+  m_EditorClassIdentifier: 
+  Path: event:/MenuMusicTrackB
+  Guid:
+    Data1: -1078527006
+    Data2: 1183754212
+    Data3: -1321752192
+    Data4: 1498557720
+  Banks:
+  - {fileID: -751830616387848740}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 70068
 --- !u!114 &-751830616387848740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,10 +96,10 @@ MonoBehaviour:
   Path: ../../../Traffic-Control-Simulator/TrafficControlSimulatorAudio/Audio/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638842955818592419
+  lastModified: 639144724081816103
   FileSizes:
   - Name: Desktop
-    Value: 971200
+    Value: 1572448
   Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -90,20 +117,23 @@ MonoBehaviour:
   - {fileID: 1246099169607058450}
   - {fileID: -751830616387848740}
   EditorEvents:
-  - {fileID: -8077408791547668910}
   - {fileID: -6570401072207173821}
+  - {fileID: -4879655140012173933}
+  - {fileID: -3371485776036825008}
   EditorParameters: []
   MasterBanks:
   - {fileID: -751830616387848740}
   StringsBanks:
   - {fileID: 1246099169607058450}
   cacheVersion: 131847
-  cacheTime: 638842955818603440
+  cacheTime: 639144724081840879
   SerializableEventsDict:
-  - key: event:/MenuMusic
-    index: 0
   - key: event:/Base
+    index: 0
+  - key: event:/MenuMusicTrackA
     index: 1
+  - key: event:/MenuMusicTrackB
+    index: 2
 --- !u!114 &1246099169607058450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,8 +149,8 @@ MonoBehaviour:
   Path: ../../../Traffic-Control-Simulator/TrafficControlSimulatorAudio/Audio/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638842955818603440
+  lastModified: 639144724081840879
   FileSizes:
   - Name: Desktop
-    Value: 806
+    Value: 856
   Exists: 1

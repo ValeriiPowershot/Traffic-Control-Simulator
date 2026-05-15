@@ -42,7 +42,8 @@ public class CarInARowCheck : MonoBehaviour
 
     private void Update()
     {
-        _carsInARowText.text = $"{CarInARowCount}/{_maxCarsInARow}";
+        if(_carsInARowText != null)
+            _carsInARowText.text = $"{CarInARowCount}/{_maxCarsInARow}";
 
     }
 

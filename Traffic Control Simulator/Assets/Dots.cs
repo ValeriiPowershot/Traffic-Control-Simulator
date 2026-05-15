@@ -3,39 +3,73 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class Dots : MonoBehaviour
 {
-    [SerializeField] private CarouselUI _carouselUI;
+    [SerializeField] private LevelChanger _levelChanger;
     [SerializeField] private GameObject _dotPrefab;
     [SerializeField] private Transform _dotsHolder;
 
     private Dot[] _dots;
+    private int _currentIndex;
 
-    private void Start() =>
+    private void Start()
+    {
         CreateDots();
+    }
 
     private void CreateDots()
     {
-        _dots = new Dot[_carouselUI.GetImagesCount()];
+        int levelCount = _levelChanger.LevelCount();
 
-        for (int i = 0; i < _carouselUI.GetImagesCount(); i++)
+        _dots = new Dot[levelCount];
+
+        for (int i = 0; i < levelCount; i++)
         {
             GameObject dot = Instantiate(_dotPrefab, _dotsHolder);
             _dots[i] = dot.GetComponent<Dot>();
         }
 
-        DeativateAllDots();
+        ActivateDot(0);
+    }
 
-        _dots[0].Activate();
+    public void ActivateNextDot()
+    {
+        _currentIndex++;
+
+        if (_currentIndex >= _dots.Length)
+            _currentIndex = 0;
+
+        ActivateDot(_currentIndex);
+    }
+
+    public void ActivatePreviousDot()
+    {
+        _currentIndex--;
+
+        if (_currentIndex < 0)
+            _currentIndex = _dots.Length - 1;
+
+        ActivateDot(_currentIndex);
     }
 
     public void ActivateDot(int index)
     {
-        DeativateAllDots();
+        if (_dots == null || _dots.Length == 0)
+            return;
+
+        if (index < 0 || index >= _dots.Length)
+            return;
+
+        _currentIndex = index;
+
+        DeactivateAllDots();
+
         _dots[index].Activate();
     }
 
-    private void DeativateAllDots()
+    private void DeactivateAllDots()
     {
         foreach (Dot dot in _dots)
+        {
             dot.Deactivate();
+        }
     }
 }
