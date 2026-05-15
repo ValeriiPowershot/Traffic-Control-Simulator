@@ -13,6 +13,8 @@ public class SpawnParts : MonoBehaviour
     [Header("Timing")]
     [SerializeField] private float delayBetween = 0.2f;
 
+    [SerializeField] private bool startOnAwake;
+
     [Header("Animation")]
     [SerializeField] private float scaleDuration = 0.3f;
     [SerializeField] private float dropDuration = 0.25f;
@@ -23,17 +25,30 @@ public class SpawnParts : MonoBehaviour
     private Vector3[] partsScale;
     private Vector3[] partsPosition;
 
+    private Coroutine spawnRoutine;
+
     private void Awake()
     {
+        CacheParts();
+    }
+
+    private void CacheParts()
+    {
+        if (parts == null)
+            return;
+
         partsScale = new Vector3[parts.Length];
         partsPosition = new Vector3[parts.Length];
 
         for (int i = 0; i < parts.Length; i++)
         {
-            if (parts[i] == null) continue;
+            if (parts[i] == null)
+                continue;
 
-            partsScale[i] = parts[i].transform.localScale;
-            partsPosition[i] = parts[i].transform.position;
+            Transform t = parts[i].transform;
+
+            partsScale[i] = t.localScale;
+            partsPosition[i] = t.localPosition;
 
             parts[i].SetActive(false);
         }
@@ -41,37 +56,71 @@ public class SpawnParts : MonoBehaviour
 
     public void StartSpawn()
     {
-        StartCoroutine(SpawnRoutine());
+        StopAllCoroutines();
+        spawnRoutine = StartCoroutine(SpawnRoutine());
+    }
+
+    public void ResetParts()
+    {
+        StopAllCoroutines();
+
+        for (int i = 0; i < parts.Length; i++)
+        {
+            if (parts[i] == null)
+                continue;
+
+            Transform t = parts[i].transform;
+
+            t.DOKill();
+
+            // защита от выхода за массив
+            if (partsPosition != null && i < partsPosition.Length)
+                t.localPosition = partsPosition[i];
+
+            if (partsScale != null && i < partsScale.Length)
+                t.localScale = partsScale[i];
+
+            parts[i].SetActive(false);
+        }
     }
 
     private IEnumerator SpawnRoutine()
     {
-        Debug.Log(gameObject.name + " spawn routine");
-
         int triggerIndex = Mathf.CeilToInt(parts.Length * 0.33f);
         bool eventCalled = false;
 
         for (int i = 0; i < parts.Length; i++)
         {
-            GameObject part = parts[i];
-            if (part == null) continue;
+            if (parts[i] == null)
+                continue;
 
-            part.SetActive(true);
+            parts[i].SetActive(true);
 
-            Transform t = part.transform;
+            Transform t = parts[i].transform;
 
-            Vector3 finalPos = partsPosition[i];
+            t.DOKill();
+
+            Vector3 finalPos = partsPosition != null && i < partsPosition.Length
+                ? partsPosition[i]
+                : t.localPosition;
+
             Vector3 startPos = finalPos + Vector3.up * dropDistance;
 
-            t.position = startPos;
+            t.localPosition = startPos;
             t.localScale = Vector3.zero;
 
             Sequence seq = DOTween.Sequence();
 
-            seq.Append(t.DOScale(partsScale[i], scaleDuration).SetEase(Ease.OutBack));
-            seq.Join(t.DOMove(finalPos, dropDuration).SetEase(Ease.OutBounce));
+            seq.Append(
+                t.DOScale(partsScale[i], scaleDuration)
+                    .SetEase(Ease.OutBack)
+            );
 
-            // вызываем событие на 2/3
+            seq.Join(
+                t.DOLocalMove(finalPos, dropDuration)
+                    .SetEase(Ease.OutBounce)
+            );
+
             if (!eventCalled && i >= triggerIndex)
             {
                 eventCalled = true;
@@ -81,13 +130,9 @@ public class SpawnParts : MonoBehaviour
             yield return new WaitForSeconds(delayBetween);
         }
 
-        // если вдруг массив очень маленький
         if (!eventCalled)
-        {
             OnSpawnEnd?.Invoke();
-        }
 
-        // запускаем следующие SpawnParts
         foreach (var next in nextParts)
         {
             if (next != null)

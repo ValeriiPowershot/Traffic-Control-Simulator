@@ -3,72 +3,114 @@ using UnityEngine;
 public class SelfRotator : MonoBehaviour
 {
     [Header("Rotation Settings")]
-    public Vector3 rotationAxis = Vector3.up;
-    public float rotationSpeed = 90f;
+    [SerializeField] private Vector3 rotationAxis = Vector3.up;
 
-    [Tooltip("Positive and negative angle limits in degrees")]
-    public float positiveAngleLimit = 90f;
-    public float negativeAngleLimit = -85f;
+    [SerializeField] private float rotationSpeed = 90f;
 
-    public bool clockwise = true;
+    [Tooltip("Максимальный угол вправо/вверх")]
+    [SerializeField] private float positiveAngleLimit = 90f;
+
+    [Tooltip("Максимальный угол влево/вниз")]
+    [SerializeField] private float negativeAngleLimit = -85f;
+
+    [SerializeField] private bool clockwise = true;
 
     [Header("Optional")]
-    public bool useFixedUpdate = false;
+    [SerializeField] private bool useFixedUpdate = false;
 
-    private Vector3 _center;
     private float _currentAngle = 0f;
-    private int _direction = 1; // 1 = вращение в положительную сторону, -1 = в обратную
+
+    // 1 = вперёд, -1 = назад
+    private int _direction = 1;
+
+    // локальный центр объекта
+    private Vector3 _localCenter;
 
     private void Start()
     {
-        _center = CalculateVisualCenter();
+        _localCenter = CalculateLocalVisualCenter();
     }
 
     private void Update()
     {
-        if (!useFixedUpdate) Rotate();
+        if (!useFixedUpdate)
+            Rotate();
     }
 
     private void FixedUpdate()
     {
-        if (useFixedUpdate) Rotate();
+        if (useFixedUpdate)
+            Rotate();
     }
 
     private void Rotate()
     {
         float baseDirection = clockwise ? 1f : -1f;
-        float angleStep = rotationSpeed * Time.deltaTime * baseDirection * _direction;
+
+        float angleStep =
+            rotationSpeed *
+            Time.deltaTime *
+            baseDirection *
+            _direction;
+
         float nextAngle = _currentAngle + angleStep;
 
-        // Проверка на превышение лимитов
+        // Проверка лимитов
         if ((_direction == 1 && nextAngle >= positiveAngleLimit) ||
             (_direction == -1 && nextAngle <= negativeAngleLimit))
         {
-            // Корректируем шаг, чтобы ровно попасть в лимит
-            angleStep = (_direction == 1 ? positiveAngleLimit : negativeAngleLimit) - _currentAngle;
-            _direction *= -1; // Меняем направление
+            angleStep =
+                (_direction == 1
+                    ? positiveAngleLimit
+                    : negativeAngleLimit)
+                - _currentAngle;
+
+            _direction *= -1;
         }
 
-        transform.RotateAround(_center, rotationAxis.normalized, angleStep);
+        // переводим локальный центр в мировые координаты
+        Vector3 worldCenter = transform.TransformPoint(_localCenter);
+
+        // вращение вокруг LOCAL center
+        transform.RotateAround(
+            worldCenter,
+            transform.TransformDirection(rotationAxis.normalized),
+            angleStep
+        );
+
         _currentAngle += angleStep;
     }
 
-    private Vector3 CalculateVisualCenter()
+    private Vector3 CalculateLocalVisualCenter()
     {
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
 
         if (renderers.Length == 0)
         {
-            Debug.LogWarning("RotateAroundVisualCenter: No renderers found.");
-            return transform.position;
+            Debug.LogWarning("No renderers found.");
+            return Vector3.zero;
         }
 
-        Bounds combinedBounds = renderers[0].bounds;
+        Bounds combinedBounds = renderers[0].localBounds;
+
         for (int i = 1; i < renderers.Length; i++)
         {
-            combinedBounds.Encapsulate(renderers[i].bounds);
+            Bounds b = renderers[i].localBounds;
+
+            // переводим bounds child в local space родителя
+            b.center = transform.InverseTransformPoint(
+                renderers[i].transform.TransformPoint(b.center)
+            );
+
+            combinedBounds.Encapsulate(b);
         }
 
         return combinedBounds.center;
+    }
+
+    public void ResetRotation()
+    {
+        _currentAngle = 0f;
+        _direction = 1;
     }
 }
