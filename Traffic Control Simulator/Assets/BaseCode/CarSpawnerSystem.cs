@@ -21,7 +21,6 @@ namespace BaseCode
 
             [Header("Spawn Settings")]
             public float SpawnDelay = 2f;
-            public float RandomDelay = 1f;
 
             [System.NonSerialized] public CarInARowCheck RowCheck;
         }
@@ -67,7 +66,7 @@ namespace BaseCode
 
                 SpawnRandomCar(spawner);
 
-                float delay = spawner.SpawnDelay + Random.Range(0f, spawner.RandomDelay);
+                float delay = spawner.SpawnDelay;
                 yield return new WaitForSeconds(delay);
             }
         }
