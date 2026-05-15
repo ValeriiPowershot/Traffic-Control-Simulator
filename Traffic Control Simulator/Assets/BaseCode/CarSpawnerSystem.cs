@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Realistic_Traffic_Controller.Scripts;
 using UnityEngine;
 
@@ -10,30 +11,46 @@ namespace BaseCode
         [System.Serializable]
         public class SpawnerConfig
         {
+            [Header("Spawn Point")]
             public Transform SpawnPoint;
-            public CarPoolScriptableObject Config;
             public RTC_Waypoint StartWaypoint;
             public int SpawnPointIndex;
+
+            [Header("Cars")]
+            public CarScriptableObject[] Cars;
+
+            [Header("Spawn Settings")]
+            public float SpawnDelay = 2f;
+            public float RandomDelay = 1f;
+
+            [System.NonSerialized] public CarInARowCheck RowCheck;
         }
 
+        [Header("Spawners")]
         public SpawnerConfig[] spawners;
 
-        [SerializeField] private int _maxSpawnedCarsOnScene;
+        [Header("Systems")]
+        [SerializeField] private DifficultyController _difficulty;
+
+        [Header("Fallback")]
+        [SerializeField] private int _maxCarsFallback = 20;
 
         private void Start()
         {
-            foreach (SpawnerConfig spawner in spawners)
+            foreach (var spawner in spawners)
             {
-                if (spawner.Config == null)
+                if (spawner.SpawnPoint == null)
                 {
-                    Debug.LogWarning("SpawnerConfig: не назначен конфиг!", this);
+                    Debug.LogWarning("Spawner не настроен!", this);
                     continue;
                 }
 
-                if (spawner.SpawnPoint == null)
+                // Кэшируем проверку ряда
+                spawner.RowCheck = spawner.SpawnPoint.GetComponent<CarInARowCheck>();
+
+                if (spawner.RowCheck == null)
                 {
-                    Debug.LogWarning("SpawnerConfig: не назначена точка спавна!", this);
-                    continue;
+                    Debug.LogWarning($"No CarInARowCheck on {spawner.SpawnPoint.name}", this);
                 }
 
                 StartCoroutine(RunSpawner(spawner));
@@ -42,44 +59,63 @@ namespace BaseCode
 
         private IEnumerator RunSpawner(SpawnerConfig spawner)
         {
-            foreach (CarPoolScriptableObject.CarSpawnData carData in spawner.Config.carsToSpawn)
+            while (true)
             {
-                yield return new WaitForSeconds(carData.initialDelay);
+                // Ждём пока можно спавнить
+                while (IsMaxCarsReached() || IsRowFull(spawner))
+                    yield return null;
 
-                for (int i = 0; i < carData.count; i++)
-                {
-                    while (transform.childCount >= _maxSpawnedCarsOnScene)
-                    {
-                        yield return null;
-                    }
+                SpawnRandomCar(spawner);
 
-                    if (carData.car != null && carData.car.Prefab != null)
-                    {
-                        GameObject car = Instantiate(
-                            carData.car.Prefab,
-                            spawner.SpawnPoint.position,
-                            spawner.SpawnPoint.rotation,
-                            transform
-                        );
+                float delay = spawner.SpawnDelay + Random.Range(0f, spawner.RandomDelay);
+                yield return new WaitForSeconds(delay);
+            }
+        }
 
-                        RTC_CarController controller = car.GetComponent<RTC_CarController>();
-                        if (controller != null)
-                        {
-                            controller.nextWaypoint = spawner.StartWaypoint;
-                            controller.CarSpawnIndex = spawner.SpawnPointIndex;
-                        }
-                        else
-                        {
-                            Debug.LogWarning("У заспавненной машины нет RTC_CarController!", car);
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogWarning("Car или его Prefab отсутствует в конфиге!", this);
-                    }
+        private bool IsMaxCarsReached()
+        {
+            int maxCars = _maxCarsFallback;
 
-                    yield return new WaitForSeconds(carData.delayBetweenSpawns);
-                }
+            if (_difficulty != null)
+                maxCars = _difficulty.CurrentStage.MaxCarsOnScreen;
+
+            return transform.childCount >= maxCars;
+        }
+
+        private bool IsRowFull(SpawnerConfig spawner)
+        {
+            if (spawner.RowCheck == null)
+                return false;
+
+            return spawner.RowCheck.IsMaxCarsInRowReached();
+        }
+
+        private void SpawnRandomCar(SpawnerConfig spawner)
+        {
+            if (spawner.Cars == null || spawner.Cars.Length == 0)
+                return;
+
+            var carData = spawner.Cars[Random.Range(0, spawner.Cars.Length)];
+
+            if (carData == null || carData.Prefab == null)
+            {
+                Debug.LogWarning("Car или Prefab отсутствует!", this);
+                return;
+            }
+
+            GameObject car = Instantiate(
+                carData.Prefab,
+                spawner.SpawnPoint.position,
+                spawner.SpawnPoint.rotation,
+                transform
+            );
+
+            var controller = car.GetComponent<RTC_CarController>();
+
+            if (controller != null)
+            {
+                controller.nextWaypoint = spawner.StartWaypoint;
+                controller.CarSpawnIndex = spawner.SpawnPointIndex;
             }
         }
     }

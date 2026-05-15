@@ -6,7 +6,5 @@ namespace BaseCode
     public class CarScriptableObject : ScriptableObject
     {
         public GameObject Prefab;
-        public float Speed;
-        public Color Color;
     }
 }
