@@ -18,10 +18,11 @@ public class LevelChanger : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Transform centerPoint;
+    [SerializeField] private Transform leftPoint;  // Точка, куда уезжает / откуда приезжает левый уровень
+    [SerializeField] private Transform rightPoint; // Точка, куда уезжает / откуда приезжает правый уровень
     [SerializeField] private Curtain curtain;
 
     [Header("Animation")]
-    [SerializeField] private float moveDistance = 15f;
     [SerializeField] private float duration = 0.5f;
     [SerializeField] private Ease ease = Ease.OutCubic;
 
@@ -125,6 +126,13 @@ public class LevelChanger : MonoBehaviour
         if (newIndex == currentIndex)
             return;
 
+        // Защита от отсутствия настроенных точек в инспекторе
+        if (leftPoint == null || rightPoint == null || centerPoint == null)
+        {
+            Debug.LogError("Пожалуйста, назначьте Center Point, Left Point и Right Point в инспекторе!", this);
+            return;
+        }
+
         SpawnPartHolder currentHolder = levels[currentIndex].holder;
         SpawnPartHolder nextHolder = levels[newIndex].holder;
 
@@ -140,15 +148,10 @@ public class LevelChanger : MonoBehaviour
         current.transform.DOKill();
         next.transform.DOKill();
 
-        float direction = moveLeft ? -1f : 1f;
-
-        Vector3 centerPos = centerPoint.position;
-
-        Vector3 nextStartPos =
-            centerPos + new Vector3(-direction * moveDistance, 0f, 0f);
-
-        Vector3 currentEndPos =
-            centerPos + new Vector3(direction * moveDistance, 0f, 0f);
+        // Рассчитываем точные мировые позиции на основе расставленных Transforms
+        Vector3 currentEndPos = moveLeft ? leftPoint.position : rightPoint.position;
+        Vector3 nextStartPos  = moveLeft ? rightPoint.position : leftPoint.position;
+        Vector3 centerPos     = centerPoint.position;
 
         // подготавливаем следующий уровень
         nextHolder.TurnOffAllParts();
@@ -158,13 +161,13 @@ public class LevelChanger : MonoBehaviour
 
         currentSequence = DOTween.Sequence();
 
-        // текущий уезжает
+        // текущий уезжает в назначенную точку
         currentSequence.Append(
             current.transform.DOMove(currentEndPos, duration)
                 .SetEase(ease)
         );
 
-        // следующий приезжает
+        // следующий приезжает строго в центр
         currentSequence.Join(
             next.transform.DOMove(centerPos, duration)
                 .SetEase(ease)
