@@ -18,8 +18,8 @@ public class LevelChanger : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Transform centerPoint;
-    [SerializeField] private Transform leftPoint;  // Точка, куда уезжает / откуда приезжает левый уровень
-    [SerializeField] private Transform rightPoint; // Точка, куда уезжает / откуда приезжает правый уровень
+    [SerializeField] private Transform leftPoint;
+    [SerializeField] private Transform rightPoint;
     [SerializeField] private Curtain curtain;
 
     [Header("Animation")]
@@ -28,6 +28,7 @@ public class LevelChanger : MonoBehaviour
 
     private int currentIndex = 0;
     private Sequence currentSequence;
+    private bool isChangingLevel;
 
     private void Start()
     {
@@ -61,6 +62,9 @@ public class LevelChanger : MonoBehaviour
 
     public void NextLevel()
     {
+        if (isChangingLevel)
+            return;
+
         if (levels.Length <= 1)
             return;
 
@@ -74,6 +78,9 @@ public class LevelChanger : MonoBehaviour
 
     public void PreviousLevel()
     {
+        if (isChangingLevel)
+            return;
+
         if (levels.Length <= 1)
             return;
 
@@ -123,13 +130,18 @@ public class LevelChanger : MonoBehaviour
 
     private void ChangeLevel(int newIndex, bool moveLeft)
     {
+        if (isChangingLevel)
+            return;
+
         if (newIndex == currentIndex)
             return;
 
-        // Защита от отсутствия настроенных точек в инспекторе
         if (leftPoint == null || rightPoint == null || centerPoint == null)
         {
-            Debug.LogError("Пожалуйста, назначьте Center Point, Left Point и Right Point в инспекторе!", this);
+            Debug.LogError(
+                "Пожалуйста, назначьте Center Point, Left Point и Right Point в инспекторе!",
+                this
+            );
             return;
         }
 
@@ -139,21 +151,20 @@ public class LevelChanger : MonoBehaviour
         if (currentHolder == null || nextHolder == null)
             return;
 
+        isChangingLevel = true;
+
         GameObject current = currentHolder.gameObject;
         GameObject next = nextHolder.gameObject;
 
-        // убиваем прошлую анимацию
         currentSequence?.Kill();
 
         current.transform.DOKill();
         next.transform.DOKill();
 
-        // Рассчитываем точные мировые позиции на основе расставленных Transforms
         Vector3 currentEndPos = moveLeft ? leftPoint.position : rightPoint.position;
-        Vector3 nextStartPos  = moveLeft ? rightPoint.position : leftPoint.position;
-        Vector3 centerPos     = centerPoint.position;
+        Vector3 nextStartPos = moveLeft ? rightPoint.position : leftPoint.position;
+        Vector3 centerPos = centerPoint.position;
 
-        // подготавливаем следующий уровень
         nextHolder.TurnOffAllParts();
 
         next.transform.position = nextStartPos;
@@ -161,19 +172,16 @@ public class LevelChanger : MonoBehaviour
 
         currentSequence = DOTween.Sequence();
 
-        // текущий уезжает в назначенную точку
         currentSequence.Append(
             current.transform.DOMove(currentEndPos, duration)
                 .SetEase(ease)
         );
 
-        // следующий приезжает строго в центр
         currentSequence.Join(
             next.transform.DOMove(centerPos, duration)
                 .SetEase(ease)
         );
 
-        // индекс обновляем сразу
         currentIndex = newIndex;
 
         currentSequence.OnComplete(() =>
@@ -181,7 +189,11 @@ public class LevelChanger : MonoBehaviour
             current.SetActive(false);
             currentHolder.TurnOffAllParts();
 
+            next.transform.position = centerPos;
+
             nextHolder.RestartParts();
+
+            isChangingLevel = false;
         });
     }
 
