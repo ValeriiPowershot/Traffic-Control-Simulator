@@ -1,14 +1,12 @@
 using UnityEngine;
 
-[DisallowMultipleComponent]
 public class Dots : MonoBehaviour
 {
-    [SerializeField] private LevelChanger _levelChanger;
-    [SerializeField] private GameObject _dotPrefab;
-    [SerializeField] private Transform _dotsHolder;
+    [SerializeField] private LevelChanger levelChanger;
+    [SerializeField] private GameObject dotPrefab;
+    [SerializeField] private Transform dotsHolder;
 
-    private Dot[] _dots;
-    private int _currentIndex;
+    private Dot[] dots;
 
     private void Start()
     {
@@ -17,59 +15,35 @@ public class Dots : MonoBehaviour
 
     private void CreateDots()
     {
-        int levelCount = _levelChanger.LevelCount();
+        int count = levelChanger.LevelCount();
 
-        _dots = new Dot[levelCount];
+        dots = new Dot[count];
 
-        for (int i = 0; i < levelCount; i++)
+        for (int i = 0; i < count; i++)
         {
-            GameObject dot = Instantiate(_dotPrefab, _dotsHolder);
-            _dots[i] = dot.GetComponent<Dot>();
+            GameObject obj = Instantiate(dotPrefab, dotsHolder);
+            dots[i] = obj.GetComponent<Dot>();
         }
 
-        ActivateDot(0);
+        Refresh();
     }
 
-    public void ActivateNextDot()
+    public void Refresh()
     {
-        _currentIndex++;
-
-        if (_currentIndex >= _dots.Length)
-            _currentIndex = 0;
-
-        ActivateDot(_currentIndex);
+        SetActive(levelChanger.CurrentIndex());
     }
 
-    public void ActivatePreviousDot()
+    public void SetActive(int index)
     {
-        _currentIndex--;
-
-        if (_currentIndex < 0)
-            _currentIndex = _dots.Length - 1;
-
-        ActivateDot(_currentIndex);
-    }
-
-    public void ActivateDot(int index)
-    {
-        if (_dots == null || _dots.Length == 0)
+        if (dots == null || dots.Length == 0)
             return;
 
-        if (index < 0 || index >= _dots.Length)
-            return;
-
-        _currentIndex = index;
-
-        DeactivateAllDots();
-
-        _dots[index].Activate();
-    }
-
-    private void DeactivateAllDots()
-    {
-        foreach (Dot dot in _dots)
+        for (int i = 0; i < dots.Length; i++)
         {
-            dot.Deactivate();
+            if (i == index)
+                dots[i].Activate();
+            else
+                dots[i].Deactivate();
         }
     }
 }

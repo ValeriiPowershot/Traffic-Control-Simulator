@@ -26,29 +26,24 @@ public class CarouselUI : MonoBehaviour
 
         leftButton.onClick.AddListener(Previous);
         rightButton.onClick.AddListener(Next);
+
+        //_dots.ActivateDot(0);
     }
 
     public void Next()
     {
-        if (isAnimating) return;
+        if (isAnimating || sprites.Length <= 1) return;
 
         int nextIndex = (currentIndex + 1) % sprites.Length;
         AnimateChange(nextIndex, 1);
-
-        _dots.ActivateDot(nextIndex);
     }
 
     public void Previous()
     {
-        if (isAnimating) return;
+        if (isAnimating || sprites.Length <= 1) return;
 
         int prevIndex = (currentIndex - 1 + sprites.Length) % sprites.Length;
         AnimateChange(prevIndex, -1);
-    }
-
-    public int GetImagesCount()
-    {
-        return sprites.Length;
     }
 
     private void AnimateChange(int newIndex, int direction)
@@ -57,12 +52,9 @@ public class CarouselUI : MonoBehaviour
 
         Sequence seq = DOTween.Sequence();
 
-        // Уезжаем
         seq.Append(imageHolder.rectTransform
             .DOAnchorPosX(-direction * slideDistance, duration)
             .SetEase(Ease.InOutCubic));
-
-        //seq.Join(imageHolder.DOFade(0, duration));
 
         seq.AppendCallback(() =>
         {
@@ -71,17 +63,17 @@ public class CarouselUI : MonoBehaviour
                 new Vector2(direction * slideDistance, 0);
         });
 
-        // Заезжаем
         seq.Append(imageHolder.rectTransform
             .DOAnchorPosX(0, duration)
             .SetEase(Ease.InCubic));
-
-        //seq.Join(imageHolder.DOFade(1, duration));
 
         seq.OnComplete(() =>
         {
             currentIndex = newIndex;
             isAnimating = false;
+
+            // 🔥 ВАЖНО: точки обновляем ТОЛЬКО тут
+            //_dots.ActivateDot(currentIndex);
         });
     }
 }
