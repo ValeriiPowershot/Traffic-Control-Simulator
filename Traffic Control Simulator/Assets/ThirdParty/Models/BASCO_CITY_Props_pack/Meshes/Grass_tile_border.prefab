@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8810106335895380019
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 4b2d534253efbe543b9c7c1180f602a4,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -60.64939
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4b2d534253efbe543b9c7c1180f602a4,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.8259754
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4b2d534253efbe543b9c7c1180f602a4,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -123.39739
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4b2d534253efbe543b9c7c1180f602a4,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4b2d534253efbe543b9c7c1180f602a4,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4b2d534253efbe543b9c7c1180f602a4,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.0000025033949
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4b2d534253efbe543b9c7c1180f602a4,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4b2d534253efbe543b9c7c1180f602a4,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4b2d534253efbe543b9c7c1180f602a4,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4b2d534253efbe543b9c7c1180f602a4,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4b2d534253efbe543b9c7c1180f602a4,
+        type: 3}
+      propertyPath: m_Name
+      value: Grass_tile_border
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4b2d534253efbe543b9c7c1180f602a4,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4b2d534253efbe543b9c7c1180f602a4,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2722532932468551256}
+  m_SourcePrefab: {fileID: 100100000, guid: 4b2d534253efbe543b9c7c1180f602a4, type: 3}
+--- !u!23 &7890971378207489207 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 4b2d534253efbe543b9c7c1180f602a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 8810106335895380019}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8539564698330946914 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4b2d534253efbe543b9c7c1180f602a4,
+    type: 3}
+  m_PrefabInstance: {fileID: 8810106335895380019}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2722532932468551256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8539564698330946914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7aebf0bb2b6ac764190dffb3c14aed3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetRenderer: {fileID: 7890971378207489207}
+  objectThemes:
+  - materials:
+    - {fileID: 9043123694273621575, guid: 4b2d534253efbe543b9c7c1180f602a4, type: 3}
+    - {fileID: -7377069818699454466, guid: 4b2d534253efbe543b9c7c1180f602a4, type: 3}
+  - materials:
+    - {fileID: 2100000, guid: 27ac72cdd9943284489f778e287aa919, type: 2}
+    - {fileID: 2100000, guid: 0df165d0d3cf46345a3606a2355e6b9f, type: 2}
+  currentThemeIndex: 0

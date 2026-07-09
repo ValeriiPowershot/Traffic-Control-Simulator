@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
@@ -123,6 +124,42 @@ public class LevelChanger : MonoBehaviour
 
             isChangingLevel = false;
         });
+    }
+
+    public void PlayCurrentLevel()
+    {
+        if (levels == null || levels.Length == 0)
+            return;
+
+        string sceneName = levels[currentIndex].sceneName;
+
+        if (string.IsNullOrWhiteSpace(sceneName))
+        {
+            Debug.LogError($"Scene name is empty for level index: {currentIndex}");
+            return;
+        }
+
+        if (curtain == null)
+        {
+            SceneManager.LoadScene(sceneName);
+            return;
+        }
+
+        StartCoroutine(LoadSceneWithCurtain(sceneName));
+    }
+
+    private IEnumerator LoadSceneWithCurtain(string sceneName)
+    {
+        CanvasGroup canvasGroup = curtain.GetComponent<CanvasGroup>();
+
+        canvasGroup.blocksRaycasts = true;
+
+        yield return canvasGroup
+            .DOFade(1f, 1.3f)
+            .SetEase(Ease.OutCubic)
+            .WaitForCompletion();
+
+        SceneManager.LoadScene(sceneName);
     }
 
     // ---------------- UI ----------------

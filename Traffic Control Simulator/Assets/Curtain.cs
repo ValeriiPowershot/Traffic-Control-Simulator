@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [DisallowMultipleComponent]
 public class Curtain : MonoBehaviour
@@ -9,21 +10,43 @@ public class Curtain : MonoBehaviour
     private CanvasGroup _canvasGroup;
     private float _duration = 1.3f;
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     private void Start()
     {
         _canvasGroup = GetComponent<CanvasGroup>();
         _canvasGroup.alpha = 0f;
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    public void CurtainToActiveGameObject(GameObject gameObject)
+    private void OnDestroy()
     {
-        StartCoroutine(ActivateCurtain(() => gameObject.SetActive(true)));
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    private IEnumerator ActivateCurtain(Action onComplete)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        _canvasGroup.DOFade(1f, _duration).OnComplete(onComplete.Invoke);
-        yield return new WaitForSeconds(_duration + 1);
+        // После загрузки новой сцены открыть занавес
         _canvasGroup.DOFade(0f, _duration);
+    }
+
+    public void LoadSceneWithCurtain(string sceneName)
+    {
+        StartCoroutine(LoadSceneCoroutine(sceneName));
+    }
+
+    private IEnumerator LoadSceneCoroutine(string sceneName)
+    {
+        // Закрываем занавес
+        yield return _canvasGroup.DOFade(1f, _duration).WaitForCompletion();
+
+        // Загружаем сцену
+        yield return SceneManager.LoadSceneAsync(sceneName);
+
+        // Открытие произойдет автоматически в OnSceneLoaded
     }
 }
