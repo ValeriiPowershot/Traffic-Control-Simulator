@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CircleProgress : MonoBehaviour
+public class CircleProgress1 : MonoBehaviour
 {
     [SerializeField] private GameObject[] circles;
 

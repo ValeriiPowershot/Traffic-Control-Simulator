@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class CarScoreValue : MonoBehaviour
+public class CarScoreValue1 : MonoBehaviour
 {
     public int CarScore;
 }

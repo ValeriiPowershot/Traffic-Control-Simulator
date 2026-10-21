@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class CarouselUI : MonoBehaviour
+public class CarouselUI1 : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private Image imageHolder;

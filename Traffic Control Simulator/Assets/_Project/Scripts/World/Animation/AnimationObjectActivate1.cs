@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class AnimationObjectActivate : MonoBehaviour
+public class AnimationObjectActivate1 : MonoBehaviour
 {
     [SerializeField] private GameObject _target;
 

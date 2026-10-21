@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class CarSpeedometr : MonoBehaviour
+public class CarSpeedometr1 : MonoBehaviour
 {
     [SerializeField] private Rigidbody _rigidbody;
 

@@ -2,7 +2,7 @@ using CarControllerScripts;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class CarDetection : MonoBehaviour
+public class CarDetection1 : MonoBehaviour
 {
     [Header("Car Components")]
     [SerializeField] private CarMovement carMovement;

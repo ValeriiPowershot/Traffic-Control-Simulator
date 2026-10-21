@@ -8,6 +8,8 @@ namespace BaseCode
     [DisallowMultipleComponent]
     public class CarSpawnerSystem : MonoBehaviour
     {
+        [SerializeField] private TrafficGameSettings settings;
+
         [System.Serializable]
         public class SpawnerConfig
         {
@@ -66,14 +68,14 @@ namespace BaseCode
 
                 SpawnRandomCar(spawner);
 
-                float delay = spawner.SpawnDelay;
+                float delay = Mathf.Max(0.01f, spawner.SpawnDelay * (settings != null ? settings.SpawnIntervalMultiplier : 1f));
                 yield return new WaitForSeconds(delay);
             }
         }
 
         private bool IsMaxCarsReached()
         {
-            int maxCars = _maxCarsFallback;
+            int maxCars = settings != null && settings.FallbackCarLimit > 0 ? settings.FallbackCarLimit : _maxCarsFallback;
 
             if (_difficulty != null)
                 maxCars = _difficulty.CurrentStage.MaxCarsOnScreen;

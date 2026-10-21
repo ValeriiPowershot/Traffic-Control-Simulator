@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.IO;
 
 
 public class SaveSystem : MonoBehaviour
 {
+        [SerializeField] private TrafficGameSettings settings;
+
     private string savePath;
 
 
@@ -44,7 +46,7 @@ public class SaveSystem : MonoBehaviour
             Data = new GameSaveData();
 
             Data.CurrentDay = 1;
-            Data.Reputation = 50;
+            Data.Reputation = settings != null ? settings.StartingReputation : 50;
 
             Debug.Log("New Game Created");
         }
@@ -56,7 +58,7 @@ public class SaveSystem : MonoBehaviour
         Data = new GameSaveData();
 
         Data.CurrentDay = 1;
-        Data.Reputation = 50;
+        Data.Reputation = settings != null ? settings.StartingReputation : 50;
 
         Save();
     }

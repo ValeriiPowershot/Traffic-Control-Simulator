@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class CarInARowCheck : MonoBehaviour
+public class CarInARowCheck1 : MonoBehaviour
 {
     [SerializeField] private int _maxCarsInARow;
     [SerializeField] private TMP_Text _carsInARowText;

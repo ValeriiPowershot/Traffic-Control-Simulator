@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [DisallowMultipleComponent]
-public class Curtain : MonoBehaviour
+public class Curtain1 : MonoBehaviour
 {
     private CanvasGroup _canvasGroup;
     private float _duration = 1.3f;

@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class StatisticsTracker : MonoBehaviour
 {
+        [SerializeField] private TrafficGameSettings settings;
+
     public static StatisticsTracker Instance;
 
     public CityStatistics Statistics = new();
@@ -28,7 +30,7 @@ public class StatisticsTracker : MonoBehaviour
     public void CalculateResult()
     {
         Statistics.Score =
-            Statistics.CarsPassed - (Statistics.Accidents * 50);
+            Statistics.CarsPassed - (Statistics.Accidents * (settings != null ? settings.ScorePenaltyPerAccident : 50));
     }
 
 

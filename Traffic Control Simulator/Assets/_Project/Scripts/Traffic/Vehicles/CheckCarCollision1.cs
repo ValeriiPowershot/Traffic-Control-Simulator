@@ -3,7 +3,7 @@ using Realistic_Traffic_Controller.Scripts;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class CheckCarCollision : MonoBehaviour
+public class CheckCarCollision1 : MonoBehaviour
 {
     [SerializeField] private RTC_CarController _carController;
 

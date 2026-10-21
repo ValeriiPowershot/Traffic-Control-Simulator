@@ -5,7 +5,7 @@ using Realistic_Traffic_Controller.Scripts;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class AllRaycasted : MonoBehaviour
+public class AllRaycasted1 : MonoBehaviour
 {
     public RTC_CarController _carController;
 

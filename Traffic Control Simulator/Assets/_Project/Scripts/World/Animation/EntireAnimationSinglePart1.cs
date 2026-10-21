@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class EntireAnimationSinglePart : MonoBehaviour
+public class EntireAnimationSinglePart1 : MonoBehaviour
 {
     [SerializeField] private Transform part;
 

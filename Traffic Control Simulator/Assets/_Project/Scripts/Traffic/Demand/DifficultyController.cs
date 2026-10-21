@@ -4,6 +4,8 @@ using TMPro;
 
 public class DifficultyController : MonoBehaviour
 {
+        [SerializeField] private TrafficGameSettings settings;
+
     [Header("Stages")]
     [SerializeField] private List<StageConfig> _stages;
 
@@ -21,7 +23,7 @@ public class DifficultyController : MonoBehaviour
 
     private void Start()
     {
-        _time = _startTime;
+        _time = settings != null ? Mathf.Max(1f, settings.DayDurationSeconds) : _startTime;
     }
 
     private void Update()
@@ -92,7 +94,7 @@ public class DifficultyController : MonoBehaviour
 
     public void ResetTimer()
     {
-        _time = _startTime;
+        _time = settings != null ? Mathf.Max(1f, settings.DayDurationSeconds) : _startTime;
         _currentStageIndex = 0;
         _isRunning = true;
     }
