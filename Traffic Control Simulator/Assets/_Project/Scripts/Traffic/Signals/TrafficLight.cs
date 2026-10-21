@@ -41,12 +41,13 @@ public class TrafficLight : MonoBehaviour
 
     public void AddCarToWaitingList(RTC_CarController carController)
     {
-        _waitingCars.Add(carController);
+        if (carController != null && !_waitingCars.Contains(carController)) _waitingCars.Add(carController);
     }
 
     public void SwitchRedGreen()
     {
-        if (isSwitching) return;
+        var director = BaseCode.Logic.City.GameManager.ForScene(gameObject.scene);
+        if (isSwitching || (director != null && !director.IsPlaying)) return;
 
         if (LightState == TrafficLightState.Red)
             StartCoroutine(YellowThenGreen());
@@ -77,10 +78,11 @@ public class TrafficLight : MonoBehaviour
     {
         foreach (var car in _waitingCars)
         {
-            //StartCoroutine(car.TimeThrottle(0.5f, 2));
+            if (car == null) continue;
             car.stoppedForTrafficLight = false;
             car.startBoostActive = true;
         }
+        _waitingCars.Clear();
     }
 
     private void SetLightState(TrafficLightState newState)

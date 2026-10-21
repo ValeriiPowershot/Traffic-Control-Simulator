@@ -1,101 +1,45 @@
 using System.Collections.Generic;
+using BaseCode.Logic.City;
 using UnityEngine;
 using TMPro;
 
 public class DifficultyController : MonoBehaviour
 {
-        [SerializeField] private TrafficGameSettings settings;
-
-    [Header("Stages")]
+    [SerializeField] private TrafficGameSettings settings;
     [SerializeField] private List<StageConfig> _stages;
-
-    [Header("Timer")]
-    [SerializeField] private float _startTime = 300f; // стартовое время (в секундах)
-
-    [Header("UI")]
+    [SerializeField] private float _startTime = 300f;
     [SerializeField] private TextMeshProUGUI _timeText;
-
     private float _time;
     private int _currentStageIndex;
-    private bool _isRunning = true;
-
-    public StageConfig CurrentStage => _stages[_currentStageIndex];
-
-    private void Start()
-    {
-        _time = settings != null ? Mathf.Max(1f, settings.DayDurationSeconds) : _startTime;
-    }
-
+    private bool _isRunning;
+    public float RemainingSeconds => _time;
+    public StageConfig CurrentStage => _stages == null || _stages.Count == 0 ? null : _stages[Mathf.Clamp(_currentStageIndex, 0, _stages.Count - 1)];
+    private void Start() { ResetTimer(); }
     private void Update()
     {
-        if (!_isRunning)
-            return;
-
+        var flow = GameManager.ForScene(gameObject.scene);
+        if (!_isRunning || (flow != null && !flow.IsPlaying)) return;
+        _time = Mathf.Max(0f, _time - Time.deltaTime);
+        if (_stages != null)
+            while (_currentStageIndex + 1 < _stages.Count)
+            {
+                var next = _stages[_currentStageIndex + 1];
+                if (next != null && _time > next.StartTime) break;
+                _currentStageIndex++;
+            }
+        UpdateTimeUI();
         if (_time <= 0f)
         {
-            _time = 0f;
             _isRunning = false;
-            OnTimerEnd();
-            return;
-        }
-
-        _time -= Time.deltaTime;
-
-        UpdateStage();
-        UpdateTimeUI();
-    }
-
-    private void UpdateStage()
-    {
-        if (_currentStageIndex >= _stages.Count - 1)
-            return;
-
-        // Переход на следующую стадию при уменьшении времени
-        if (_time <= _stages[_currentStageIndex + 1].StartTime)
-        {
-            _currentStageIndex++;
+            if (flow != null) flow.FinishGame();
+            else Debug.LogWarning("Timer ended outside a campaign scene.", this);
         }
     }
-
     private void UpdateTimeUI()
-    {
-        if (_timeText == null)
-            return;
-
-        int minutes = Mathf.FloorToInt(_time / 60f);
-        int seconds = Mathf.FloorToInt(_time % 60f);
-
-        _timeText.text = $"{minutes:00}:{seconds:00}";
-    }
-
-    private void OnTimerEnd()
-    {
-        Debug.Log("Timer ended!");
-        // TODO: сюда можно добавить Game Over / победу / остановку игры
-    }
-
-    // --- Дополнительно ---
-
-    public void AddTime(float value)
-    {
-        _time += value;
-    }
-
-    public void PauseTimer()
-    {
-        _isRunning = false;
-    }
-
-    public void ResumeTimer()
-    {
-        if (_time > 0f)
-            _isRunning = true;
-    }
-
+    { if (_timeText != null) _timeText.text = $"{Mathf.FloorToInt(_time / 60f):00}:{Mathf.FloorToInt(_time % 60f):00}"; }
+    public void AddTime(float seconds) { _time = Mathf.Max(0f, _time + seconds); UpdateTimeUI(); }
+    public void PauseTimer() { _isRunning = false; }
+    public void ResumeTimer() { if (_time > 0) _isRunning = true; }
     public void ResetTimer()
-    {
-        _time = settings != null ? Mathf.Max(1f, settings.DayDurationSeconds) : _startTime;
-        _currentStageIndex = 0;
-        _isRunning = true;
-    }
+    { _currentStageIndex = 0; _time = settings != null ? Mathf.Max(1f, settings.DayDurationSeconds) : Mathf.Max(1f, _startTime); _isRunning = true; UpdateTimeUI(); }
 }

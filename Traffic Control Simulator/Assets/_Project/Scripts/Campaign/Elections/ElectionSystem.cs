@@ -10,6 +10,8 @@ namespace BaseCode.Logic.City
         private int requiredReputation = 60;
 
 
+        public void Configure(TrafficGameSettings configuration) { settings = configuration; }
+
         public bool CheckElection(int reputation)
         {
             return reputation >= (settings != null ? settings.ElectionThreshold : requiredReputation);

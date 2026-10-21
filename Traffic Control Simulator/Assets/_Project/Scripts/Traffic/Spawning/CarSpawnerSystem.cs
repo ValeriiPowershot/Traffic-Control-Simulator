@@ -38,9 +38,10 @@ namespace BaseCode
 
         private void Start()
         {
+            if (spawners == null) return;
             foreach (var spawner in spawners)
             {
-                if (spawner.SpawnPoint == null)
+                if (spawner == null || spawner.SpawnPoint == null)
                 {
                     Debug.LogWarning("Spawner не настроен!", this);
                     continue;
@@ -63,7 +64,7 @@ namespace BaseCode
             while (true)
             {
                 // Ждём пока можно спавнить
-                while (IsMaxCarsReached() || IsRowFull(spawner))
+                while (CampaignBlocked() || IsMaxCarsReached() || IsRowFull(spawner))
                     yield return null;
 
                 SpawnRandomCar(spawner);
@@ -73,12 +74,18 @@ namespace BaseCode
             }
         }
 
+        private bool CampaignBlocked()
+        {
+            var director = BaseCode.Logic.City.GameManager.ForScene(gameObject.scene);
+            return director != null && !director.IsPlaying;
+        }
+
         private bool IsMaxCarsReached()
         {
             int maxCars = settings != null && settings.FallbackCarLimit > 0 ? settings.FallbackCarLimit : _maxCarsFallback;
 
-            if (_difficulty != null)
-                maxCars = _difficulty.CurrentStage.MaxCarsOnScreen;
+            if (_difficulty != null && _difficulty.CurrentStage != null)
+                maxCars = Mathf.Max(1, _difficulty.CurrentStage.MaxCarsOnScreen);
 
             return transform.childCount >= maxCars;
         }
@@ -117,6 +124,8 @@ namespace BaseCode
             {
                 controller.nextWaypoint = spawner.StartWaypoint;
                 controller.CarSpawnIndex = spawner.SpawnPointIndex;
+                var director = BaseCode.Logic.City.GameManager.ForScene(gameObject.scene);
+                if (director != null) director.RegisterVehicle(controller.gameObject);
             }
         }
     }

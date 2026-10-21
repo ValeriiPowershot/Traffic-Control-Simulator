@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace BaseCode.Logic.City
 {
@@ -7,12 +7,12 @@ namespace BaseCode.Logic.City
         public string GetNews(int reputation)
         {
             if(reputation > 70)
-                return "Citizens are happy with traffic.";
+                return "Жители довольны движением в городе.";
 
             if(reputation < 40)
-                return "Citizens complain about traffic.";
+                return "Горожане жалуются на движение и ждут улучшений.";
 
-            return "The city is stable.";
+            return "Город оценивает работу мэра спокойно.";
         }
     }
 }

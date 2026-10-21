@@ -94,15 +94,9 @@ namespace TrafficControl.EditorTools
                 {
                     if (EditorUtility.DisplayDialog("Finish debug day", "This calculates the current statistics, updates reputation, advances the day and writes save.json. Continue?", "Finish day", "Cancel"))
                     {
-                        stats.CalculateResult();
-                        day.FinishDay(stats.Statistics);
+                        if (game == null) { Debug.LogWarning("No campaign director in this scene."); return; }
+                        game.FinishGame();
                         finishedSaveId = save.GetInstanceID(); finishedDay = save.Data.CurrentDay;
-                        if (game != null) game.CurrentState = GameState.Results;
-                        foreach (var spawner in Resources.FindObjectsOfTypeAll<BaseCode.CarSpawnerSystem>())
-                            if (spawner.gameObject.scene.IsValid() && spawner.gameObject.scene.isLoaded) spawner.StopAllCoroutines();
-                        foreach (var timer in Resources.FindObjectsOfTypeAll<DifficultyController>())
-                            if (timer.gameObject.scene.IsValid() && timer.gameObject.scene.isLoaded) timer.PauseTimer();
-                        Debug.Log("Debug day saved. Restart Play Mode for a fresh session.");
                         EditorApplication.isPaused = true;
                     }
                 }

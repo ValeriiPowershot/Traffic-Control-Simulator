@@ -15,6 +15,7 @@ public class ScoreText : MonoBehaviour
 
     public void UpdateScoreText(int score)
     {
-        _scoreText.text = $"{score}/{_levelTargetScore.GetTargetScore()}";
+        if (_scoreText != null)
+            _scoreText.text = _levelTargetScore != null ? $"{score}/{_levelTargetScore.GetTargetScore()}" : score.ToString();
     }
 }

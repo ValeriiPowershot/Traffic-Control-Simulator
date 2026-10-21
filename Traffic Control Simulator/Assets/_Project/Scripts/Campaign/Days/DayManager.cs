@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using System;
+using UnityEngine;
 
 namespace BaseCode.Logic.City
 {
@@ -6,38 +7,29 @@ namespace BaseCode.Logic.City
     {
         [SerializeField] private SaveSystem saveSystem;
         [SerializeField] private ReputationSystem reputationSystem;
-
-
-        public void FinishDay(CityStatistics stats)
+        [SerializeField] private TrafficGameSettings settings;
+        private int sessionDay;
+        private bool complete;
+        public string LastError { get; private set; }
+        public void Configure(SaveSystem save, TrafficGameSettings config)
+        { saveSystem = save; settings = config; sessionDay = save.Data.CurrentDay; complete = false; }
+        public bool TryFinishDay(CityStatistics statistics)
         {
-            int oldReputation = saveSystem.Data.Reputation;
-
-
-            reputationSystem.CalculateReputation(stats);
-
-
-            DayResult result = new DayResult();
-
-            result.CarsPassed = stats.CarsPassed;
-            result.Accidents = stats.Accidents;
-            result.Score = stats.Score;
-
-            result.ReputationChange =
-                saveSystem.Data.Reputation - oldReputation;
-
-
-            saveSystem.Data.Results.Add(result);
-
-
-            saveSystem.Data.CurrentDay++;
-
-
-            saveSystem.Save();
-
-
-            Debug.Log(
-                $"Day finished! Reputation {oldReputation} -> {saveSystem.Data.Reputation}"
-            );
+            LastError = null;
+            if (complete) { LastError = "Результат этой смены уже сохранён."; return false; }
+            if (saveSystem == null || saveSystem.Data == null || settings == null || sessionDay == 0)
+            { LastError = "Системы дня не инициализированы."; return false; }
+            try
+            {
+                var candidate = CampaignRules.Complete(saveSystem.Data, statistics, sessionDay, settings.CampaignLengthDays,
+                    settings.ElectionThreshold, settings.ScorePenaltyPerAccident, settings.ScorePerReputationPoint, settings.ReputationPenaltyPerAccident);
+                if (!saveSystem.TryCommit(candidate)) { LastError = saveSystem.LastError; return false; }
+                complete = true; return true;
+            }
+            catch (Exception exception) when (exception is InvalidOperationException || exception is ArgumentException)
+            { LastError = exception.Message; return false; }
         }
+        public void FinishDay(CityStatistics statistics)
+        { if (!TryFinishDay(statistics)) Debug.LogWarning(LastError); }
     }
 }
