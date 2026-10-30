@@ -64,7 +64,7 @@ namespace BaseCode.Logic.City
         }
         private void Update()
         {
-            if (CurrentState == GameState.Playing && Input.GetKeyDown(KeyCode.Escape))
+            if (CurrentState == GameState.Playing && UnityEngine.Input.GetKeyDown(KeyCode.Escape))
             { IsPaused = !IsPaused; Time.timeScale = IsPaused ? 0f : previousScale; }
         }
         public void StartGame()
