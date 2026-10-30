@@ -80,7 +80,7 @@ public class TrafficLight : MonoBehaviour
         {
             if (car == null) continue;
             car.stoppedForTrafficLight = false;
-            car.startBoostActive = true;
+            car.startBoostActive = false;
         }
         _waitingCars.Clear();
     }

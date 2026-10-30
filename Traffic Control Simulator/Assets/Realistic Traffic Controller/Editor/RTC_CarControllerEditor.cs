@@ -1,4 +1,4 @@
-﻿//----------------------------------------------
+//----------------------------------------------
 //        Realistic Traffic Controller
 //
 // Copyright © 2014 - 2024 BoneCracker Games
@@ -371,7 +371,15 @@ public class RTC_CarControllerEditor : Editor {
             EditorGUILayout.LabelField("Navigation", EditorStyles.centeredGreyMiniLabel);
             EditorGUILayout.Space();
 
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("lookAhead"), new GUIContent("Look Ahead", "Offset for navigator point."), false);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("preciseDriving"), new GUIContent("Precise City Driving"));
+            if (serializedObject.FindProperty("preciseDriving").boolValue) {
+                EditorGUILayout.HelpBox("Physical wheel steering with rounded turns and automatic approach braking. All speed limits are km/h. Routes must leave room for the vehicle's turning radius.", MessageType.Info);
+                string[] cityFields = { "citySpeedLimit", "citySteeringAngle", "steeringLookAhead", "steeringPreviewTime", "maximumLookAhead", "comfortableDeceleration", "lateralAccelerationLimit", "standstillGap", "followingTime", "steeringResponse" };
+                foreach (string field in cityFields)
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty(field));
+            } else {
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("lookAhead"), new GUIContent("Look Ahead", "Offset for navigator point."), false);
+            }
 
             EditorGUILayout.Space();
             GUI.enabled = false;

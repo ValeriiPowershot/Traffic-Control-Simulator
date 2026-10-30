@@ -19,7 +19,7 @@ namespace Realistic_Traffic_Controller.Scripts
     /// </summary>
     [AddComponentMenu("BoneCracker Games/Realistic Traffic Controller/RTC Car Controller")]
     [RequireComponent(typeof(Rigidbody))]
-    public class RTC_CarController : RTC_Core
+    public partial class RTC_CarController : RTC_Core
     {
 
         #region Core Components
@@ -449,9 +449,12 @@ namespace Realistic_Traffic_Controller.Scripts
         private void Update()
         {
 
-            Inputs();
-            ClampInputs();
-            Navigation();
+            if (!preciseDriving)
+            {
+                Inputs();
+                ClampInputs();
+                Navigation();
+            }
             WheelAlign();
             VehicleLights();
             Optimization();
@@ -459,7 +462,7 @@ namespace Realistic_Traffic_Controller.Scripts
             Audio();
             Others();
 
-            if (startBoostActive)
+            if (!preciseDriving && startBoostActive)
             {
                 throttleInput = 0.8f;
             }
@@ -475,6 +478,16 @@ namespace Realistic_Traffic_Controller.Scripts
         private void FixedUpdate()
         {
             currentSpeed = Rigid.velocity.magnitude * 3.6f;
+
+            if (preciseDriving)
+            {
+                PreciseDrivingStep();
+                Engine();
+                Clutch();
+                Gearbox();
+                WheelColliders();
+                return;
+            }
 
             Throttle();
             Brake();
@@ -537,7 +550,7 @@ namespace Realistic_Traffic_Controller.Scripts
             if (wheels != null)
             {
 
-                if (COM.localPosition == Vector3.zero)
+                if (COM != null && COM.localPosition == Vector3.zero)
                 {
 
                     Transform frontWheelCollider = null;
@@ -655,7 +668,7 @@ namespace Realistic_Traffic_Controller.Scripts
                 return;
             }
 
-            Rigid.centerOfMass = transform.InverseTransformPoint(COM.position);
+            if (COM != null) Rigid.centerOfMass = transform.InverseTransformPoint(COM.position);
             raycastDistanceOrg = raycastDistance;
         }
 
@@ -708,6 +721,7 @@ namespace Realistic_Traffic_Controller.Scripts
         private void ResetVehicleState()
         {
             ResetVehicleOnEnable();
+            ResetPreciseDriving();
         }
 
         private void InvokeEnableEvent()
@@ -853,7 +867,7 @@ namespace Realistic_Traffic_Controller.Scripts
             else
                 waitForHorn = 0f;
 
-            if (waitForHorn > 10f && !hornSource.isPlaying)
+            if (waitForHorn > 10f && hornSource != null && !hornSource.isPlaying)
             {
 
                 waitForHorn = 0f;
@@ -1508,7 +1522,7 @@ namespace Realistic_Traffic_Controller.Scripts
                 clutchInputRaw = 1f;
 
             //  Smoothing the clutch input with inertia.
-            clutchInput = Mathf.SmoothDamp(clutchInput, clutchInputRaw, ref clutchVelocity, .15f);
+            clutchInput = Mathf.SmoothDamp(clutchInput, clutchInputRaw, ref clutchVelocity, .15f, Mathf.Infinity, Time.fixedDeltaTime);
 
         }
 
@@ -1761,7 +1775,7 @@ namespace Realistic_Traffic_Controller.Scripts
             wantedEngineRPMRaw = Mathf.Clamp(wantedEngineRPMRaw, 0f, maxEngineRPM);
 
             //  Smoothing the engine rpm.
-            currentEngineRPM = Mathf.SmoothDamp(currentEngineRPM, wantedEngineRPMRaw, ref engineVelocity, .15f);
+            currentEngineRPM = Mathf.SmoothDamp(currentEngineRPM, wantedEngineRPMRaw, ref engineVelocity, .15f, Mathf.Infinity, Time.fixedDeltaTime);
 
             //  Converting wheel rpm to speed as km/h unit.
             wheelRPM2Speed = (averagePowerWheelRPM * averagePowerWheelRadius * Mathf.PI * 2f) * 60f / 1000f;
@@ -2065,7 +2079,9 @@ namespace Realistic_Traffic_Controller.Scripts
         {
 
             currentWaypoint = waypoint;
-            nextWaypoint = currentWaypoint;
+            nextWaypoint = waypoint;
+            pastWaypoint = null;
+            if (waypoint != null) PassWaypoint();
 
         }
 
@@ -2241,11 +2257,6 @@ namespace Realistic_Traffic_Controller.Scripts
         private void OnCollisionEnter(Collision collision)
         {
             outputEvent_OnCollision.Invoke(outputOnCollision);
-
-            if (collision.transform.gameObject.layer == LayerMask.NameToLayer("RTC_TrafficVehicle") && collision.gameObject.GetComponentInChildren<RTC_CarController>().CarSpawnIndex != CarSpawnIndex)
-            {
-                Debug.Log("Уебался");
-            }
 
             //  Return if canCrash is disabled.
             if (!canCrash)

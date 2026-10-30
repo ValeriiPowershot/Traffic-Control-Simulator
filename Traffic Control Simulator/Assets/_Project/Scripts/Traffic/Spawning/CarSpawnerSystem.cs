@@ -122,7 +122,7 @@ namespace BaseCode
 
             if (controller != null)
             {
-                controller.nextWaypoint = spawner.StartWaypoint;
+                controller.SetWaypoint(spawner.StartWaypoint);
                 controller.CarSpawnIndex = spawner.SpawnPointIndex;
                 var director = BaseCode.Logic.City.GameManager.ForScene(gameObject.scene);
                 if (director != null) director.RegisterVehicle(controller.gameObject);
