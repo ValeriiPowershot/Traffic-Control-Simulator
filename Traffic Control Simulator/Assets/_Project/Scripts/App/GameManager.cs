@@ -14,7 +14,9 @@ namespace BaseCode.Logic.City
         public GameState CurrentState;
         public bool IsPaused { get; private set; }
         public bool IsPlaying => CurrentState == GameState.Playing && !IsPaused;
-        public bool IsTraining => gameObject.scene.name == "Tutorial";
+        private bool trainingSession;
+        public bool IsTraining => trainingSession || gameObject.scene.name == "Tutorial";
+        public void EnableTrainingSession() { if (!initialized) trainingSession = true; }
         public TrafficGameSettings Settings => settings;
         public string Error { get; private set; }
         public StatisticsTracker Tracker { get; private set; }

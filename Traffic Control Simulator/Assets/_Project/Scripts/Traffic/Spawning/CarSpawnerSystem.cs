@@ -8,6 +8,8 @@ namespace BaseCode
     [DisallowMultipleComponent]
     public class CarSpawnerSystem : MonoBehaviour
     {
+        [Header("Experimental driving")]
+        public bool UseExperimentalController;
         [SerializeField] private TrafficGameSettings settings;
 
         [System.Serializable]
@@ -124,6 +126,8 @@ namespace BaseCode
             {
                 controller.SetWaypoint(spawner.StartWaypoint);
                 controller.CarSpawnIndex = spawner.SpawnPointIndex;
+                if (UseExperimentalController)
+                    ArcadeTrafficCar.TakeOver(controller, spawner.StartWaypoint, spawner.SpawnPointIndex);
                 var director = BaseCode.Logic.City.GameManager.ForScene(gameObject.scene);
                 if (director != null) director.RegisterVehicle(controller.gameObject);
             }

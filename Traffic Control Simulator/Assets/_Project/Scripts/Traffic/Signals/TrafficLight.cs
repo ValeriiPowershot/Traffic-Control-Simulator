@@ -14,6 +14,18 @@ public enum TrafficLightState
 [DisallowMultipleComponent]
 public class TrafficLight : MonoBehaviour
 {
+    private static readonly List<TrafficLight> activeSignals = new List<TrafficLight>();
+    public static IReadOnlyList<TrafficLight> ActiveSignals => activeSignals;
+    private Collider cachedBarrier;
+    public Collider StopBarrier => cachedBarrier != null ? cachedBarrier :
+        (cachedBarrier = _stopCollider != null ? _stopCollider.GetComponentInChildren<Collider>(true) : null);
+    // Yellow preserves the previous barrier state: finish crossing after green,
+    // but keep waiting during the red-to-green transition.
+    public bool BlocksTraffic => LightState == TrafficLightState.Red ||
+        (LightState == TrafficLightState.Yellow && _stopCollider != null && _stopCollider.activeInHierarchy);
+    private void OnEnable() { if (!activeSignals.Contains(this)) activeSignals.Add(this); }
+    private void OnDisable() { activeSignals.Remove(this); }
+
     [Header("Start State")]
     [SerializeField] private TrafficLightState startLightState = TrafficLightState.Red;
     public TrafficLightState LightState { get; private set; }
