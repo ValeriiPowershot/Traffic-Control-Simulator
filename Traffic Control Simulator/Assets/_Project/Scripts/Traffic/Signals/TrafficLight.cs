@@ -25,6 +25,8 @@ public class TrafficLight : MonoBehaviour
         (LightState == TrafficLightState.Yellow && _stopCollider != null && _stopCollider.activeInHierarchy);
     private void OnEnable() { if (!activeSignals.Contains(this)) activeSignals.Add(this); }
     private void OnDisable() { activeSignals.Remove(this); }
+    public void ConfigureRuntime(int stream, GameObject barrier)
+    { TrafficLightSpawnIndex = stream; _stopCollider = barrier; cachedBarrier = null; }
 
     [Header("Start State")]
     [SerializeField] private TrafficLightState startLightState = TrafficLightState.Red;
@@ -104,21 +106,21 @@ public class TrafficLight : MonoBehaviour
         switch (newState)
         {
             case TrafficLightState.Red:
-                trafficLightSwitcher.ChangeToRed();
-                lightUI.color = trafficLightMaterials.RedColor;
-                _stopCollider.SetActive(true);
+                if (trafficLightSwitcher) trafficLightSwitcher.ChangeToRed();
+                if (lightUI && trafficLightMaterials) lightUI.color = trafficLightMaterials.RedColor;
+                if (_stopCollider) _stopCollider.SetActive(true);
                 if (stopWaypoint != null) stopWaypoint.SetRed();
                 break;
 
             case TrafficLightState.Yellow:
-                trafficLightSwitcher.ChangeToYellow();
-                lightUI.color = trafficLightMaterials.YellowColor;
+                if (trafficLightSwitcher) trafficLightSwitcher.ChangeToYellow();
+                if (lightUI && trafficLightMaterials) lightUI.color = trafficLightMaterials.YellowColor;
                 break;
 
             case TrafficLightState.Green:
-                trafficLightSwitcher.ChangeToGreen();
-                lightUI.color = trafficLightMaterials.GreenColor;
-                _stopCollider.SetActive(false);
+                if (trafficLightSwitcher) trafficLightSwitcher.ChangeToGreen();
+                if (lightUI && trafficLightMaterials) lightUI.color = trafficLightMaterials.GreenColor;
+                if (_stopCollider) _stopCollider.SetActive(false);
                 if (stopWaypoint != null) stopWaypoint.SetGreen();
                 break;
         }
