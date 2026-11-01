@@ -20,9 +20,9 @@ public sealed class OwnCarPlayRunner : MonoBehaviour
         ground.transform.position = new Vector3(0,-0.5f,0); ground.transform.localScale = new Vector3(100,1,100);
         var routeObject = new GameObject("Route"); routeObject.transform.position = new Vector3(0,0,100);
         var route = routeObject.AddComponent<RTC_Waypoint>(); route.desiredSpeedForNextWaypoint = 32;
-        var car = CreateCar(route);
+        var car = CreateCar(route); car.AssignSpawner(101);
         var foreign = new GameObject("Foreign car"); foreign.SetActive(false); foreign.transform.position = new Vector3(0,0.6f,10);
-        var other = foreign.AddComponent<ArcadeTrafficCar>(); other.enabled = false; other.StreamId = 99;
+        var other = foreign.AddComponent<ArcadeTrafficCar>(); other.enabled = false; other.StreamId = 7; other.AssignSpawner(202);
         foreign.GetComponent<Rigidbody>().isKinematic = true;
         foreign.AddComponent<BoxCollider>().size = new Vector3(1.5f,0.7f,3.6f);
         foreign.SetActive(true);

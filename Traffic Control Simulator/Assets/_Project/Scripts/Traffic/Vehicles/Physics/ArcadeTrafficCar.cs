@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Realistic_Traffic_Controller.Scripts;
 using BaseCode.Logic.City;
@@ -18,6 +19,8 @@ public sealed class ArcadeTrafficCar : MonoBehaviour
     public Wheel[] Wheels;
     public Transform CentreOfMass;
     public int StreamId;
+    public int SpawnerId { get; private set; }
+    public void AssignSpawner(int id) { SpawnerId = id; }
     public RTC_Waypoint StartWaypoint;
     [Header("Physical arcade handling")]
     [Min(1)] public float SpeedLimitKph = 32;
@@ -55,6 +58,27 @@ public sealed class ArcadeTrafficCar : MonoBehaviour
     private float wheelbase, rearZ, frontZ, halfWidth, sensorY, wait, throttle, brake;
     private bool initialized;
     private int drivenCount, brakeCount;
+    private static readonly List<ArcadeTrafficCar> trafficCars = new List<ArcadeTrafficCar>();
+    private Collider[] bodyColliders;
+
+    private void OnEnable() { if (!trafficCars.Contains(this)) trafficCars.Add(this); }
+    private void OnDestroy() { trafficCars.Remove(this); }
+
+    private Bounds BodyBounds()
+    {
+        if (bodyColliders == null) bodyColliders = GetComponentsInChildren<Collider>(true);
+        Bounds result = new Bounds(transform.position, Vector3.zero);
+        bool found = false;
+        foreach (var c in bodyColliders)
+        {
+            if (!c || !c.enabled || !c.gameObject.activeInHierarchy || c.isTrigger || c is WheelCollider) continue;
+            if (!found) { result = c.bounds; found = true; } else result.Encapsulate(c.bounds);
+        }
+        return result;
+    }
+
+    private bool SameSpawner(ArcadeTrafficCar other)
+        => ArcadeTrafficRules.SameSpawner(SpawnerId, other.SpawnerId, StreamId, other.StreamId);
 
     private void Awake() { body = GetComponent<Rigidbody>(); }
     private void Start() { if (!initialized) Initialize(); }
@@ -83,6 +107,8 @@ public sealed class ArcadeTrafficCar : MonoBehaviour
     public void Initialize()
     {
         body = GetComponent<Rigidbody>();
+        bodyColliders = null;
+        if (!trafficCars.Contains(this)) trafficCars.Add(this);
         initialized = false;
         ConfigurationError = null;
         drivenCount = brakeCount = 0;
@@ -230,6 +256,12 @@ public sealed class ArcadeTrafficCar : MonoBehaviour
         if (count == overlaps.Length) wanted = 0;
         for (int i = 0; i < count; i++) wanted = LimitForCar(overlaps[i], 0, direction, wanted);
 
+        // A height-dependent cast can miss a low bumper or a car on a slope.
+        // Check full body footprints as well, without relying on collider layers.
+        wanted = LimitForQueue(direction, range, wanted);
+        if (Vector3.Dot(curveDirection, direction) > 0.1f)
+            wanted = LimitForQueue(curveDirection, range, wanted);
+
         var signals = TrafficLight.ActiveSignals;
         for (int i = 0; i < signals.Count; i++)
         {
@@ -250,6 +282,34 @@ public sealed class ArcadeTrafficCar : MonoBehaviour
         return wanted;
     }
 
+    private float LimitForQueue(Vector3 direction, float range, float wanted)
+    {
+        Bounds mine = BodyBounds();
+        Vector3 right = new Vector3(direction.z, 0, -direction.x);
+        for (int i = 0; i < trafficCars.Count; i++)
+        {
+            var other = trafficCars[i];
+            if (!other || other == this || !other.gameObject.activeInHierarchy || other.gameObject.scene != gameObject.scene || !SameSpawner(other)) continue;
+            Bounds theirs = other.BodyBounds();
+            if (theirs.size.sqrMagnitude < 0.0001f) continue;
+            if (Mathf.Abs(theirs.center.y - mine.center.y) > mine.extents.y + theirs.extents.y + 0.5f) continue;
+            Vector3 delta = ArcadeTrafficPath.Flat(theirs.center - mine.center);
+            float ahead = Vector3.Dot(delta, direction);
+            if (ahead <= 0 || ahead > range + mine.size.magnitude + theirs.size.magnitude) continue;
+            float myWidth = Mathf.Abs(right.x) * mine.extents.x + Mathf.Abs(right.z) * mine.extents.z;
+            float theirWidth = Mathf.Abs(right.x) * theirs.extents.x + Mathf.Abs(right.z) * theirs.extents.z;
+            if (Mathf.Abs(Vector3.Dot(delta, right)) > myWidth + theirWidth + 0.15f) continue;
+            float myLength = Mathf.Abs(direction.x) * mine.extents.x + Mathf.Abs(direction.z) * mine.extents.z;
+            float theirLength = Mathf.Abs(direction.x) * theirs.extents.x + Mathf.Abs(direction.z) * theirs.extents.z;
+            float gap = Mathf.Max(0, ahead - myLength - theirLength);
+            Rigidbody leader = other.body ? other.body : other.GetComponent<Rigidbody>();
+            float leaderSpeed = leader ? Mathf.Max(0, Vector3.Dot(ArcadeTrafficPath.Flat(leader.velocity), direction)) : 0;
+            WaitingForOwnCar = true;
+            wanted = Mathf.Min(wanted, ArcadeTrafficRules.FollowSpeed(leaderSpeed, gap, StandstillGap, FollowingTime, PlanningDeceleration));
+        }
+        return wanted;
+    }
+
     private float LimitForCar(Collider collider, float gap, Vector3 direction, float wanted)
     {
         if (!collider || collider.transform.IsChildOf(transform)) return wanted;
@@ -264,7 +324,7 @@ public sealed class ArcadeTrafficCar : MonoBehaviour
             stream = rtc.CarSpawnIndex; leader = rtc.Rigid;
         }
         // Foreign traffic remains physically solid but is deliberately ignored by the driver.
-        if (!ArcadeTrafficRules.ShouldFollow(StreamId, stream)) return wanted;
+        if (other ? !SameSpawner(other) : !ArcadeTrafficRules.ShouldFollow(StreamId, stream)) return wanted;
         WaitingForOwnCar = true;
         float leaderSpeed = leader ? Mathf.Max(0, Vector3.Dot(ArcadeTrafficPath.Flat(leader.velocity), direction)) : 0;
         return Mathf.Min(wanted, ArcadeTrafficRules.FollowSpeed(leaderSpeed, gap, StandstillGap, FollowingTime, PlanningDeceleration));
@@ -358,7 +418,7 @@ public sealed class ArcadeTrafficCar : MonoBehaviour
         var rtc = other ? null : collision.collider.GetComponentInParent<RTC_CarController>();
         if (!other && !rtc) return;
         int stream = other ? other.StreamId : rtc.CarSpawnIndex;
-        if (stream == StreamId || collision.relativeVelocity.magnitude < ForeignCrashImpact) return;
+        if ((other ? SameSpawner(other) : stream == StreamId) || collision.relativeVelocity.magnitude < ForeignCrashImpact) return;
         if (StopAfterForeignCrash) HasCrashed = true;
         var director = GameManager.ForScene(gameObject.scene);
         if (director) director.RecordCollision(gameObject, other ? other.gameObject : rtc.gameObject);

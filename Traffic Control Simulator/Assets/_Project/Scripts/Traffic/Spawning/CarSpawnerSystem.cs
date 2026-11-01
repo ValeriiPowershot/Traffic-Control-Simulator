@@ -127,7 +127,8 @@ namespace BaseCode
                 controller.SetWaypoint(spawner.StartWaypoint);
                 controller.CarSpawnIndex = spawner.SpawnPointIndex;
                 if (UseExperimentalController)
-                    ArcadeTrafficCar.TakeOver(controller, spawner.StartWaypoint, spawner.SpawnPointIndex);
+                    ArcadeTrafficCar.TakeOver(controller, spawner.StartWaypoint, spawner.SpawnPointIndex)
+                        .AssignSpawner(spawner.SpawnPoint.GetInstanceID());
                 var director = BaseCode.Logic.City.GameManager.ForScene(gameObject.scene);
                 if (director != null) director.RegisterVehicle(controller.gameObject);
             }

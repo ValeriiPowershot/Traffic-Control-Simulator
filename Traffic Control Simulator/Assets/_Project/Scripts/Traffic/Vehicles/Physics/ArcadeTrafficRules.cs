@@ -3,6 +3,8 @@ using System;
 public static class ArcadeTrafficRules
 {
     public static bool ShouldFollow(int mine, int other) => mine == other;
+    public static bool SameSpawner(int mine, int other, int myStream, int otherStream)
+        => mine != 0 && other != 0 ? mine == other : ShouldFollow(myStream, otherStream);
     public static float ApproachSpeed(float endSpeed, float distance, float deceleration)
         => (float)Math.Sqrt(endSpeed * endSpeed + 2 * Math.Max(0.1f, deceleration) * Math.Max(0, distance));
     public static float Steering(float x, float z, float wheelbase, float maxRadians)

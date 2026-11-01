@@ -9,6 +9,10 @@ static class Program
         Check(ArcadeTrafficRules.ShouldFollow(7, 7), "Follow own stream");
         Check(!ArcadeTrafficRules.ShouldFollow(7, 99), "Foreign stream is not a braking obstacle");
         Check(ArcadeTrafficRules.ShouldFollow(0, 0), "Zero is a valid shared stream");
+        Check(ArcadeTrafficRules.SameSpawner(101, 101, 7, 99), "Same spawn point remains own regardless of light id");
+        Check(!ArcadeTrafficRules.SameSpawner(101, 202, 7, 7), "Different spawn points are foreign even with duplicate light id");
+        Check(ArcadeTrafficRules.SameSpawner(0, 0, 7, 7), "Manually placed cars retain stream fallback");
+        Check(!ArcadeTrafficRules.SameSpawner(0, 0, 7, 99), "Manual foreign fallback");
         Check(ArcadeTrafficRules.FollowSpeed(10, 1, 1.1f, 1, 3) == 0, "Full stop inside standstill gap");
         Check(ArcadeTrafficRules.FollowSpeed(0, 2, 1.1f, 1, 3) < 1, "Slow approach to queue");
         Check(ArcadeTrafficRules.FollowSpeed(5, 6.1f, 1.1f, 1, 3) == 5, "Match leader at headway");
