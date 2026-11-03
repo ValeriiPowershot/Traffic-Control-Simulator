@@ -22,6 +22,9 @@ namespace TrafficControl.CleanVehicles
         public Curve[] Curves = new Curve[0];
         [Range(8, 100)] public int Resolution = 40;
         public Color GuideColor = Color.cyan;
+        [Header("Route authoring")]
+        [Min(0.5f)] public float LaneHalfWidth = 1.7f;
+        public bool ShowVehicleEnvelope = true;
         private Sample[] samples;
         public float Length { get { Ensure(); return samples.Length > 0 ? samples[samples.Length - 1].Distance : 0; } }
         private void Ensure() { if (samples == null) Rebuild(); }
@@ -82,6 +85,17 @@ namespace TrafficControl.CleanVehicles
         {
             Rebuild(); Gizmos.color = GuideColor;
             for (int i = 1; i < samples.Length; i++) Gizmos.DrawLine(samples[i - 1].Position, samples[i].Position);
+            for (float d = 0; d < Length; d += 4)
+            {
+                var sample = At(d); Vector3 right = Vector3.Cross(Vector3.up, sample.Tangent).normalized;
+                Gizmos.DrawLine(sample.Position - right * LaneHalfWidth, sample.Position + right * LaneHalfWidth);
+                if (!ShowVehicleEnvelope) continue;
+                Matrix4x4 previous = Gizmos.matrix;
+                Gizmos.matrix = Matrix4x4.TRS(sample.Position + sample.Tangent * 1.2f + Vector3.up * 0.7f,
+                    Quaternion.LookRotation(sample.Tangent), Vector3.one);
+                Gizmos.DrawWireCube(Vector3.zero, new Vector3(1.55f, 0.65f, 3.6f));
+                Gizmos.matrix = previous;
+            }
         }
     }
 }

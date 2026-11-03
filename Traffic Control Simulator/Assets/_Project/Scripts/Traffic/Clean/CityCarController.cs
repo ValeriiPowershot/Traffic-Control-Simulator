@@ -22,6 +22,8 @@ namespace TrafficControl.CleanVehicles
         public float LaneCorrection = 1.8f, AccelerationJerk = 8;
         [Header("Traffic")]
         public float QueueGap = 1.3f, ReactionSeconds = 0.45f;
+        [Range(0, 1.5f)] public float StartReactionSeconds = 0.35f;
+        public Renderer[] BrakeLights, LeftIndicators, RightIndicators;
         public bool Parked;
         public float CrashImpact = 2;
         public int OriginId { get; private set; }
@@ -36,8 +38,16 @@ namespace TrafficControl.CleanVehicles
         private WheelCollider[] wheels;
         private float wheelbase, rearAxle, frontReach, rearReach, width, track;
         private float steeringAngle, acceleration;
-        private bool ready, arrivalSent;
-        private void Awake() { body = GetComponent<Rigidbody>(); }
+        private bool ready, arrivalSent, waitingToRelease;
+        private float releaseTimer;
+        private MaterialPropertyBlock lightBlock;
+        public bool Braking => ready && acceleration < -0.3f;
+        public int TurnDirection { get; private set; }
+        public float BodyLength => frontReach + rearReach;
+        public float FrontReach => frontReach;
+        public float RearReach => rearReach;
+        public int SameStreamContacts { get; private set; }
+        private void Awake() { body = GetComponent<Rigidbody>(); lightBlock = new MaterialPropertyBlock(); }
         private void OnEnable() { if (!cars.Contains(this)) cars.Add(this); }
         private void OnDisable() { cars.Remove(this); HoldWheels(); }
         private void Start() { if (!ready) Prepare(Road, OriginId); }
@@ -59,6 +69,7 @@ namespace TrafficControl.CleanVehicles
             body.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             RouteDistance = Road.Project(RearPosition(), 0, true);
             State = DrivingState.Driving; arrivalSent = false; acceleration = steeringAngle = 0;
+            waitingToRelease = false; releaseTimer = 0; SameStreamContacts = 0;
             ready = true; return true;
         }
         private Vector3 Local(WheelCollider w) => transform.InverseTransformPoint(w.transform.position);
@@ -88,6 +99,11 @@ namespace TrafficControl.CleanVehicles
                 wantedSpeed = Mathf.Min(wantedSpeed, Mathf.Sqrt(cap * cap + 2 * Mathf.Max(0.1f, ComfortableBraking) * Mathf.Max(0, d - 1)));
             }
             wantedSpeed = Mathf.Min(wantedSpeed, CityCarMath.SafeSpeed(Road.Length - RouteDistance - 0.15f, 0, ComfortableBraking, ReactionSeconds));
+            // Signal the upcoming bend before the steering axle enters it.
+            var turn = Road.At(RouteDistance + Mathf.Max(4, speed * 1.5f));
+            float turnAngle = Vector3.SignedAngle(here.Tangent, turn.Tangent, Vector3.up);
+            TurnDirection = Mathf.Abs(turnAngle) > 8 ? (turnAngle > 0 ? 1 : -1) :
+                Mathf.Abs(here.Curvature) > 0.025f ? (here.Curvature > 0 ? 1 : -1) : 0;
             bool emergency = false;
             for (int i = 0; i < cars.Count; i++)
             {
@@ -111,12 +127,22 @@ namespace TrafficControl.CleanVehicles
                 if (remaining < QueueGap * 0.5f) emergency = true;
             }
             if (Parked || State == DrivingState.Crashed || State == DrivingState.Arrived) wantedSpeed = 0;
+            // Start reaction is latched once per stop; a stationary queue must not
+            // continually reset its timer while the leader begins to pull away.
+            if (wantedSpeed < 0.1f && speed < 0.15f)
+            { waitingToRelease = true; releaseTimer = Mathf.Max(0, StartReactionSeconds); }
+            else if (waitingToRelease)
+            {
+                releaseTimer -= dt;
+                if (releaseTimer > 0) wantedSpeed = 0;
+                else { waitingToRelease = false; acceleration = Mathf.Max(0, acceleration); }
+            }
             TargetSpeedKph = wantedSpeed * 3.6f;
             if (State != DrivingState.Crashed && State != DrivingState.Arrived)
                 State = wantedSpeed < 0.1f ? DrivingState.Waiting : DrivingState.Driving;
             float demand = Mathf.Clamp((wantedSpeed - speed) * 2.5f + (wantedSpeed > 0.5f ? 0.15f : 0), -MaxDeceleration, MaxAcceleration);
             if (wantedSpeed < 0.05f && speed < 0.25f) demand = -MaxDeceleration;
-            acceleration = emergency || State == DrivingState.Crashed ? -MaxDeceleration : Mathf.MoveTowards(acceleration, demand, Mathf.Max(0.1f, AccelerationJerk) * dt);
+            acceleration = emergency || State == DrivingState.Crashed || (wantedSpeed < 0.05f && speed < 0.25f) ? -MaxDeceleration : Mathf.MoveTowards(acceleration, demand, Mathf.Max(0.1f, AccelerationJerk) * dt);
             ApplyWheels();
             if (!arrivalSent && Road.Length - RouteDistance < 0.4f && SpeedKph < 0.5f && State != DrivingState.Crashed)
             { arrivalSent = true; State = DrivingState.Arrived; Arrived?.Invoke(this); }
@@ -145,14 +171,29 @@ namespace TrafficControl.CleanVehicles
         }
         private void Update()
         {
-            if (!ready || WheelModels == null) return;
+            if (!ready) return;
+            SetLights(BrakeLights, Braking || State == DrivingState.Waiting, Color.red);
+            bool blink = Time.time % 0.8f < 0.4f;
+            SetLights(LeftIndicators, blink && TurnDirection < 0, new Color(1, 0.45f, 0));
+            SetLights(RightIndicators, blink && TurnDirection > 0, new Color(1, 0.45f, 0));
+            if (WheelModels == null) return;
             for (int i = 0; i < Mathf.Min(wheels.Length, WheelModels.Length); i++)
                 if (WheelModels[i]) { wheels[i].GetWorldPose(out var p, out var r); WheelModels[i].SetPositionAndRotation(p, r); }
+        }
+        private void SetLights(Renderer[] lights, bool on, Color color)
+        {
+            if (lights == null) return;
+            if (lightBlock == null) lightBlock = new MaterialPropertyBlock();
+            lightBlock.SetColor("_BaseColor", on ? color : color * 0.15f);
+            lightBlock.SetColor("_Color", on ? color : color * 0.15f);
+            foreach (var lamp in lights) if (lamp) lamp.SetPropertyBlock(lightBlock);
         }
         private void OnCollisionEnter(Collision contact)
         {
             var other = contact.collider.GetComponentInParent<CityCarController>();
-            if (!other || other == this || other.OriginId == OriginId || contact.relativeVelocity.magnitude < CrashImpact) return;
+            if (!other || other == this) return;
+            if (other.OriginId == OriginId) { SameStreamContacts++; return; }
+            if (contact.relativeVelocity.magnitude < CrashImpact) return;
             State = DrivingState.Crashed; acceleration = -MaxDeceleration; HoldWheels();
             ForeignCollision?.Invoke(this, other);
         }

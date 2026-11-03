@@ -51,6 +51,15 @@ namespace TrafficControl.CleanVehicles
                 car.WheelModels[i] = model.transform; wheels[i] = w;
             }
             car.FrontLeft = wheels[0]; car.FrontRight = wheels[1]; car.RearLeft = wheels[2]; car.RearRight = wheels[3];
+            car.BrakeLights = new Renderer[2]; car.LeftIndicators = new Renderer[2]; car.RightIndicators = new Renderer[2];
+            for (int side = 0; side < 2; side++)
+            {
+                float x = side == 0 ? -0.57f : 0.57f;
+                car.BrakeLights[side] = Box("Brake lamp", go.transform, new Vector3(x, 0.08f, -1.82f), new Vector3(0.25f, 0.16f, 0.04f), glass).GetComponent<Renderer>();
+                var indicators = side == 0 ? car.LeftIndicators : car.RightIndicators;
+                for (int end = 0; end < 2; end++)
+                    indicators[end] = Box("Turn indicator", go.transform, new Vector3(x, 0.08f, end == 0 ? -1.85f : 1.82f), new Vector3(0.12f, 0.12f, 0.04f), glass).GetComponent<Renderer>();
+            }
             car.Road = road; go.SetActive(true); car.Prepare(road, origin);
             // Each generated body owns its paint material.
             go.AddComponent<CityCarPaint>().OwnedMaterial = paint;

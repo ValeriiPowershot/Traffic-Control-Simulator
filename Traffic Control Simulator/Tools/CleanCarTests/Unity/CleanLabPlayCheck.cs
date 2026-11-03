@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System;
 using System.Collections;
 using System.Reflection;
@@ -51,6 +50,27 @@ public sealed class CleanLabPlayCheck : MonoBehaviour
         foreach (var component in UnityEngine.Object.FindObjectsOfType<MonoBehaviour>())
             if (component.GetType().FullName.Contains("RTC_") || component.GetType().Name == "ArcadeTrafficCar")
             { Check(false,"Legacy vehicle component appeared in clean lab"); yield break; }
+        // Sustained single flow over a bend: congestion must drain without contacts.
+        foreach (var spawn in spawns) spawn.enabled = false;
+        foreach (var vehicle in new System.Collections.Generic.List<CityCarController>(CityCarController.All)) Destroy(vehicle.gameObject);
+        yield return null;
+        var south = System.Array.Find(spawns, item => item.Road.name == "South right turn");
+        var southLight = System.Array.Find(UnityEngine.Object.FindObjectsOfType<TrafficLight>(), item => item.TrafficLightSpawnIndex == 1);
+        if (southLight.LightState == TrafficLightState.Red) southLight.SwitchRedGreen();
+        yield return new WaitForSeconds(2.2f);
+        int completedBefore = south.Completed; south.Interval = 1.1f; south.Capacity = 18; south.enabled = true;
+        float maxError = 0; deadline = Time.time + 150;
+        while (Time.time < deadline)
+        {
+            foreach (var vehicle in CityCarController.All)
+            {
+                if (vehicle.State == CityCarController.DrivingState.Crashed || vehicle.SameStreamContacts > 0) { Check(false, "Dense flow made vehicle contact"); yield break; }
+                maxError = Mathf.Max(maxError, Mathf.Abs(vehicle.LaneError));
+            }
+            yield return new WaitForSeconds(0.25f);
+        }
+        if (!Check(south.Completed - completedBefore >= 15 && maxError < 0.85f,
+            "150-second dense turn: completed=" + (south.Completed-completedBefore) + "; max lane error=" + maxError)) yield break;
         Debug.Log("CLEAN_SAVED_SCENE_PASS: clean generated scene; original red/yellow/green coroutines; same-spawner queues; real foreign collision; zero legacy vehicle components.");
         UnityEditor.EditorApplication.Exit(0);
     }
@@ -61,5 +81,3 @@ public sealed class CleanLabPlayCheck : MonoBehaviour
         return ok;
     }
 }
-
-#endif
